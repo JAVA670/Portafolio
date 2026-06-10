@@ -10,7 +10,7 @@ export function Footer() {
     <footer className="border-t border-smoke bg-void px-4 py-10 sm:px-8">
       <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <p className="font-display text-2xl font-bold uppercase tracking-[0.14em] sm:text-3xl">
-          THROUGHLENSES<span className="text-ash">670</span>
+          THROUGHLENSES<span className="text-blood">670</span>
         </p>
         <div className="flex flex-col gap-1 text-[10px] tracking-[0.2em] text-ash md:items-end">
           <a

@@ -28,7 +28,7 @@ export function Header() {
       aria-pressed={lang === next}
       className={`px-1.5 py-0.5 text-[10px] tracking-[0.2em] transition-colors ${
         lang === next
-          ? "bg-strobe text-void"
+          ? "bg-blood text-void"
           : "text-ash hover:text-strobe"
       }`}
     >
@@ -46,7 +46,7 @@ export function Header() {
           href="#top"
           className="font-display text-sm font-bold uppercase tracking-[0.18em] sm:text-base"
         >
-          THROUGHLENSES<span className="text-ash">670</span>
+          THROUGHLENSES<span className="text-blood">670</span>
         </a>
 
         <nav className="hidden items-center gap-6 md:flex">
@@ -54,7 +54,7 @@ export function Header() {
             <a
               key={link.key}
               href={link.href}
-              className="text-[11px] tracking-[0.25em] text-bone transition-colors hover:bg-strobe hover:text-void"
+              className="text-[11px] tracking-[0.25em] text-bone transition-colors hover:bg-blood hover:text-void"
             >
               {t.nav[link.key]}
             </a>
@@ -73,7 +73,7 @@ export function Header() {
           <a
             key={link.key}
             href={link.href}
-            className="text-[10px] tracking-[0.18em] text-bone active:bg-strobe active:text-void"
+            className="text-[10px] tracking-[0.18em] text-bone active:bg-blood active:text-void"
           >
             {t.nav[link.key]}
           </a>

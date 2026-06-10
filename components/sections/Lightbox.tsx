@@ -66,7 +66,7 @@ export function Lightbox({ photos, index, onClose, onNavigate }: LightboxProps) 
             <button
               type="button"
               onClick={onClose}
-              className="border border-smoke px-4 py-1.5 text-[10px] tracking-[0.25em] transition-colors hover:bg-strobe hover:text-void"
+              className="border border-smoke px-4 py-1.5 text-[10px] tracking-[0.25em] transition-colors hover:bg-blood hover:text-void"
             >
               {t.gallery.close} [ESC]
             </button>
@@ -98,7 +98,7 @@ export function Lightbox({ photos, index, onClose, onNavigate }: LightboxProps) 
             <button
               type="button"
               onClick={() => step(-1)}
-              className="border border-smoke px-4 py-1.5 text-[10px] tracking-[0.25em] transition-colors hover:bg-strobe hover:text-void"
+              className="border border-smoke px-4 py-1.5 text-[10px] tracking-[0.25em] transition-colors hover:bg-blood hover:text-void"
             >
               ← {t.gallery.prev}
             </button>
@@ -108,7 +108,7 @@ export function Lightbox({ photos, index, onClose, onNavigate }: LightboxProps) 
             <button
               type="button"
               onClick={() => step(1)}
-              className="border border-smoke px-4 py-1.5 text-[10px] tracking-[0.25em] transition-colors hover:bg-strobe hover:text-void"
+              className="border border-smoke px-4 py-1.5 text-[10px] tracking-[0.25em] transition-colors hover:bg-blood hover:text-void"
             >
               {t.gallery.next} →
             </button>

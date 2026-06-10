@@ -34,7 +34,7 @@ export function Gallery() {
               type="button"
               onClick={() => setActive(i)}
               whileHover="hover"
-              className="group relative block w-full overflow-hidden border border-steel bg-iron text-left"
+              className="latex-sheen group relative block w-full overflow-hidden border border-steel bg-iron text-left transition-all duration-300 hover:border-blood hover:box-glow-red"
               style={{ aspectRatio: photo.ratio }}
               aria-label={photo.alt}
             >
@@ -53,8 +53,8 @@ export function Gallery() {
                 />
               </motion.div>
 
-              {/* High-contrast hover plate */}
-              <div className="absolute inset-x-0 bottom-0 translate-y-full bg-strobe px-3 py-2 transition-transform duration-300 group-hover:translate-y-0">
+              {/* Blood hover plate */}
+              <div className="absolute inset-x-0 bottom-0 z-10 translate-y-full bg-blood px-3 py-2 transition-transform duration-300 group-hover:translate-y-0">
                 <p className="text-[10px] font-bold tracking-[0.2em] text-void">
                   {photo.event}
                 </p>
@@ -63,7 +63,7 @@ export function Gallery() {
                 </p>
               </div>
 
-              <span className="tech-label absolute left-2 top-2 bg-void/70 px-1.5 py-0.5">
+              <span className="tech-label-red absolute left-2 top-2 bg-void/70 px-1.5 py-0.5">
                 {String(i + 1).padStart(2, "0")}
               </span>
             </motion.button>
