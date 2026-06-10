@@ -18,13 +18,13 @@ function frameSvg(width, height, label, sub) {
   const fontSize = Math.round(Math.min(width, height) / 16);
   const subSize = Math.round(fontSize * 0.45);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
-  <rect width="100%" height="100%" fill="#0d0d0d"/>
-  <rect x="12" y="12" width="${width - 24}" height="${height - 24}" fill="none" stroke="#2b2b2b" stroke-width="2"/>
-  <line x1="0" y1="0" x2="${width}" y2="${height}" stroke="#1a1a1a" stroke-width="2"/>
-  <line x1="${width}" y1="0" x2="0" y2="${height}" stroke="#1a1a1a" stroke-width="2"/>
+  <rect width="100%" height="100%" fill="#0c0a0a"/>
+  <rect x="12" y="12" width="${width - 24}" height="${height - 24}" fill="none" stroke="#4a000e" stroke-width="2"/>
+  <line x1="0" y1="0" x2="${width}" y2="${height}" stroke="#1c0006" stroke-width="2"/>
+  <line x1="${width}" y1="0" x2="0" y2="${height}" stroke="#1c0006" stroke-width="2"/>
   <text x="${cx}" y="${cy - subSize}" text-anchor="middle" fill="#ffffff" font-family="monospace" font-weight="bold" font-size="${fontSize}" letter-spacing="6">${label}</text>
-  <text x="${cx}" y="${cy + subSize * 1.6}" text-anchor="middle" fill="#6f6f6f" font-family="monospace" font-size="${subSize}" letter-spacing="4">${sub}</text>
-  <text x="24" y="${height - 26}" fill="#6f6f6f" font-family="monospace" font-size="${subSize}" letter-spacing="3">THROUGHLENSES670 / PLACEHOLDER</text>
+  <text x="${cx}" y="${cy + subSize * 1.6}" text-anchor="middle" fill="#e8002d" font-family="monospace" font-size="${subSize}" letter-spacing="4">${sub}</text>
+  <text x="24" y="${height - 26}" fill="#7a3a44" font-family="monospace" font-size="${subSize}" letter-spacing="3">THROUGHLENSES670 / PLACEHOLDER</text>
 </svg>`;
 }
 

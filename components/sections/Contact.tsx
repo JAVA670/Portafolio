@@ -7,7 +7,7 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 import { contact, gear } from "@/lib/mockData";
 
 const inputClass =
-  "w-full border border-smoke bg-void px-3 py-2.5 text-xs tracking-[0.1em] text-strobe placeholder:text-ash focus:border-strobe focus:outline-none";
+  "w-full border border-smoke bg-void px-3 py-2.5 text-xs tracking-[0.1em] text-strobe placeholder:text-ash caret-blood focus:border-blood focus:outline-none";
 
 export function Contact() {
   const { t } = useLanguage();
@@ -64,7 +64,7 @@ export function Contact() {
         {/* Gear manifest */}
         <BlurReveal className="border-b border-smoke md:border-b-0 md:border-r">
           <div className="p-5 sm:p-8">
-            <p className="tech-label mb-6">{`> ${t.contact.gearTitle}`}</p>
+            <p className="tech-label-red mb-6">{`> ${t.contact.gearTitle}`}</p>
             <ul className="flex flex-col">
               {gear.map((g) => (
                 <li
@@ -80,23 +80,23 @@ export function Contact() {
             </ul>
 
             <div className="mt-10 flex flex-col gap-2">
-              <p className="tech-label">{`> ${t.contact.directEmail}`}</p>
+              <p className="tech-label-red">{`> ${t.contact.directEmail}`}</p>
               <a
                 href={`mailto:${contact.email}`}
-                className="w-fit text-sm font-bold tracking-[0.1em] underline decoration-smoke underline-offset-4 hover:bg-strobe hover:text-void"
+                className="w-fit text-sm font-bold tracking-[0.1em] underline decoration-smoke underline-offset-4 hover:bg-blood hover:text-void"
               >
                 {contact.email}
               </a>
-              <p className="tech-label mt-4">{`> ${t.contact.instagram}`}</p>
+              <p className="tech-label-red mt-4">{`> ${t.contact.instagram}`}</p>
               <a
                 href={contact.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-fit text-sm font-bold tracking-[0.1em] underline decoration-smoke underline-offset-4 hover:bg-strobe hover:text-void"
+                className="w-fit text-sm font-bold tracking-[0.1em] underline decoration-smoke underline-offset-4 hover:bg-blood hover:text-void"
               >
                 @{contact.instagram}
               </a>
-              <p className="tech-label mt-4 animate-blink">
+              <p className="tech-label-red mt-4 animate-blink">
                 ● {t.contact.basedIn}
               </p>
             </div>
@@ -106,7 +106,7 @@ export function Contact() {
         {/* Media pass request — terminal form */}
         <BlurReveal delay={0.1}>
           <form onSubmit={submit} className="flex flex-col gap-4 p-5 sm:p-8">
-            <p className="tech-label mb-2">{`> ${t.contact.formTitle}`}</p>
+            <p className="tech-label-red mb-2">{`> ${t.contact.formTitle}`}</p>
 
             <label className="flex flex-col gap-1.5">
               <span className="tech-label">{t.contact.name}</span>
@@ -181,7 +181,7 @@ export function Contact() {
 
             <button
               type="submit"
-              className="mt-2 border border-strobe bg-strobe px-6 py-3 text-xs font-bold tracking-[0.3em] text-void transition-colors hover:bg-void hover:text-strobe"
+              className="mt-2 border border-blood bg-blood px-6 py-3 text-xs font-bold tracking-[0.3em] text-void transition-all hover:bg-void hover:text-laser hover:box-glow-red"
             >
               {t.contact.send} →
             </button>
