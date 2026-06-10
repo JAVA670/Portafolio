@@ -22,7 +22,7 @@ export const dictionary = {
     videos: {
       label: "VAULT / 02",
       title: "VIDEOS",
-      sub: "DJ sets, aftermovies and reels — one vault. 16:9 cinema next to 9:16 cuts built for the feed.",
+      sub: "DJ sets, aftermovies and festival recaps — every cut in its native frame, straight from the floor.",
       watch: "PLAY",
     },
     contact: {
@@ -76,7 +76,7 @@ export const dictionary = {
     videos: {
       label: "BÓVEDA / 02",
       title: "VIDEOS",
-      sub: "DJ sets, aftermovies y reels — una sola bóveda. Cine 16:9 junto a cortes 9:16 hechos para el feed.",
+      sub: "DJ sets, aftermovies y recaps de festivales — cada corte en su formato nativo, directo desde la pista.",
       watch: "PLAY",
     },
     contact: {
