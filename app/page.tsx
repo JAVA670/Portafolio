@@ -7,8 +7,7 @@ import { ScrollProgress } from "@/components/fx/ScrollProgress";
 import { MarqueeDivider } from "@/components/fx/MarqueeDivider";
 import { Hero } from "@/components/sections/Hero";
 import { Gallery } from "@/components/sections/Gallery";
-import { DJSets } from "@/components/sections/DJSets";
-import { Aftermovies } from "@/components/sections/Aftermovies";
+import { Videos } from "@/components/sections/Videos";
 import { Contact } from "@/components/sections/Contact";
 
 export default function Home() {
@@ -21,11 +20,9 @@ export default function Home() {
       <Header />
       <Hero />
       <Gallery />
-      <MarqueeDivider hot text="PRESS PLAY / / FEEL THE HEAT / / 140+ BPM / / NO MERCY / /" />
-      <DJSets />
-      <MarqueeDivider reverse text="VERTICAL CUTS / / 9:16 / / BUILT FOR THE FEED / / RAW ENERGY / /" />
-      <Aftermovies />
-      <MarqueeDivider hot reverse text="BOOK THE LENS / / WORLDWIDE / / PHOTO + VIDEO + DRONE / /" />
+      <MarqueeDivider hot text="999999999 / / AND / / HENRIQUE CAMACHO / / MIJA / / SHIMZA / / + LOCAL HEROES / /" />
+      <Videos />
+      <MarqueeDivider reverse text="HOCUS POCUS MIAMI / / AEROTECHNO FESTIVAL MEDELLÍN / / LA SOLAR MEDELLÍN / /" />
       <Contact />
       <Footer />
     </main>

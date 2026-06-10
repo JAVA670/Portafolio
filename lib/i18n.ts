@@ -2,12 +2,12 @@ export type Lang = "en" | "es";
 
 export const dictionary = {
   en: {
-    nav: { photos: "PHOTOS", djSets: "DJ SETS", aftermovies: "AFTERMOVIES", contact: "BOOKING" },
+    nav: { photos: "PHOTOS", videos: "VIDEOS", contact: "BOOKING" },
     hero: {
       role: "CONCERT PHOTOGRAPHY / VIDEOGRAPHY",
       scene: "HARD TECHNO — WAREHOUSE — INDUSTRIAL",
       scroll: "SCROLL TO ENTER",
-      marquee: "HARD TECHNO / / WAREHOUSE / / STROBE / / 140+ BPM / / RAW FOOTAGE / / NO FILTERS / /",
+      marquee: "HOCUS POCUS MIAMI / / AEROTECHNO MEDELLÍN / / LA SOLAR / / 140+ BPM / / RAW FOOTAGE / / NO FILTERS / /",
       statement:
         "Shot from inside the crowd. Strobes, smoke and steel — captured at the speed the floor moves.",
     },
@@ -19,22 +19,19 @@ export const dictionary = {
       prev: "PREV",
       next: "NEXT",
     },
-    djSets: {
+    videos: {
       label: "VAULT / 02",
-      title: "DJ SETS",
-      sub: "Full-length cinematic set recordings. Multi-cam, synced to the booth.",
+      title: "VIDEOS",
+      sub: "DJ sets, aftermovies and reels — one vault. 16:9 cinema next to 9:16 cuts built for the feed.",
       watch: "PLAY",
     },
-    aftermovies: {
-      label: "VAULT / 03",
-      title: "AFTERMOVIES + REELS",
-      sub: "Vertical cuts built for the feed. 9:16, high energy, zero dead air.",
-    },
     contact: {
-      label: "TERMINAL / 04",
+      label: "TERMINAL / 03",
       title: "BOOKING SHEET",
       sub: "Direct line for promoters, collectives and venues.",
       gearTitle: "GEAR MANIFEST",
+      creditsTitle: "SHOT FOR",
+      festivalsTitle: "FESTIVALS",
       formTitle: "MEDIA PASS REQUEST",
       name: "NAME / COLLECTIVE",
       email: "EMAIL",
@@ -59,12 +56,12 @@ export const dictionary = {
     },
   },
   es: {
-    nav: { photos: "FOTOS", djSets: "DJ SETS", aftermovies: "AFTERMOVIES", contact: "BOOKING" },
+    nav: { photos: "FOTOS", videos: "VIDEOS", contact: "BOOKING" },
     hero: {
       role: "FOTOGRAFÍA / VIDEOGRAFÍA DE CONCIERTOS",
       scene: "HARD TECHNO — WAREHOUSE — INDUSTRIAL",
       scroll: "SCROLL PARA ENTRAR",
-      marquee: "HARD TECHNO / / WAREHOUSE / / STROBE / / 140+ BPM / / MATERIAL CRUDO / / SIN FILTROS / /",
+      marquee: "HOCUS POCUS MIAMI / / AEROTECHNO MEDELLÍN / / LA SOLAR / / 140+ BPM / / MATERIAL CRUDO / / SIN FILTROS / /",
       statement:
         "Disparado desde adentro de la multitud. Strobes, humo y acero — capturado a la velocidad de la pista.",
     },
@@ -76,22 +73,19 @@ export const dictionary = {
       prev: "ANT",
       next: "SIG",
     },
-    djSets: {
+    videos: {
       label: "BÓVEDA / 02",
-      title: "DJ SETS",
-      sub: "Grabaciones cinematográficas de sets completos. Multicámara, sincronizado a la cabina.",
+      title: "VIDEOS",
+      sub: "DJ sets, aftermovies y reels — una sola bóveda. Cine 16:9 junto a cortes 9:16 hechos para el feed.",
       watch: "PLAY",
     },
-    aftermovies: {
-      label: "BÓVEDA / 03",
-      title: "AFTERMOVIES + REELS",
-      sub: "Cortes verticales hechos para el feed. 9:16, alta energía, cero tiempos muertos.",
-    },
     contact: {
-      label: "TERMINAL / 04",
+      label: "TERMINAL / 03",
       title: "HOJA DE BOOKING",
       sub: "Línea directa para promotores, colectivos y venues.",
       gearTitle: "MANIFIESTO DE EQUIPO",
+      creditsTitle: "HE DISPARADO PARA",
+      festivalsTitle: "FESTIVALES",
       formTitle: "SOLICITUD DE MEDIA PASS",
       name: "NOMBRE / COLECTIVO",
       email: "EMAIL",

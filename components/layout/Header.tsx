@@ -6,8 +6,7 @@ import type { Lang } from "@/lib/i18n";
 
 const links = [
   { href: "#photography", key: "photos" },
-  { href: "#dj-sets", key: "djSets" },
-  { href: "#aftermovies", key: "aftermovies" },
+  { href: "#videos", key: "videos" },
   { href: "#booking", key: "contact" },
 ] as const;
 
