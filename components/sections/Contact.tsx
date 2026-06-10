@@ -4,7 +4,7 @@ import { useState } from "react";
 import { BlurReveal } from "@/components/fx/BlurReveal";
 import { SectionHeader } from "@/components/fx/SectionHeader";
 import { useLanguage } from "@/components/providers/LanguageProvider";
-import { contact, gear } from "@/lib/mockData";
+import { contact, credits, gear } from "@/lib/mockData";
 
 const inputClass =
   "w-full border border-smoke bg-void px-3 py-2.5 text-xs tracking-[0.1em] text-strobe placeholder:text-ash caret-blood focus:border-blood focus:outline-none";
@@ -78,6 +78,35 @@ export function Contact() {
                 </li>
               ))}
             </ul>
+
+            {/* Credits — artists and festivals actually shot */}
+            <div className="mt-10">
+              <p className="tech-label-red mb-4">{`> ${t.contact.creditsTitle}`}</p>
+              <div className="flex flex-wrap gap-2">
+                {credits.artists.map((artist) => (
+                  <span
+                    key={artist}
+                    className="border border-crimson px-2.5 py-1 text-[10px] font-bold tracking-[0.2em] transition-colors hover:bg-blood hover:text-void"
+                  >
+                    {artist}
+                  </span>
+                ))}
+                <span className="px-2.5 py-1 text-[10px] tracking-[0.2em] text-ash">
+                  + LOCAL DJS
+                </span>
+              </div>
+              <p className="tech-label-red mb-4 mt-6">{`> ${t.contact.festivalsTitle}`}</p>
+              <ul className="flex flex-col gap-2">
+                {credits.festivals.map((festival) => (
+                  <li
+                    key={festival}
+                    className="text-[11px] font-bold tracking-[0.15em] text-bone"
+                  >
+                    ▸ {festival}
+                  </li>
+                ))}
+              </ul>
+            </div>
 
             <div className="mt-10 flex flex-col gap-2">
               <p className="tech-label-red">{`> ${t.contact.directEmail}`}</p>
