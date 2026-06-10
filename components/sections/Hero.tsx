@@ -7,6 +7,7 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
+import { TextReveal } from "@/components/fx/TextReveal";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 
 export function Hero() {
@@ -60,23 +61,27 @@ export function Hero() {
           style={reduceMotion ? undefined : { y: labelY }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.6 }}
+          transition={{ delay: 2.0, duration: 0.6 }}
           className="tech-label-red mb-6"
         >
           {t.hero.role}
         </motion.p>
 
-        <motion.h1
-          initial={reduceMotion ? { opacity: 0 } : { opacity: 0, filter: "blur(20px)", scale: 0.96 }}
-          animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
-          transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-          className="relative font-display text-[13vw] font-bold uppercase leading-[0.85] tracking-tighter sm:text-[11vw] lg:text-[9.5vw]"
-        >
-          THROUGH
-          <br />
-          LENSES
-          <span className="text-blood glow-red animate-pulse-glow motion-reduce:animate-none">
-            670
+        {/* Masked editorial reveal — letters rise out of clipped lines once
+            the preloader curtain lifts. */}
+        <h1 className="relative font-display text-[13vw] font-bold uppercase leading-[0.85] tracking-tighter sm:text-[11vw] lg:text-[9.5vw]">
+          <span className="block">
+            <TextReveal text="THROUGH" immediate delay={1.35} stagger={0.045} />
+          </span>
+          <span className="block">
+            <TextReveal text="LENSES" immediate delay={1.6} stagger={0.045} />
+            <TextReveal
+              text="670"
+              immediate
+              delay={1.9}
+              stagger={0.06}
+              className="text-blood glow-red animate-pulse-glow motion-reduce:animate-none"
+            />
           </span>
           {/* RGB-split misfire layers */}
           {(["glitch-layer-a", "glitch-layer-b"] as const).map((layer) => (
@@ -86,12 +91,12 @@ export function Hero() {
               LENSES670
             </span>
           ))}
-        </motion.h1>
+        </h1>
 
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.7 }}
+          transition={{ delay: 2.3, duration: 0.7 }}
           className="mt-8 max-w-sm text-xs leading-relaxed text-bone sm:max-w-md sm:text-sm"
         >
           {t.hero.statement}
@@ -100,7 +105,7 @@ export function Hero() {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
+          transition={{ delay: 2.8 }}
           className="tech-label-red mt-12 animate-blink"
         >
           ▼ {t.hero.scroll}

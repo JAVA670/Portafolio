@@ -32,6 +32,7 @@ export function Aftermovies() {
             delay={(i % 4) * 0.08}
           >
             <motion.article
+              data-cursor="PLAY"
               whileHover={{ rotateX: 3, rotateY: i % 2 === 0 ? -3 : 3, y: -8 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="latex-sheen group flex flex-col border border-steel bg-iron transition-[border-color,box-shadow] duration-300 hover:border-blood hover:box-glow-red"

@@ -1,5 +1,8 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { Preloader } from "@/components/fx/Preloader";
+import { Cursor } from "@/components/fx/Cursor";
+import { ChapterRail } from "@/components/fx/ChapterRail";
 import { ScrollProgress } from "@/components/fx/ScrollProgress";
 import { MarqueeDivider } from "@/components/fx/MarqueeDivider";
 import { Hero } from "@/components/sections/Hero";
@@ -11,6 +14,9 @@ import { Contact } from "@/components/sections/Contact";
 export default function Home() {
   return (
     <main>
+      <Preloader />
+      <Cursor />
+      <ChapterRail />
       <ScrollProgress />
       <Header />
       <Hero />

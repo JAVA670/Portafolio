@@ -52,7 +52,11 @@ export const dictionary = {
       instagram: "INSTAGRAM",
       basedIn: "AVAILABLE WORLDWIDE",
     },
-    footer: { rights: "ALL FOOTAGE SHOT + CUT BY THROUGHLENSES670" },
+    footer: {
+      rights: "ALL FOOTAGE SHOT + CUT BY THROUGHLENSES670",
+      ctaLabel: "NEXT EVENT",
+      cta: "BOOK THE LENS",
+    },
   },
   es: {
     nav: { photos: "FOTOS", djSets: "DJ SETS", aftermovies: "AFTERMOVIES", contact: "BOOKING" },
@@ -105,7 +109,11 @@ export const dictionary = {
       instagram: "INSTAGRAM",
       basedIn: "DISPONIBLE A NIVEL MUNDIAL",
     },
-    footer: { rights: "TODO EL MATERIAL FILMADO + EDITADO POR THROUGHLENSES670" },
+    footer: {
+      rights: "TODO EL MATERIAL FILMADO + EDITADO POR THROUGHLENSES670",
+      ctaLabel: "PRÓXIMO EVENTO",
+      cta: "RESERVA EL LENTE",
+    },
   },
 } as const;
 

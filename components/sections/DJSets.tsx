@@ -10,7 +10,10 @@ import { djSets, type DJSetVideo } from "@/lib/mockData";
 
 function SetPanel({ set, index, watch }: { set: DJSetVideo; index: number; watch: string }) {
   return (
-    <article className="latex-sheen group grid border border-crimson bg-iron transition-shadow duration-500 hover:box-glow-red md:grid-cols-[1fr_300px]">
+    <article
+      data-cursor="PLAY"
+      className="latex-sheen group grid border border-crimson bg-iron transition-shadow duration-500 hover:box-glow-red md:grid-cols-[1fr_300px]"
+    >
       <div className="relative aspect-video overflow-hidden bg-void">
         <AutoVideo
           src={set.src}

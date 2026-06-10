@@ -32,6 +32,7 @@ export function Gallery() {
           >
             <motion.button
               type="button"
+              data-cursor="VIEW"
               onClick={() => setActive(i)}
               whileHover="hover"
               className="latex-sheen group relative block w-full overflow-hidden border border-steel bg-iron text-left transition-all duration-300 hover:border-blood hover:box-glow-red"

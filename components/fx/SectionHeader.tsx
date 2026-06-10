@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { BlurReveal } from "@/components/fx/BlurReveal";
+import { TextReveal } from "@/components/fx/TextReveal";
 
 type SectionHeaderProps = {
   label: string;
@@ -31,7 +32,7 @@ export function SectionHeader({ label, title, sub }: SectionHeaderProps) {
           style={reduceMotion ? undefined : { x }}
           className="font-display text-5xl font-bold uppercase leading-[0.9] tracking-tight sm:text-7xl md:text-8xl"
         >
-          {title}
+          <TextReveal text={title} stagger={0.03} />
           <span className="text-blood glow-red">.</span>
         </motion.h2>
         <p className="mt-5 max-w-md border-l-2 border-blood pl-3 text-xs leading-relaxed text-bone sm:text-sm">
