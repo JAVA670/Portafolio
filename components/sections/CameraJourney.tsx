@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { useReducedMotion, useScroll } from "framer-motion";
 import { Hero } from "@/components/sections/Hero";
 import { LensPortal } from "@/components/sections/LensPortal";
-import { SharedCamera } from "@/components/fx/SharedCamera";
+import { SharedCamera3D } from "@/components/fx/SharedCamera3D";
 
 /**
  * The opening act as one continuous shot: a single camera orbits the brand
@@ -24,7 +24,7 @@ export function CameraJourney() {
     <div ref={ref} className="relative">
       <Hero />
       <LensPortal />
-      {!reduceMotion && <SharedCamera progress={scrollYProgress} />}
+      {!reduceMotion && <SharedCamera3D progress={scrollYProgress} />}
     </div>
   );
 }
