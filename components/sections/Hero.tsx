@@ -8,7 +8,6 @@ import {
   useTransform,
 } from "framer-motion";
 import { TextReveal } from "@/components/fx/TextReveal";
-import { FloatingCamera } from "@/components/fx/FloatingCamera";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 
 export function Hero() {
@@ -68,8 +67,7 @@ export function Hero() {
         style={reduceMotion ? undefined : { scale, filter: blur, opacity, skewX: skew }}
         className="relative flex flex-1 flex-col items-center justify-center px-4 text-center"
       >
-        {/* Sony camera drifting in the void behind the type */}
-        <FloatingCamera />
+        {/* The shared camera (CameraJourney) orbits this headline, shooting it */}
 
         {/* AF focus brackets breathing around the headline */}
         <motion.div

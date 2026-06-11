@@ -9,20 +9,15 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
-import { CameraIllustration } from "@/components/fx/FloatingCamera";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 
 /**
- * THE transition. A pinned 300vh sequence between the hero and the archive:
- * the camera flies toward the viewer until its lens swallows the viewport,
- * the aperture iris opens with a strobe pop, and the scroll lands inside a
- * photograph — literally going through the lens.
- *
- * The lens glass sits at 50% / 52.2% of the camera SVG, so every zoom layer
- * shares that transform origin.
+ * The far side of the glass. The shared camera (CameraJourney) dives through
+ * this section: as its lens swallows the viewport, the iris here opens with
+ * a strobe pop and rippling focus rings, landing the scroll inside a
+ * photograph. Timings are tuned to the camera's flight — its zoom happens
+ * over p 0.13–0.37 of this container.
  */
-const LENS_ORIGIN = "50% 52.2%";
-
 export function LensPortal() {
   const { t } = useLanguage();
   const reduceMotion = useReducedMotion();
@@ -35,27 +30,23 @@ export function LensPortal() {
     offset: ["start start", "end end"],
   });
 
-  // Phase A — the camera flies at you (origin on the lens glass)
-  const camScale = useTransform(scrollYProgress, [0, 0.55], [0.9, 12]);
-  const camOpacity = useTransform(scrollYProgress, [0, 0.42, 0.58], [1, 1, 0]);
-
-  // Phase B — the photo opens through an expanding iris
-  const iris = useTransform(scrollYProgress, [0.34, 0.92], [0, 120]);
+  // The photo opens through an expanding iris as the camera glass hits
+  const iris = useTransform(scrollYProgress, [0.1, 0.8], [0, 120]);
   const clipPath = useTransform(iris, (r) => `circle(${r}% at 50% 50%)`);
-  const photoScale = useTransform(scrollYProgress, [0.34, 1], [1.45, 1]);
+  const photoScale = useTransform(scrollYProgress, [0.1, 1], [1.45, 1]);
 
   // Aperture rings rippling outward as the glass breaks open
-  const ringScale = useTransform(scrollYProgress, [0.36, 0.75], [0.1, 3.4]);
+  const ringScale = useTransform(scrollYProgress, [0.12, 0.5], [0.1, 3.4]);
   const ringOpacity = useTransform(
     scrollYProgress,
-    [0.36, 0.5, 0.78],
+    [0.12, 0.28, 0.55],
     [0, 0.9, 0]
   );
 
-  // Strobe pop at the moment of breakthrough
+  // Strobe pop at the moment of breakthrough (camera fully gone)
   const flash = useTransform(
     scrollYProgress,
-    [0.4, 0.46, 0.54],
+    [0.28, 0.34, 0.44],
     [0, 0.9, 0]
   );
 
@@ -68,7 +59,7 @@ export function LensPortal() {
 
   useMotionValueEvent(scrollYProgress, "change", (v) => {
     setFocal(Math.min(670, Math.max(12, Math.round(12 + v * 730))));
-    setInside(v > 0.55);
+    setInside(v > 0.4);
   });
 
   if (reduceMotion) return null;
@@ -106,18 +97,6 @@ export function LensPortal() {
             }`}
           />
         ))}
-
-        {/* The camera you fly through */}
-        <motion.div
-          style={{
-            scale: camScale,
-            opacity: camOpacity,
-            transformOrigin: LENS_ORIGIN,
-          }}
-          className="absolute left-1/2 top-1/2 w-[82vw] max-w-[600px] -translate-x-1/2 -translate-y-1/2 sm:w-[44vw]"
-        >
-          <CameraIllustration />
-        </motion.div>
 
         {/* Strobe pop */}
         <motion.div

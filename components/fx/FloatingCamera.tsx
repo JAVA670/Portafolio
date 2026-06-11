@@ -1,70 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
-import {
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-  useTransform,
-} from "framer-motion";
-
 /**
- * The hero centerpiece: a mirrorless camera drifting in the void behind the
- * brand name. Technical vector illustration — blood-red rim light, knurled
- * lens rings — with a zero-gravity bob and subtle mouse parallax.
+ * The single camera that lives across the hero and the lens portal.
+ * Technical vector illustration — blood-red rim light, knurled lens rings.
  */
-export function FloatingCamera() {
-  const reduceMotion = useReducedMotion();
-
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const x = useSpring(useTransform(mouseX, [-1, 1], [-22, 22]), {
-    stiffness: 40,
-    damping: 18,
-  });
-  const y = useSpring(useTransform(mouseY, [-1, 1], [-14, 14]), {
-    stiffness: 40,
-    damping: 18,
-  });
-  const rotate = useSpring(useTransform(mouseX, [-1, 1], [-4, 4]), {
-    stiffness: 40,
-    damping: 18,
-  });
-
-  useEffect(() => {
-    if (reduceMotion || !window.matchMedia("(pointer: fine)").matches) return;
-    const onMove = (e: MouseEvent) => {
-      mouseX.set((e.clientX / window.innerWidth) * 2 - 1);
-      mouseY.set((e.clientY / window.innerHeight) * 2 - 1);
-    };
-    window.addEventListener("mousemove", onMove, { passive: true });
-    return () => window.removeEventListener("mousemove", onMove);
-  }, [mouseX, mouseY, reduceMotion]);
-
-  return (
-    <motion.div
-      aria-hidden
-      style={reduceMotion ? undefined : { x, y, rotate }}
-      className="pointer-events-none absolute left-1/2 top-1/2 z-0 w-[82vw] max-w-[600px] -translate-x-1/2 -translate-y-1/2 sm:w-[44vw]"
-      initial={{ opacity: 0, scale: 0.92 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay: 1.1, duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-    >
-      <motion.div
-        animate={
-          reduceMotion
-            ? undefined
-            : { y: [-14, 14, -14], rotate: [-1.5, 1.5, -1.5] }
-        }
-        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <CameraIllustration />
-      </motion.div>
-    </motion.div>
-  );
-}
-
 export function CameraIllustration() {
   return (
     <svg
