@@ -51,7 +51,7 @@ export function Preloader() {
         >
           <div className="flex items-center justify-between">
             <p className="font-display text-sm font-bold uppercase tracking-[0.18em]">
-              THROUGHLENSES<span className="text-blood">670</span>
+              THRULENSES<span className="text-blood">670</span>
             </p>
             <p className="tech-label-red animate-flicker">
               ACQUIRING SIGNAL

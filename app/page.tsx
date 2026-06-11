@@ -6,6 +6,7 @@ import { ChapterRail } from "@/components/fx/ChapterRail";
 import { ScrollProgress } from "@/components/fx/ScrollProgress";
 import { MarqueeDivider } from "@/components/fx/MarqueeDivider";
 import { Hero } from "@/components/sections/Hero";
+import { LensPortal } from "@/components/sections/LensPortal";
 import { Gallery } from "@/components/sections/Gallery";
 import { Videos } from "@/components/sections/Videos";
 import { Contact } from "@/components/sections/Contact";
@@ -19,6 +20,7 @@ export default function Home() {
       <ScrollProgress />
       <Header />
       <Hero />
+      <LensPortal />
       <Gallery />
       <MarqueeDivider hot text="999999999 / / AND / / HENRIQUE CAMACHO / / MIJA / / SHIMZA / / + LOCAL HEROES / /" />
       <Videos />

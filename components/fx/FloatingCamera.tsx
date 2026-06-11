@@ -65,7 +65,7 @@ export function FloatingCamera() {
   );
 }
 
-function CameraIllustration() {
+export function CameraIllustration() {
   return (
     <svg
       viewBox="0 0 640 460"

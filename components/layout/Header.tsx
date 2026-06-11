@@ -45,7 +45,7 @@ export function Header() {
           href="#top"
           className="font-display text-sm font-bold uppercase tracking-[0.18em] sm:text-base"
         >
-          THROUGHLENSES<span className="text-blood">670</span>
+          THRULENSES<span className="text-blood">670</span>
         </a>
 
         <nav className="hidden items-center gap-6 md:flex">

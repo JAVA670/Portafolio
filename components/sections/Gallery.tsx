@@ -42,7 +42,7 @@ export function Gallery() {
               <motion.div
                 variants={{ hover: { scale: 1.06 } }}
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute inset-0 grayscale transition-[filter] duration-500 group-hover:grayscale-0"
+                className="absolute inset-0"
               >
                 <SmartImage
                   src={photo.src}
@@ -54,13 +54,10 @@ export function Gallery() {
                 />
               </motion.div>
 
-              {/* Blood hover plate */}
+              {/* Blood hover plate — artistic caption */}
               <div className="absolute inset-x-0 bottom-0 z-10 translate-y-full bg-blood px-3 py-2 transition-transform duration-300 group-hover:translate-y-0">
                 <p className="text-[10px] font-bold tracking-[0.2em] text-void">
-                  {photo.event}
-                </p>
-                <p className="text-[9px] tracking-[0.15em] text-void/70">
-                  {photo.location} / {photo.year}
+                  {photo.caption}
                 </p>
               </div>
 

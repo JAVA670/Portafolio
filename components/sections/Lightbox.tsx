@@ -102,8 +102,8 @@ export function Lightbox({ photos, index, onClose, onNavigate }: LightboxProps) 
             >
               ← {t.gallery.prev}
             </button>
-            <p className="hidden text-center text-[10px] tracking-[0.2em] text-bone sm:block">
-              {photo.event} — {photo.location} — {photo.year}
+            <p className="hidden text-center text-[10px] font-bold tracking-[0.25em] text-laser sm:block">
+              {photo.caption}
             </p>
             <button
               type="button"

@@ -116,6 +116,13 @@ export function Contact() {
               >
                 {contact.email}
               </a>
+              <p className="tech-label-red mt-4">{`> ${t.contact.phoneLabel}`}</p>
+              <a
+                href={contact.phoneHref}
+                className="w-fit text-sm font-bold tracking-[0.1em] underline decoration-smoke underline-offset-4 hover:bg-blood hover:text-void"
+              >
+                {contact.phone}
+              </a>
               <p className="tech-label-red mt-4">{`> ${t.contact.instagram}`}</p>
               <a
                 href={contact.instagramUrl}
