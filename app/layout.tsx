@@ -19,7 +19,7 @@ const mono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "THRULENSES670 — Hard Techno Concert Photography & Videography",
   description:
-    "Concert photography and videography for hard techno events. DJ sets, aftermovies, and raw warehouse coverage. Available worldwide.",
+    "Concert photography and videography for hard techno events. DJ sets, aftermovies, and raw warehouse coverage. Based in USA — available worldwide.",
   keywords: [
     "hard techno",
     "concert photography",
@@ -28,6 +28,20 @@ export const metadata: Metadata = {
     "DJ set",
     "rave",
   ],
+  openGraph: {
+    title: "THRULENSES670",
+    description:
+      "Hard techno concert photography & videography. Shot from inside the crowd.",
+    type: "website",
+    images: [{ url: "/assets/photography/diablo-03.jpg", width: 2000, height: 1333 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "THRULENSES670",
+    description:
+      "Hard techno concert photography & videography. Shot from inside the crowd.",
+    images: ["/assets/photography/diablo-03.jpg"],
+  },
 };
 
 export const viewport: Viewport = {

@@ -30,24 +30,26 @@ export function LensPortal() {
     offset: ["start start", "end end"],
   });
 
-  // The photo opens through an expanding iris as the camera glass hits
-  const iris = useTransform(scrollYProgress, [0.1, 0.8], [0, 120]);
+  // The DOM photo opens behind the 3D tunnel canvas; by the time the canvas
+  // fades (journey P 0.60-0.66 ≈ local 0.40-0.49) it is already near full
+  // bleed showing the same frame the tunnel lands on — a clean matte handoff.
+  const iris = useTransform(scrollYProgress, [0.3, 0.52], [0, 120]);
   const clipPath = useTransform(iris, (r) => `circle(${r}% at 50% 50%)`);
-  const photoScale = useTransform(scrollYProgress, [0.1, 1], [1.45, 1]);
+  const photoScale = useTransform(scrollYProgress, [0.3, 1], [1.18, 1]);
 
-  // Aperture rings rippling outward as the glass breaks open
-  const ringScale = useTransform(scrollYProgress, [0.12, 0.5], [0.1, 3.4]);
+  // Aperture rings rippling outward during the emergence
+  const ringScale = useTransform(scrollYProgress, [0.34, 0.62], [0.1, 3.4]);
   const ringOpacity = useTransform(
     scrollYProgress,
-    [0.12, 0.28, 0.55],
+    [0.34, 0.46, 0.66],
     [0, 0.9, 0]
   );
 
-  // Strobe pop at the moment of breakthrough (camera fully gone)
+  // Strobe pop right as the tunnel hands over to the page
   const flash = useTransform(
     scrollYProgress,
-    [0.28, 0.34, 0.44],
-    [0, 0.9, 0]
+    [0.42, 0.48, 0.58],
+    [0, 0.85, 0]
   );
 
   // HUD
@@ -59,7 +61,7 @@ export function LensPortal() {
 
   useMotionValueEvent(scrollYProgress, "change", (v) => {
     setFocal(Math.min(670, Math.max(12, Math.round(12 + v * 730))));
-    setInside(v > 0.4);
+    setInside(v > 0.46);
   });
 
   if (reduceMotion) return null;
