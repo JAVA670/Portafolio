@@ -37,7 +37,7 @@ export function SharedCamera({ progress }: SharedCameraProps) {
 
   useAnimationFrame((t) => {
     const P = progress.get();
-    if (P > 0.66) {
+    if (P > 0.5) {
       opacity.set(0);
       return;
     }
@@ -57,14 +57,16 @@ export function SharedCamera({ progress }: SharedCameraProps) {
     const cx = lerp(px, 0, blend);
     const cy = lerp(py, 0, blend);
 
-    // --- APPROACH + THROUGH: forward through the letters, then the dive.
+    // --- APPROACH: forward through the letters — only a gentle grow; the
+    // real travel is the 3D tunnel (LensTunnel), which crossfades in before
+    // this vector asset could ever scale enough to soften.
     const approach = lerp(0.95, 1.15, ease(clamp01((P - 0.26) / 0.14)));
-    const zoom = clamp01((P - 0.4) / 0.18);
-    const s = approach * (1 + zoom * zoom * 11);
+    const zoom = clamp01((P - 0.34) / 0.1);
+    const s = approach * (1 + zoom * 1.5);
 
-    // Entrance after the preloader curtain; exit through the glass.
+    // Entrance after the preloader curtain; handoff to the tunnel.
     const intro = clamp01((t - 1400) / 900);
-    const exit = 1 - clamp01((P - 0.56) / 0.05);
+    const exit = 1 - clamp01((P - 0.4) / 0.05);
 
     x.set(cx);
     y.set(cy);

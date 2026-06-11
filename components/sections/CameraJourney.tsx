@@ -5,6 +5,7 @@ import { useReducedMotion, useScroll } from "framer-motion";
 import { Hero } from "@/components/sections/Hero";
 import { LensPortal } from "@/components/sections/LensPortal";
 import { SharedCamera } from "@/components/fx/SharedCamera";
+import { LensTunnel } from "@/components/fx/LensTunnel";
 
 /**
  * The opening act as one continuous shot: a single camera films the brand
@@ -28,6 +29,7 @@ export function CameraJourney() {
       {!reduceMotion && <SharedCamera progress={scrollYProgress} />}
       <Hero />
       <LensPortal />
+      {!reduceMotion && <LensTunnel progress={scrollYProgress} />}
     </div>
   );
 }
