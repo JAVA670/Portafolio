@@ -31,7 +31,8 @@ export function Hero() {
     <section
       ref={sectionRef}
       id="top"
-      className="relative flex h-svh flex-col justify-between overflow-hidden bg-void"
+      // No own background: the journey camera films from behind this section
+      className="relative flex h-svh flex-col justify-between overflow-hidden"
     >
       {/* Heat haze rising from the floor of the frame */}
       <div
