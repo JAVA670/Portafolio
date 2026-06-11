@@ -17,7 +17,7 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "THROUGHLENSES670 — Hard Techno Concert Photography & Videography",
+  title: "THRULENSES670 — Hard Techno Concert Photography & Videography",
   description:
     "Concert photography and videography for hard techno events. DJ sets, aftermovies, and raw warehouse coverage. Available worldwide.",
   keywords: [

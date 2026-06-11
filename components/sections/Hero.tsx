@@ -103,7 +103,7 @@ export function Hero() {
             the preloader curtain lifts. */}
         <h1 className="relative z-10 font-display text-[13vw] font-bold uppercase leading-[0.85] tracking-tighter sm:text-[11vw] lg:text-[9.5vw]">
           <span className="block">
-            <TextReveal text="THROUGH" immediate delay={1.35} stagger={0.045} />
+            <TextReveal text="THRU" immediate delay={1.35} stagger={0.05} />
           </span>
           <span className="block">
             <TextReveal text="LENSES" immediate delay={1.6} stagger={0.045} />
@@ -118,7 +118,7 @@ export function Hero() {
           {/* RGB-split misfire layers */}
           {(["glitch-layer-a", "glitch-layer-b"] as const).map((layer) => (
             <span key={layer} aria-hidden className={`glitch-layer ${layer}`}>
-              THROUGH
+              THRU
               <br />
               LENSES670
             </span>

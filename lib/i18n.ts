@@ -11,6 +11,11 @@ export const dictionary = {
       statement:
         "Shot from inside the crowd. Strobes, smoke and steel — captured at the speed the floor moves.",
     },
+    lens: {
+      label: "OPTICS / 00",
+      enter: "GOING THROUGH THE LENS",
+      lock: "FOCUS LOCKED — WELCOME INSIDE",
+    },
     gallery: {
       label: "ARCHIVE / 01",
       title: "PHOTOGRAPHY",
@@ -46,11 +51,12 @@ export const dictionary = {
       send: "TRANSMIT REQUEST",
       sendHint: "Opens your email client with the request pre-filled.",
       directEmail: "DIRECT EMAIL",
+      phoneLabel: "PHONE",
       instagram: "INSTAGRAM",
-      basedIn: "AVAILABLE WORLDWIDE",
+      basedIn: "BASED IN USA — AVAILABLE WORLDWIDE",
     },
     footer: {
-      rights: "ALL FOOTAGE SHOT + CUT BY THROUGHLENSES670",
+      rights: "ALL FOOTAGE SHOT + CUT BY THRULENSES670",
       ctaLabel: "NEXT EVENT",
       cta: "BOOK THE LENS",
     },
@@ -64,6 +70,11 @@ export const dictionary = {
       marquee: "HOCUS POCUS MIAMI / / AEROTECHNO MEDELLÍN / / LA SOLAR / / 140+ BPM / / MATERIAL CRUDO / / SIN FILTROS / /",
       statement:
         "Disparado desde adentro de la multitud. Strobes, humo y acero — capturado a la velocidad de la pista.",
+    },
+    lens: {
+      label: "ÓPTICA / 00",
+      enter: "ATRAVESANDO EL LENTE",
+      lock: "ENFOQUE BLOQUEADO — BIENVENIDO ADENTRO",
     },
     gallery: {
       label: "ARCHIVO / 01",
@@ -100,11 +111,12 @@ export const dictionary = {
       send: "TRANSMITIR SOLICITUD",
       sendHint: "Abre tu cliente de correo con la solicitud lista.",
       directEmail: "EMAIL DIRECTO",
+      phoneLabel: "TELÉFONO",
       instagram: "INSTAGRAM",
-      basedIn: "DISPONIBLE A NIVEL MUNDIAL",
+      basedIn: "EN ESTADOS UNIDOS — DISPONIBLE A NIVEL MUNDIAL",
     },
     footer: {
-      rights: "TODO EL MATERIAL FILMADO + EDITADO POR THROUGHLENSES670",
+      rights: "TODO EL MATERIAL FILMADO + EDITADO POR THRULENSES670",
       ctaLabel: "PRÓXIMO EVENTO",
       cta: "RESERVA EL LENTE",
     },

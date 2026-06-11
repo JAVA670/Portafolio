@@ -1,4 +1,4 @@
-# THROUGHLENSES670
+# THRULENSES670
 
 Immersive digital portfolio for hard techno concert photography & videography.
 Next.js (App Router, TypeScript) · Tailwind CSS v4 · Framer Motion · Lenis.
