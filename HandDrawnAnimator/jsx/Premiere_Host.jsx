@@ -95,10 +95,23 @@ $.global.HDA_HOST = (function () {
         } catch (e2) { log.push(name + ": setValue failed (" + e2 + ")"); return false; }
     }
 
-    function mogrtFile() {
-        // Premiere_Host.jsx is in /jsx, so the extension root is parent.parent.
-        return new File(new File($.fileName).parent.parent.fsName + "/assets/HandDrawnMaster.mogrt");
+    // The MOGRT can live next to the installed extension OR in the neutral
+    // Documents location Build_Mogrt.jsx exports to (the AE script and the
+    // installed panel are usually in different folders, so we check both).
+    function candidatePaths() {
+        var root = new File($.fileName).parent.parent.fsName; // extension root
+        var docs = Folder.myDocuments ? Folder.myDocuments.fsName : root;
+        return [
+            root + "/assets/HandDrawnMaster.mogrt",
+            docs + "/HandDrawnAnimator/HandDrawnMaster.mogrt"
+        ];
     }
+    function findMogrt() {
+        var p = candidatePaths();
+        for (var i = 0; i < p.length; i++) { var f = new File(p[i]); if (f.exists) return f; }
+        return null;
+    }
+    function pathsList() { return candidatePaths().join("  |  "); }
 
     /* ---------------- public API ---------------------------------------- */
     var api = {};
@@ -106,9 +119,9 @@ $.global.HDA_HOST = (function () {
     api.ping = function () {
         try {
             var seq = app.project ? app.project.activeSequence : null;
-            var has = mogrtFile().exists ? "MOGRT found" : "MOGRT MISSING (run Build_Mogrt.jsx in After Effects)";
+            var has = findMogrt() ? "MOGRT found" : "MOGRT MISSING (run Build_Mogrt.jsx in After Effects)";
             if (!seq) return reply(true, "PPro " + app.version + " — no sequence — " + has);
-            return reply(mogrtFile().exists, '"' + seq.name + '" — ' + has);
+            return reply(!!findMogrt(), '"' + seq.name + '" — ' + has);
         } catch (e) { return reply(false, "ping failed: " + e); }
     };
 
@@ -125,10 +138,11 @@ $.global.HDA_HOST = (function () {
             if (!app.project || !app.project.activeSequence) return reply(false, "Open a sequence first.");
             var seq = app.project.activeSequence;
 
-            var mogrt = mogrtFile();
-            if (!mogrt.exists) {
-                return reply(false, "HandDrawnMaster.mogrt not found in /assets. Run aftereffects/Build_Mogrt.jsx in After Effects first (it exports straight into /assets).", log);
+            var mogrt = findMogrt();
+            if (!mogrt) {
+                return reply(false, "HandDrawnMaster.mogrt not found. Put it in one of these exact paths (or re-run Build_Mogrt.jsx, which now exports to your Documents): " + pathsList(), log);
             }
+            log.push("using MOGRT: " + mogrt.fsName);
 
             var vTrack = seq.videoTracks.numTracks - 1; // top existing video track
             var startTicks = "0";

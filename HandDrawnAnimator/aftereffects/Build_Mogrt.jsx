@@ -222,29 +222,46 @@
     egp(function () { return ctrl.property("ADBE Effect Parade").property("Transition Out").property(1); }, "Transition Out");
     try { comp.openInEssentialGraphics(); } catch (eE) {}
 
-    // ---- export the .mogrt into the Premiere extension's /assets --------
-    // This script lives in HandDrawnAnimator/aftereffects/, so ../assets is
-    // exactly where Premiere_Host.jsx looks for HandDrawnMaster.mogrt.
-    var outPath = null;
+    // ---- export the .mogrt -----------------------------------------------
+    // Export to a NEUTRAL location both halves agree on: <Documents>/
+    // HandDrawnAnimator/HandDrawnMaster.mogrt. The AE script and the installed
+    // Premiere panel usually live in different folders, so a fixed user-space
+    // path avoids the "found it here, looked there" mismatch. We also copy it
+    // next to the script (../assets) in case you run from the extension folder.
+    var primaryPath = null, copyPath = null, exportErr = "";
     try {
-        var here = new File($.fileName);            // .../aftereffects/Build_Mogrt.jsx
-        var assets = new Folder(here.parent.parent.fsName + "/assets");
-        if (!assets.exists) assets.create();
-        var out = new File(assets.fsName + "/HandDrawnMaster.mogrt");
+        var docFolder = new Folder(Folder.myDocuments.fsName + "/HandDrawnAnimator");
+        if (!docFolder.exists) docFolder.create();
+        var out = new File(docFolder.fsName + "/HandDrawnMaster.mogrt");
         var ok = comp.exportAsMotionGraphicsTemplate(true, out.fsName);
-        outPath = ok ? out.fsName : null;
-    } catch (eX) { outPath = null; }
+        // Some AE versions return undefined yet still write the file.
+        if (out.exists) primaryPath = out.fsName;
+        else if (ok) primaryPath = out.fsName;
+    } catch (eX) { exportErr = (function () { try { return eX.toString(); } catch (x) { return "export error"; } })(); }
+
+    if (primaryPath) {
+        try {
+            var assets = new Folder(new File($.fileName).parent.parent.fsName + "/assets");
+            if (!assets.exists) assets.create();
+            var dest = new File(assets.fsName + "/HandDrawnMaster.mogrt");
+            if (new File(primaryPath).copy(dest.fsName)) copyPath = dest.fsName;
+        } catch (eC) {}
+    }
 
     app.endUndoGroup();
 
     var report = "\n\nEssential Graphics controls:\n  " + egpReport.join("\n  ");
 
-    if (outPath) {
-        alert("Hand-Drawn Master built and exported to:\n" + outPath +
-              "\n\nIt's already in the Premiere extension's /assets folder — you're ready to use the panel." + report);
+    if (primaryPath) {
+        var msg = "Hand-Drawn Master exported to:\n" + primaryPath;
+        if (copyPath) msg += "\n(also copied to: " + copyPath + ")";
+        msg += "\n\nThe Premiere panel checks your Documents folder automatically — just click ANIMATE.";
+        alert(msg + report);
     } else {
-        alert("Hand-Drawn Master comp built and opened in Essential Graphics.\n\n" +
-              "Auto-export was unavailable in this AE version — click 'Export Motion Graphics Template…' " +
-              "in the Essential Graphics panel and save it as HandDrawnMaster.mogrt inside the extension's /assets folder." + report);
+        alert("Hand-Drawn Master comp built and opened in Essential Graphics, but AUTO-EXPORT FAILED" +
+              (exportErr ? " (" + exportErr + ")" : "") + ".\n\n" +
+              "Export it by hand: in the Essential Graphics panel click 'Export Motion Graphics Template…' " +
+              "and save it as HandDrawnMaster.mogrt inside:\n" +
+              Folder.myDocuments.fsName + "/HandDrawnAnimator/" + report);
     }
 })();

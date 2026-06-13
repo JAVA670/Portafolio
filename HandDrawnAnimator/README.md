@@ -51,9 +51,13 @@ HandDrawnAnimator/
 2. **File ▸ Scripts ▸ Run Script File…** → choose
    `HandDrawnAnimator/aftereffects/Build_Mogrt.jsx`.
 3. It builds the comp and auto-exports `HandDrawnMaster.mogrt` into
-   `HandDrawnAnimator/assets/`. (If your AE build can't auto-export, it opens
-   the comp in Essential Graphics — click **Export Motion Graphics Template…**
-   and save it as `HandDrawnMaster.mogrt` in `/assets` yourself.)
+   **`<Documents>/HandDrawnAnimator/`** (a neutral location the Premiere panel
+   checks automatically, regardless of where the panel is installed). The
+   final alert prints the exact saved path. (If your AE build can't
+   auto-export, the alert says so and tells you where to **Export Motion
+   Graphics Template…** by hand.)
+   - The Premiere host searches both `<installed-extension>/assets/` **and**
+     `<Documents>/HandDrawnAnimator/`, so either location works.
    - If "Apply expressions" warns about expressions being disabled, enable
      **Preferences ▸ Scripting & Expressions ▸ Allow Scripts to Write Files
      and Access Network**.
