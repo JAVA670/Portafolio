@@ -1,20 +1,37 @@
 # Hand-Drawn Animator — CEP extension for Premiere Pro (2023+)
 
-Automates the frame-by-frame "boil / jitter" aesthetic for text and shape
-graphics: one click applies a displacement warp, an edge-roughening texture
-and Posterize Time, then generates the looping boil animation as keyframes.
+A vintage-hardware-styled panel that animates text & graphics with a
+hand-drawn frame-by-frame "boil / jitter" aesthetic. Type text (or select a
+clip), turn the **ANIMATION** knob to pick a preset, choose a **STYLE**, set
+in/out **TRANSITION** directions on the D-pads, and hit **ANIMATE**.
+
+Under the hood, ANIMATE: (1) targets the selected clip or spawns a text MOGRT
+from the TEXT field, (2) applies a displacement warp + edge-roughening texture
++ Posterize Time and generates the looping boil keyframes, and (3) keyframes a
+directional in/out transition on Motion ▸ Position and Opacity.
 
 ```
 HandDrawnAnimator/
-├── CSXS/manifest.xml        CEP manifest (PPRO ≥ 23.0)
-├── .debug                   remote-debug port (localhost:8088)
-├── index.html               panel UI
-├── css/style.css            dark theme, syncs to Premiere's skin
-├── js/main.js               UI logic → evalScript bridge
-├── lib/CSInterface.js       minimal CEP bridge (drop-in compatible with Adobe's)
+├── CSXS/manifest.xml          CEP manifest (PPRO ≥ 23.0)
+├── .debug                     remote-debug port (localhost:8088)
+├── index.html                 panel UI (skeuomorphic hardware look)
+├── css/style.css              pure-CSS/SVG styling (renders offline)
+├── js/main.js                 control state → evalScript bridge
+├── lib/CSInterface.js         minimal CEP bridge (drop-in compatible)
 ├── jsx/HandDrawnAnimator.jsx  ExtendScript backend (all Premiere work)
-└── assets/BUILD-THE-MOGRT.md  optional AE-grade fallback for PPro < 25.2
+└── assets/BUILD-THE-TEXT-MOGRT.md  one-time text-template recipe
 ```
+
+## Controls
+
+| Control | Maps to |
+|---|---|
+| **ANIMATION** knob (drag or ◀ ▶) | Boil preset: Normal / Calm / Rough / Jitter / Wild → jitter + fps + boil mode |
+| **TEXT HERE** field | Text to create (spawns a MOGRT) or retext a selected MOGRT; leave empty to animate the selection as-is |
+| **STYLE** selector | Edge-texture roughness: None / Pencil / Marker / Bold |
+| **TRANSITION** D-pads | Animate In / Out direction (Up/Down/Left/Right) or center = None |
+| **ANIMATE** | Runs `HDA.animateText(...)` |
+| ⟳ button | Re-checks the timeline selection |
 
 ## Feasibility summary (what the API allows)
 
@@ -22,13 +39,14 @@ HandDrawnAnimator/
 |---|---|---|
 | Add effects to a clip by script | ✅ via QE DOM only | `app.enableQE()` → `qe.project.getVideoEffectByName()` → `qeClip.addVideoEffect()`. The documented DOM cannot add effects. |
 | Modify effect parameters | ✅ documented DOM | `trackItem.components[i].properties` → `ComponentParam.setValue(value, true)` |
-| Keyframes for the boil loop | ✅ documented DOM | `setTimeVarying(true)`, `addKey(t)`, `setValueAtKey(t, v)`, `setInterpolationTypeAtKey(t, 4 /*Hold*/)` — times are clip-relative seconds (`inPoint.seconds → outPoint.seconds`) |
+| Boil + transition keyframes | ✅ documented DOM | `setTimeVarying(true)`, `addKey(t)`, `setValueAtKey(t, v)`, `setInterpolationTypeAtKey` (0=Linear, 4=Hold, 5=Bezier — values verified against Adobe's PProPanel sample); times are clip-relative seconds (`inPoint.seconds → outPoint.seconds`) |
+| Directional in/out transition | ✅ documented DOM | keyframes intrinsic **Motion ▸ Position** + **Opacity ▸ Opacity**; current Position is read first to detect center & coordinate units (normalized vs pixels) |
 | Expressions on Evolution | ❌ impossible | Premiere has no expression engine (AE only) → the script writes real keyframes instead |
+| Create a text layer from scratch | ❌ impossible | no ExtendScript API → spawn a text MOGRT via `sequence.importMGT()` and set Source Text via `getMGTComponent()` (see `assets/BUILD-THE-TEXT-MOGRT.md`), or animate an existing selected clip |
 | Posterize Time | ✅ all supported versions | native Premiere effect (Time category) |
 | Roughen Edges | ✅ Premiere 22.x+ | native (GPU-accelerated since 22.1) — available on the 2023 minimum |
 | Turbulent Displace | ✅ Premiere 25.2+ only | native GPU effect since April 2025; on 23.x/24.x the script auto-falls back to **Wave Warp** (Smooth Noise) |
 | Apply a `.prfpset` preset by script | ❌ impossible | no scripting API for effect presets — QE add-by-name replaces it |
-| AE-grade look on old versions | ✅ MOGRT workaround | `sequence.importMGT()` + `trackItem.getMGTComponent()` — see `assets/BUILD-THE-MOGRT.md` |
 
 ## Install (developer mode)
 
@@ -67,10 +85,15 @@ Tip: symlink instead of copying while developing —
 ### 3. Run it
 
 1. Restart Premiere Pro → **Window ▸ Extensions ▸ Hand-Drawn Animator**.
-2. Open a sequence, select a text/shape graphic clip in the timeline.
-3. Set **Jitter Intensity** and **Boil Rate**, click **Apply Hand-Drawn Effect**.
+2. Open a sequence. Then either:
+   - **Select a text/graphic clip** in the timeline (animate it as-is), or
+   - **Type in TEXT HERE** with nothing selected to spawn a text graphic
+     (requires `assets/HandDrawnText.mogrt` — see that build doc).
+3. Turn the **ANIMATION** knob (preset), pick a **STYLE**, set **Animate
+   In/Out** directions, and click **ANIMATE**.
 4. Check the clip's Effect Controls: warp + edge effects on top, Posterize
-   Time at the bottom (order matters — it quantizes what is above it).
+   Time at the bottom (order matters — it quantizes what is above it), plus
+   Position/Opacity keyframes for the transition.
 
 ### 4. Debugging
 
@@ -94,16 +117,22 @@ Install the `.zxp` with anastasiy's Extension Manager or `ExManCmd`.
 ## Troubleshooting
 
 - **"warp/edges: no candidate effect available"** — your Premiere UI locale
-  names effects differently. Open the panel's *Troubleshooting ▸ effect name
-  finder*, search (e.g. `wave`), and paste the exact name at the front of
-  `FX_CANDIDATES` in `jsx/HandDrawnAnimator.jsx`.
+  names effects differently. Add the exact local name to the front of the
+  `FX` candidate lists at the top of `jsx/HandDrawnAnimator.jsx` (call
+  `HDA.listEffects("wave")` from the console to see what your build exposes).
+- **"Type some text, or select a text/graphic clip"** — nothing was selected
+  and the TEXT field was empty. Select a clip or type text.
+- **"no text parameter exposed in this MOGRT"** — your text template's
+  exposed control isn't named `Text`; re-check `assets/BUILD-THE-TEXT-MOGRT.md`.
+- **Transition shows "Position unreadable — opacity fade only"** — rare on
+  some clip types; the in/out still fades. Position keying needs a readable
+  Motion ▸ Position value.
 - **No Turbulent Displace on 23.x/24.x** — expected; it shipped natively in
-  25.2. The script falls back to Wave Warp, or use the MOGRT route for the
-  real AE effect.
+  25.2. The script falls back to Wave Warp automatically.
 - **Turbulent Displace renders oddly on 25.3** — known Adobe GPU bug in that
   dot release; update Premiere or switch the clip to software rendering.
-- **Nothing happens on Apply** — the panel needs a *timeline* selection
-  (clip highlighted in the sequence), not a Project-panel selection.
+- **Nothing happens** — the panel needs a *timeline* selection (clip
+  highlighted in the sequence), not a Project-panel selection.
 - **QE disclaimer** — `qe` is Adobe's internal QE DOM: undocumented but
   stable for ~a decade and used by Adobe's own PProPanel sample. It is the
   only way to add effects by script; all parameter work uses the documented

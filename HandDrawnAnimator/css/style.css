@@ -325,6 +325,75 @@ button:disabled { opacity: .55; cursor: default; }
   -webkit-user-select: text; user-select: text;
 }
 
+/* ---------------- editable text input ---------------- */
+
+.text-input {
+  flex: 1;
+  min-height: 52px;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  text-align: center;
+  font-family: "Arial Black", Impact, sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: #f1eee7;
+  background: linear-gradient(180deg, #211f1d, #2c2a27);
+  box-shadow:
+    0 2px 5px rgba(0,0,0,.6) inset,
+    0 0 0 1px rgba(0,0,0,.4),
+    0 1px 0 rgba(255,255,255,.4);
+  outline: none;
+}
+.text-input::placeholder { color: #6f6b62; font-weight: 800; letter-spacing: 2px; }
+.text-input:focus { box-shadow: 0 2px 5px rgba(0,0,0,.6) inset, 0 0 0 1.5px #ef5f1f, 0 1px 0 rgba(255,255,255,.4); }
+
+/* ---------------- transition D-pad ---------------- */
+
+.dpad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 5px;
+  width: 100%;
+  max-width: 132px;
+  margin: 0 auto;
+}
+.dbtn {
+  border: none; border-radius: 7px;
+  padding: 0; height: 30px;
+  font-size: 11px; color: #cdcabf;
+  background: linear-gradient(180deg, #45423d, #2c2a27);
+  box-shadow: 0 1px 0 rgba(255,255,255,.12) inset, 0 2px 3px rgba(0,0,0,.4);
+  cursor: pointer;
+}
+.dbtn:active { transform: translateY(1px); }
+.dbtn.up    { grid-column: 2; grid-row: 1; }
+.dbtn.left  { grid-column: 1; grid-row: 2; }
+.dbtn.none  { grid-column: 2; grid-row: 2; font-size: 14px; }
+.dbtn.right { grid-column: 3; grid-row: 2; }
+.dbtn.down  { grid-column: 2; grid-row: 3; }
+.dbtn.on {
+  color: #fff;
+  background: linear-gradient(180deg, #f0641e, #d4521a);
+  box-shadow: 0 0 0 1px rgba(0,0,0,.25) inset, 0 0 8px rgba(240,100,30,.55);
+}
+.dbtn.none.on { color: #fff; }
+.dir-readout { font-size: 10px; }
+
+/* ---------------- status line ---------------- */
+
+.statusline {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 11px; font-weight: 600;
+  color: #6f6b62;
+  min-height: 14px;
+}
+.statusline.ok  { color: #3f7d4e; }
+.statusline.err { color: #c7472f; }
+
 /* ---------------- narrow / docked layout ---------------- */
 
 @media (max-width: 560px) {

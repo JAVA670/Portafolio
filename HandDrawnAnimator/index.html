@@ -9,11 +9,9 @@
 <div class="device">
   <div class="panel">
 
-    <!-- corner screws -->
     <i class="screw s-tl"></i><i class="screw s-tr"></i>
     <i class="screw s-bl"></i><i class="screw s-br"></i>
 
-    <!-- brand -->
     <header class="brand">
       <div class="logo">
         <span class="logo-script">Hand&nbsp;Drawn</span>
@@ -22,19 +20,18 @@
       <span class="version">V 1.0</span>
     </header>
 
-    <!-- main console -->
     <div class="console">
 
-      <!-- LEFT: intensity knob -->
+      <!-- LEFT: ANIMATION preset knob -->
       <section class="bay bay-left">
         <i class="screw s-bay tl"></i><i class="screw s-bay tr"></i>
         <div class="bay-head">
-          <span>INTENSITY</span>
-          <span class="readout" id="intensityReadout">Med</span>
+          <span>ANIMATION</span>
+          <span class="readout" id="animReadout">Normal</span>
         </div>
         <div class="knob-row">
-          <button class="arrow-btn" id="jitterDown" title="Less jitter">&#9664;</button>
-          <div class="knob" id="knob" title="Drag to set Jitter Intensity">
+          <button class="arrow-btn" id="animPrev" title="Previous preset">&#9664;</button>
+          <div class="knob" id="knob" title="Turn to change animation preset">
             <div class="knob-rim">
               <div class="knob-face">
                 <svg class="scribble" viewBox="0 0 100 100" aria-hidden="true">
@@ -44,53 +41,62 @@
                 </svg>
               </div>
             </div>
-            <span class="knob-value" id="jitterValue">40</span>
           </div>
-          <button class="arrow-btn" id="jitterUp" title="More jitter">&#9654;</button>
+          <button class="arrow-btn" id="animNext" title="Next preset">&#9654;</button>
         </div>
       </section>
 
-      <!-- CENTER: status display + style selector -->
+      <!-- CENTER: text + style -->
       <section class="bay bay-center">
         <i class="screw s-bay tl"></i><i class="screw s-bay tr"></i>
         <div class="display-row">
-          <div class="display" id="status">Connecting&hellip;</div>
+          <input type="text" class="text-input" id="textInput" placeholder="TEXT HERE" maxlength="120" spellcheck="false">
           <button class="dropper" id="refresh" title="Re-check timeline selection">&#10227;</button>
         </div>
         <div class="bay-head center"><span>STYLE</span></div>
         <div class="selector-row">
           <button class="arrow-btn" id="stylePrev">&#9664;</button>
-          <div class="selector" id="styleLabel">Random Boil</div>
+          <div class="selector" id="styleLabel">None</div>
           <button class="arrow-btn" id="styleNext">&#9654;</button>
         </div>
       </section>
 
-      <!-- RIGHT: output options -->
+      <!-- RIGHT: TRANSITION (Animate In / Out) -->
       <section class="bay bay-right">
         <i class="screw s-bay tl"></i><i class="screw s-bay tr"></i>
-        <div class="bay-head"><span>OUTPUT</span></div>
+        <div class="bay-head"><span>TRANSITION</span></div>
         <div class="subpanels">
-          <div class="subpanel">
-            <div class="sub-head"><span>Boil Rate</span></div>
-            <div class="rate-toggle" id="rateToggle">
-              <button data-fps="8">8 fps</button>
-              <button data-fps="12" class="on">12 fps</button>
+
+          <div class="subpanel" data-trans="in">
+            <div class="sub-head"><span>Animate In</span><span class="readout dir-readout">None</span></div>
+            <div class="dpad">
+              <button class="dbtn up"    data-dir="up">&#9650;</button>
+              <button class="dbtn left"  data-dir="left">&#9664;</button>
+              <button class="dbtn none on" data-dir="none" title="No animation">&#9863;</button>
+              <button class="dbtn right" data-dir="right">&#9654;</button>
+              <button class="dbtn down"  data-dir="down">&#9660;</button>
             </div>
           </div>
-          <div class="subpanel">
-            <div class="sub-head"><span>Extras</span></div>
-            <button class="mini" id="mogrt" title="Insert AE-look boil MOGRT above the clip">MOGRT</button>
-            <button class="mini" id="find" title="List effect names in this Premiere build">Effects</button>
+
+          <div class="subpanel" data-trans="out">
+            <div class="sub-head"><span>Animate Out</span><span class="readout dir-readout">None</span></div>
+            <div class="dpad">
+              <button class="dbtn up"    data-dir="up">&#9650;</button>
+              <button class="dbtn left"  data-dir="left">&#9664;</button>
+              <button class="dbtn none on" data-dir="none" title="No animation">&#9863;</button>
+              <button class="dbtn right" data-dir="right">&#9654;</button>
+              <button class="dbtn down"  data-dir="down">&#9660;</button>
+            </div>
           </div>
+
         </div>
       </section>
 
     </div>
 
-    <!-- action -->
     <button class="animate-btn" id="apply">ANIMATE</button>
-
     <pre id="log" class="log" hidden></pre>
+    <div id="status" class="statusline">Connecting&hellip;</div>
   </div>
 </div>
 
