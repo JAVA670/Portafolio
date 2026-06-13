@@ -144,15 +144,18 @@ $.global.HDA_HOST = (function () {
             }
             log.push("using MOGRT: " + mogrt.fsName);
 
-            var vTrack = seq.videoTracks.numTracks - 1; // top existing video track
+            // vidTrackOffset / audTrackOffset are OFFSETS, not absolute track
+            // indices — Adobe's own PProPanel sample hardcodes 0, 0. Passing a
+            // track index here makes importMGT fail and return nothing.
+            var vidTrackOffset = 0, audTrackOffset = 0;
             var startTicks = "0";
             try { startTicks = seq.getPlayerPosition().ticks; } catch (e) {}
 
             var item = null;
-            try { item = seq.importMGT(mogrt.fsName, startTicks, vTrack, 0); }
+            try { item = seq.importMGT(mogrt.fsName, startTicks, vidTrackOffset, audTrackOffset); }
             catch (eImp) { return reply(false, "importMGT failed: " + eImp, log); }
-            if (!item) return reply(false, "importMGT returned nothing.", log);
-            log.push("MOGRT imported on V" + (vTrack + 1) + " at playhead");
+            if (!item) return reply(false, "importMGT returned nothing (check the MOGRT exported cleanly).", log);
+            log.push("MOGRT imported at playhead");
 
             var mgt = null;
             try { mgt = item.getMGTComponent(); } catch (eC) { mgt = null; }

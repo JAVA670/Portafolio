@@ -31,12 +31,12 @@
         });
     }
     function ensureBackend(cb) {
-        cs.evalScript("typeof HDA_HOST", function (t) {
-            if (t === "object") { cb(true); return; }
-            var jsx = (cs.getSystemPath(SystemPath.EXTENSION) + "/jsx/Premiere_Host.jsx").replace(/\\/g, "/");
-            cs.evalScript('$.evalFile("' + jsx + '")', function () {
-                cs.evalScript("typeof HDA_HOST", function (t2) { cb(t2 === "object"); });
-            });
+        // Always re-load the host from disk so panel reloads pick up edits
+        // (Premiere's ExtendScript engine caches HDA_HOST across panel opens,
+        // so checking "typeof HDA_HOST" first would keep a stale version).
+        var jsx = (cs.getSystemPath(SystemPath.EXTENSION) + "/jsx/Premiere_Host.jsx").replace(/\\/g, "/");
+        cs.evalScript('$.evalFile("' + jsx + '")', function () {
+            cs.evalScript("typeof HDA_HOST", function (t) { cb(t === "object"); });
         });
     }
 
