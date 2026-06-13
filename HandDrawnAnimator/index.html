@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hand-Drawn Animator</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header>
+    <h1>Hand-Drawn Animator</h1>
+    <span class="version">v1.0.0</span>
+  </header>
+
+  <div id="status" class="status">Connecting to Premiere Pro…</div>
+
+  <section class="card">
+    <label class="row" for="jitter">
+      <span>Jitter Intensity</span>
+      <output id="jitterValue">40</output>
+    </label>
+    <input type="range" id="jitter" min="0" max="100" step="1" value="40">
+    <p class="hint">Maps to the displacement amount (Turbulent Displace &gt; Amount, or Wave Warp height/width on older versions).</p>
+  </section>
+
+  <section class="card">
+    <span class="row"><span>Boil Rate</span></span>
+    <div class="segmented" role="radiogroup" aria-label="Boil rate">
+      <label><input type="radio" name="fps" value="8"><span>8 fps</span></label>
+      <label><input type="radio" name="fps" value="12" checked><span>12 fps</span></label>
+    </div>
+    <p class="hint">Posterize Time frame rate and keyframe spacing.</p>
+  </section>
+
+  <section class="card">
+    <label class="check">
+      <input type="checkbox" id="holdKeys" checked>
+      <span>Generate hold keyframes (random boil)</span>
+    </label>
+    <p class="hint">On: a hold keyframe per boil frame on Evolution / Phase — authentic random jitter. Off: continuous auto-animation quantized by Posterize Time.</p>
+  </section>
+
+  <button id="apply" class="primary">Apply Hand-Drawn Effect</button>
+  <button id="mogrt" class="secondary" title="Inserts assets/HandDrawnBoil.mogrt above the selected clip">Insert Boil MOGRT (AE look)</button>
+
+  <details>
+    <summary>Troubleshooting · effect name finder</summary>
+    <div class="finder">
+      <input type="text" id="findTerm" placeholder="e.g. wave, turbulent, posterize">
+      <button id="find" class="secondary small">Find</button>
+    </div>
+    <p class="hint">Lists matching effect names in your Premiere build/locale. If an effect is reported missing, put the exact local name into <code>FX_CANDIDATES</code> in <code>jsx/HandDrawnAnimator.jsx</code>.</p>
+  </details>
+
+  <pre id="log" class="log" hidden></pre>
+
+  <script src="lib/CSInterface.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

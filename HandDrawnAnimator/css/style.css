@@ -1,0 +1,195 @@
+/* Hand-Drawn Animator — panel styling.
+   Defaults match Premiere's darkest UI theme; main.js overwrites --bg and
+   --card at runtime from the host's appSkinInfo so the panel always blends
+   with the user's chosen brightness. */
+
+:root {
+  --bg: #232323;
+  --card: #2d2d2d;
+  --border: #3a3a3a;
+  --text: #d6d6d6;
+  --text-dim: #9a9a9a;
+  --accent: #1473e6;       /* Adobe blue */
+  --accent-hover: #2b85f2;
+  --ok: #3da45c;
+  --err: #d4543f;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  font-size: 12px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+body { padding: 10px 12px 16px; }
+
+header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+h1 {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  margin: 0;
+}
+
+.version { color: var(--text-dim); font-size: 10px; }
+
+.status {
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--text-dim);
+  border-radius: 3px;
+  background: var(--card);
+  color: var(--text-dim);
+  padding: 6px 8px;
+  margin-bottom: 10px;
+  min-height: 16px;
+  line-height: 1.4;
+}
+.status.ok  { border-left-color: var(--ok);  color: var(--text); }
+.status.err { border-left-color: var(--err); color: var(--text); }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+output { color: var(--accent); font-weight: 700; }
+
+.hint {
+  color: var(--text-dim);
+  font-size: 10.5px;
+  line-height: 1.45;
+  margin: 6px 0 0;
+}
+
+/* slider */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+  outline: none;
+  margin: 6px 0 2px;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb:hover { background: var(--accent-hover); }
+
+/* segmented fps switch */
+.segmented { display: flex; gap: 6px; }
+.segmented label { flex: 1; }
+.segmented input { display: none; }
+.segmented span {
+  display: block;
+  text-align: center;
+  padding: 6px 0;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  cursor: pointer;
+  color: var(--text-dim);
+}
+.segmented input:checked + span {
+  border-color: var(--accent);
+  color: #fff;
+  background: rgba(20, 115, 230, 0.18);
+}
+
+/* checkbox */
+.check { display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer; }
+.check input { accent-color: var(--accent); }
+
+/* buttons */
+button {
+  width: 100%;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: background 0.12s ease;
+}
+button:disabled { opacity: 0.5; cursor: default; }
+
+.primary { background: var(--accent); color: #fff; }
+.primary:hover:not(:disabled) { background: var(--accent-hover); }
+
+.secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.secondary:hover:not(:disabled) { border-color: var(--text-dim); }
+.secondary.small { width: auto; padding: 6px 14px; margin: 0; }
+
+/* troubleshooting */
+details { margin: 4px 0 10px; }
+summary { color: var(--text-dim); cursor: pointer; font-size: 11px; outline: none; }
+.finder { display: flex; gap: 6px; margin-top: 8px; }
+.finder input[type="text"] {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text);
+  padding: 6px 8px;
+  outline: none;
+}
+.finder input[type="text"]:focus { border-color: var(--accent); }
+
+code {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 0 3px;
+  font-size: 10px;
+}
+
+.log {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-dim);
+  font-family: Consolas, Menlo, monospace;
+  font-size: 10.5px;
+  line-height: 1.5;
+  padding: 8px;
+  margin: 0;
+  max-height: 180px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  -webkit-user-select: text;
+  user-select: text;
+}
