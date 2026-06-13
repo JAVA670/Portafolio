@@ -52,11 +52,25 @@
     }
     function expr(prop, str) { try { prop.expression = str; } catch (e) { /* expressions off */ } }
     function lines() { var a = []; for (var i = 0; i < arguments.length; i++) a.push(arguments[i]); return a.join("\n"); }
-    function egp(prop, name) {
+    // `getProp` is a function so a stale/invalid reference is caught here, not
+    // at the call site. Adding effects to a layer invalidates previously
+    // stored references to its other effects, so callers re-resolve by name.
+    var egpReport = [];
+    function egp(getProp, name) {
+        var prop;
+        try { prop = getProp(); } catch (e) { egpReport.push("✗ " + name + " (unavailable: " + e + ")"); return; }
+        if (!prop) { egpReport.push("✗ " + name + " (not found)"); return; }
         try {
-            if (prop.canAddToMotionGraphicsTemplate(comp)) prop.addToMotionGraphicsTemplateAs(comp, name);
+            var can = true;
+            try { can = prop.canAddToMotionGraphicsTemplate(comp); } catch (eC) { can = true; }
+            if (can && prop.addToMotionGraphicsTemplateAs) prop.addToMotionGraphicsTemplateAs(comp, name);
+            else if (prop.addToMotionGraphicsTemplate) prop.addToMotionGraphicsTemplate(comp);
             else prop.addToMotionGraphicsTemplateAs(comp, name);
-        } catch (e) { try { prop.addToMotionGraphicsTemplate(comp); } catch (e2) {} }
+            egpReport.push("✓ " + name);
+        } catch (e2) {
+            try { prop.addToMotionGraphicsTemplate(comp); egpReport.push("✓ " + name + " (default name)"); }
+            catch (e3) { egpReport.push("✗ " + name + " (" + e2 + ")"); }
+        }
     }
     function addDropdown(layer, name, items) {
         var e = fx(layer, "ADBE Dropdown Control", name);
@@ -93,7 +107,7 @@
 
     // Fill effect → gives us an EGP-able "Fill Color" the user can drive
     var fill = fx(txt, "ADBE Fill", "Fill Color");
-    fill.property("Color").setValue([1, 1, 1, 1]);
+    try { fill.property("Color").setValue([1, 1, 1, 1]); } catch (eFill) { try { fill.property("Color").setValue([1, 1, 1]); } catch (eFill2) {} }
 
     // --- hand-drawn boil on the text -------------------------------------
     // Turbulent Displace = line wobble; Evolution animates infinitely via time*.
@@ -195,12 +209,15 @@
     } catch (eM) { /* older AE: set protected regions manually in the EGP */ }
 
     // ---- Essential Graphics linking -------------------------------------
-    egp(txt.property("ADBE Text Properties").property("ADBE Text Document"), "Source Text");
-    egp(fill.property("Color"), "Fill Color");
-    egp(dSpeed.property(1), "Animation Speed");   // .property(1) = the menu
-    egp(dStyle.property(1), "Style");
-    egp(dIn.property(1), "Transition In");
-    egp(dOut.property(1), "Transition Out");
+    // Re-resolve every effect by name from a FRESH effect parade: references
+    // captured earlier (fill, dSpeed, …) went stale when later effects were
+    // added to the same layer. Layer property groups (Source Text) are stable.
+    egp(function () { return txt.property("ADBE Text Properties").property("ADBE Text Document"); }, "Source Text");
+    egp(function () { return txt.property("ADBE Effect Parade").property("Fill Color").property("Color"); }, "Fill Color");
+    egp(function () { return ctrl.property("ADBE Effect Parade").property("Animation Speed").property(1); }, "Animation Speed");
+    egp(function () { return ctrl.property("ADBE Effect Parade").property("Style").property(1); }, "Style");
+    egp(function () { return ctrl.property("ADBE Effect Parade").property("Transition In").property(1); }, "Transition In");
+    egp(function () { return ctrl.property("ADBE Effect Parade").property("Transition Out").property(1); }, "Transition Out");
     try { comp.openInEssentialGraphics(); } catch (eE) {}
 
     // ---- export the .mogrt into the Premiere extension's /assets --------
@@ -218,12 +235,14 @@
 
     app.endUndoGroup();
 
+    var report = "\n\nEssential Graphics controls:\n  " + egpReport.join("\n  ");
+
     if (outPath) {
         alert("Hand-Drawn Master built and exported to:\n" + outPath +
-              "\n\nIt's already in the Premiere extension's /assets folder — you're ready to use the panel.");
+              "\n\nIt's already in the Premiere extension's /assets folder — you're ready to use the panel." + report);
     } else {
         alert("Hand-Drawn Master comp built and opened in Essential Graphics.\n\n" +
               "Auto-export was unavailable in this AE version — click 'Export Motion Graphics Template…' " +
-              "in the Essential Graphics panel and save it as HandDrawnMaster.mogrt inside the extension's /assets folder.");
+              "in the Essential Graphics panel and save it as HandDrawnMaster.mogrt inside the extension's /assets folder." + report);
     }
 })();
