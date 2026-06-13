@@ -77,6 +77,10 @@
     function addDropdown(layer, name, items) {
         var e = fx(layer, "ADBE Dropdown Control", name);
         try { e.property(1).setPropertyParameters(items); } catch (er) {}
+        // Link to EGP NOW, while `e` is a fresh, valid reference. Resolving
+        // these by name at the end of the script returns null in some AE
+        // builds, so link eagerly. e.property(1) is the dropdown's menu.
+        egp(function () { return e.property(1); }, name);
         return e;
     }
 
@@ -110,6 +114,11 @@
     // Fill effect → gives us an EGP-able "Fill Color" the user can drive
     var fill = fx(txt, "ADBE Fill", "Fill Color");
     try { fill.property("Color").setValue([1, 1, 1, 1]); } catch (eFill) { try { fill.property("Color").setValue([1, 1, 1]); } catch (eFill2) {} }
+
+    // Link text + color to EGP NOW, before adding the boil effects below
+    // (adding sibling effects would invalidate the `fill` reference).
+    egp(function () { return txt.property("ADBE Text Properties").property("ADBE Text Document"); }, "Source Text");
+    egp(function () { return fill.property("Color"); }, "Fill Color");
 
     // --- hand-drawn boil on the text -------------------------------------
     // Turbulent Displace = line wobble; Evolution animates infinitely via time*.
@@ -210,16 +219,10 @@
         comp.markerProperty.setValueAtTime(DUR - OUTRO, mOut);
     } catch (eM) { /* older AE: set protected regions manually in the EGP */ }
 
-    // ---- Essential Graphics linking -------------------------------------
-    // Re-resolve every effect by name from a FRESH effect parade: references
-    // captured earlier (fill, dSpeed, …) went stale when later effects were
-    // added to the same layer. Layer property groups (Source Text) are stable.
-    egp(function () { return txt.property("ADBE Text Properties").property("ADBE Text Document"); }, "Source Text");
-    egp(function () { return txt.property("ADBE Effect Parade").property("Fill Color").property("Color"); }, "Fill Color");
-    egp(function () { return ctrl.property("ADBE Effect Parade").property("Animation Speed").property(1); }, "Animation Speed");
-    egp(function () { return ctrl.property("ADBE Effect Parade").property("Style").property(1); }, "Style");
-    egp(function () { return ctrl.property("ADBE Effect Parade").property("Transition In").property(1); }, "Transition In");
-    egp(function () { return ctrl.property("ADBE Effect Parade").property("Transition Out").property(1); }, "Transition Out");
+    // ---- Essential Graphics ---------------------------------------------
+    // Every control was linked to the EGP at creation time, while its
+    // reference was fresh (see addDropdown() and the TEXT/Fill section above).
+    // Re-resolving by name here failed for the dropdowns in some AE builds.
     try { comp.openInEssentialGraphics(); } catch (eE) {}
 
     // ---- export the .mogrt -----------------------------------------------
