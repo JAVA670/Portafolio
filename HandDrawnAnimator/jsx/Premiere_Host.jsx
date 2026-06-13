@@ -159,7 +159,7 @@ $.global.HDA_HOST = (function () {
 
             var mgt = null;
             try { mgt = item.getMGTComponent(); } catch (eC) { mgt = null; }
-            if (!mgt) return reply(false, "getMGTComponent() returned nothing — set values via the Essential Graphics panel.", log);
+            if (!mgt) return reply(true, "Graphic placed on the timeline, but its controls weren't reachable by script — adjust Text/Style/etc. in the Essential Graphics panel.", log);
 
             // Inject every control. Names MUST match those set in Build_Mogrt.jsx.
             if (d.text != null && String(d.text) !== "") setText(mgt, "Source Text", d.text, log);
