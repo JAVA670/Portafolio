@@ -35,7 +35,7 @@
           <MainPath>./index.html</MainPath>
           <!-- ScriptPath is auto-loaded into Premiere's ExtendScript engine
                the first time the panel calls evalScript(). -->
-          <ScriptPath>./jsx/HandDrawnAnimator.jsx</ScriptPath>
+          <ScriptPath>./jsx/Premiere_Host.jsx</ScriptPath>
           <CEFCommandLine>
             <Parameter>--allow-file-access</Parameter>
             <Parameter>--allow-file-access-from-files</Parameter>

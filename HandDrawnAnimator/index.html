@@ -20,77 +20,61 @@
       <span class="version">V 1.0</span>
     </header>
 
-    <div class="console">
+    <div class="form">
 
-      <!-- LEFT: ANIMATION preset knob -->
-      <section class="bay bay-left">
-        <i class="screw s-bay tl"></i><i class="screw s-bay tr"></i>
-        <div class="bay-head">
-          <span>ANIMATION</span>
-          <span class="readout" id="animReadout">Normal</span>
-        </div>
-        <div class="knob-row">
-          <button class="arrow-btn" id="animPrev" title="Previous preset">&#9664;</button>
-          <div class="knob" id="knob" title="Turn to change animation preset">
-            <div class="knob-rim">
-              <div class="knob-face">
-                <svg class="scribble" viewBox="0 0 100 100" aria-hidden="true">
-                  <path d="M30 64 C18 50 38 30 52 40 C66 50 44 70 36 56 C30 46 56 28 70 38 C82 47 60 72 48 60"
-                        fill="none" stroke="#f4f1ea" stroke-width="4"
-                        stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-          <button class="arrow-btn" id="animNext" title="Next preset">&#9654;</button>
-        </div>
-      </section>
+      <label class="field">
+        <span class="lbl">Animation Speed</span>
+        <select id="speed">
+          <option value="1">Light</option>
+          <option value="2" selected>Normal</option>
+          <option value="3">Heavy</option>
+        </select>
+      </label>
 
-      <!-- CENTER: text + style -->
-      <section class="bay bay-center">
-        <i class="screw s-bay tl"></i><i class="screw s-bay tr"></i>
-        <div class="display-row">
-          <input type="text" class="text-input" id="textInput" placeholder="TEXT HERE" maxlength="120" spellcheck="false">
-          <button class="dropper" id="refresh" title="Re-check timeline selection">&#10227;</button>
-        </div>
-        <div class="bay-head center"><span>STYLE</span></div>
-        <div class="selector-row">
-          <button class="arrow-btn" id="stylePrev">&#9664;</button>
-          <div class="selector" id="styleLabel">None</div>
-          <button class="arrow-btn" id="styleNext">&#9654;</button>
-        </div>
-      </section>
+      <label class="field">
+        <span class="lbl">Text</span>
+        <textarea id="text" rows="2" placeholder="Hello World" spellcheck="false">Hello World</textarea>
+      </label>
 
-      <!-- RIGHT: TRANSITION (Animate In / Out) -->
-      <section class="bay bay-right">
-        <i class="screw s-bay tl"></i><i class="screw s-bay tr"></i>
-        <div class="bay-head"><span>TRANSITION</span></div>
-        <div class="subpanels">
+      <label class="field">
+        <span class="lbl">Fill Color</span>
+        <span class="color-wrap">
+          <input type="color" id="color" value="#ffffff">
+          <span class="hex" id="hex">#FFFFFF</span>
+        </span>
+      </label>
 
-          <div class="subpanel" data-trans="in">
-            <div class="sub-head"><span>Animate In</span><span class="readout dir-readout">None</span></div>
-            <div class="dpad">
-              <button class="dbtn up"    data-dir="up">&#9650;</button>
-              <button class="dbtn left"  data-dir="left">&#9664;</button>
-              <button class="dbtn none on" data-dir="none" title="No animation">&#9863;</button>
-              <button class="dbtn right" data-dir="right">&#9654;</button>
-              <button class="dbtn down"  data-dir="down">&#9660;</button>
-            </div>
-          </div>
+      <label class="field">
+        <span class="lbl">Style</span>
+        <select id="style">
+          <option value="1" selected>None</option>
+          <option value="2">Grunge</option>
+          <option value="3">Film</option>
+          <option value="4">VHS</option>
+          <option value="5">Paper</option>
+        </select>
+      </label>
 
-          <div class="subpanel" data-trans="out">
-            <div class="sub-head"><span>Animate Out</span><span class="readout dir-readout">None</span></div>
-            <div class="dpad">
-              <button class="dbtn up"    data-dir="up">&#9650;</button>
-              <button class="dbtn left"  data-dir="left">&#9664;</button>
-              <button class="dbtn none on" data-dir="none" title="No animation">&#9863;</button>
-              <button class="dbtn right" data-dir="right">&#9654;</button>
-              <button class="dbtn down"  data-dir="down">&#9660;</button>
-            </div>
-          </div>
-
-        </div>
-      </section>
+      <div class="field-row">
+        <label class="field">
+          <span class="lbl">Transition In</span>
+          <select id="transIn">
+            <option value="1" selected>Up</option>
+            <option value="2">Down</option>
+            <option value="3">Left</option>
+            <option value="4">Right</option>
+          </select>
+        </label>
+        <label class="field">
+          <span class="lbl">Transition Out</span>
+          <select id="transOut">
+            <option value="1">Up</option>
+            <option value="2" selected>Down</option>
+            <option value="3">Left</option>
+            <option value="4">Right</option>
+          </select>
+        </label>
+      </div>
 
     </div>
 
