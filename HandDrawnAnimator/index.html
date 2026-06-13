@@ -6,53 +6,93 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<div class="device">
+  <div class="panel">
 
-  <header>
-    <h1>Hand-Drawn Animator</h1>
-    <span class="version">v1.0.0</span>
-  </header>
+    <!-- corner screws -->
+    <i class="screw s-tl"></i><i class="screw s-tr"></i>
+    <i class="screw s-bl"></i><i class="screw s-br"></i>
 
-  <div id="status" class="status">Connecting to Premiere Pro…</div>
+    <!-- brand -->
+    <header class="brand">
+      <div class="logo">
+        <span class="logo-script">Hand&nbsp;Drawn</span>
+        <span class="logo-bold">ANIMATOR</span>
+      </div>
+      <span class="version">V 1.0</span>
+    </header>
 
-  <section class="card">
-    <label class="row" for="jitter">
-      <span>Jitter Intensity</span>
-      <output id="jitterValue">40</output>
-    </label>
-    <input type="range" id="jitter" min="0" max="100" step="1" value="40">
-    <p class="hint">Maps to the displacement amount (Turbulent Displace &gt; Amount, or Wave Warp height/width on older versions).</p>
-  </section>
+    <!-- main console -->
+    <div class="console">
 
-  <section class="card">
-    <span class="row"><span>Boil Rate</span></span>
-    <div class="segmented" role="radiogroup" aria-label="Boil rate">
-      <label><input type="radio" name="fps" value="8"><span>8 fps</span></label>
-      <label><input type="radio" name="fps" value="12" checked><span>12 fps</span></label>
+      <!-- LEFT: intensity knob -->
+      <section class="bay bay-left">
+        <i class="screw s-bay tl"></i><i class="screw s-bay tr"></i>
+        <div class="bay-head">
+          <span>INTENSITY</span>
+          <span class="readout" id="intensityReadout">Med</span>
+        </div>
+        <div class="knob-row">
+          <button class="arrow-btn" id="jitterDown" title="Less jitter">&#9664;</button>
+          <div class="knob" id="knob" title="Drag to set Jitter Intensity">
+            <div class="knob-rim">
+              <div class="knob-face">
+                <svg class="scribble" viewBox="0 0 100 100" aria-hidden="true">
+                  <path d="M30 64 C18 50 38 30 52 40 C66 50 44 70 36 56 C30 46 56 28 70 38 C82 47 60 72 48 60"
+                        fill="none" stroke="#f4f1ea" stroke-width="4"
+                        stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <span class="knob-value" id="jitterValue">40</span>
+          </div>
+          <button class="arrow-btn" id="jitterUp" title="More jitter">&#9654;</button>
+        </div>
+      </section>
+
+      <!-- CENTER: status display + style selector -->
+      <section class="bay bay-center">
+        <i class="screw s-bay tl"></i><i class="screw s-bay tr"></i>
+        <div class="display-row">
+          <div class="display" id="status">Connecting&hellip;</div>
+          <button class="dropper" id="refresh" title="Re-check timeline selection">&#10227;</button>
+        </div>
+        <div class="bay-head center"><span>STYLE</span></div>
+        <div class="selector-row">
+          <button class="arrow-btn" id="stylePrev">&#9664;</button>
+          <div class="selector" id="styleLabel">Random Boil</div>
+          <button class="arrow-btn" id="styleNext">&#9654;</button>
+        </div>
+      </section>
+
+      <!-- RIGHT: output options -->
+      <section class="bay bay-right">
+        <i class="screw s-bay tl"></i><i class="screw s-bay tr"></i>
+        <div class="bay-head"><span>OUTPUT</span></div>
+        <div class="subpanels">
+          <div class="subpanel">
+            <div class="sub-head"><span>Boil Rate</span></div>
+            <div class="rate-toggle" id="rateToggle">
+              <button data-fps="8">8 fps</button>
+              <button data-fps="12" class="on">12 fps</button>
+            </div>
+          </div>
+          <div class="subpanel">
+            <div class="sub-head"><span>Extras</span></div>
+            <button class="mini" id="mogrt" title="Insert AE-look boil MOGRT above the clip">MOGRT</button>
+            <button class="mini" id="find" title="List effect names in this Premiere build">Effects</button>
+          </div>
+        </div>
+      </section>
+
     </div>
-    <p class="hint">Posterize Time frame rate and keyframe spacing.</p>
-  </section>
 
-  <section class="card">
-    <label class="check">
-      <input type="checkbox" id="holdKeys" checked>
-      <span>Generate hold keyframes (random boil)</span>
-    </label>
-    <p class="hint">On: a hold keyframe per boil frame on Evolution / Phase — authentic random jitter. Off: continuous auto-animation quantized by Posterize Time.</p>
-  </section>
+    <!-- action -->
+    <button class="animate-btn" id="apply">ANIMATE</button>
 
-  <button id="apply" class="primary">Apply Hand-Drawn Effect</button>
-  <button id="mogrt" class="secondary" title="Inserts assets/HandDrawnBoil.mogrt above the selected clip">Insert Boil MOGRT (AE look)</button>
-
-  <details>
-    <summary>Troubleshooting · effect name finder</summary>
-    <div class="finder">
-      <input type="text" id="findTerm" placeholder="e.g. wave, turbulent, posterize">
-      <button id="find" class="secondary small">Find</button>
-    </div>
-    <p class="hint">Lists matching effect names in your Premiere build/locale. If an effect is reported missing, put the exact local name into <code>FX_CANDIDATES</code> in <code>jsx/HandDrawnAnimator.jsx</code>.</p>
-  </details>
-
-  <pre id="log" class="log" hidden></pre>
+    <pre id="log" class="log" hidden></pre>
+  </div>
+</div>
 
   <script src="lib/CSInterface.js"></script>
   <script src="js/main.js"></script>

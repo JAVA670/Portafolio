@@ -1,7 +1,7 @@
 /* Hand-Drawn Animator — panel logic.
-   All Premiere work happens in jsx/HandDrawnAnimator.jsx; this file only
-   collects UI values, calls the backend through evalScript, and renders the
-   JSON replies. */
+   The Premiere work lives in jsx/HandDrawnAnimator.jsx; this file collects
+   the hardware-style control state (rotary knob, STYLE selector, rate
+   toggle), calls the backend through evalScript, and renders JSON replies. */
 
 (function () {
     "use strict";
@@ -9,19 +9,24 @@
     var cs = null;
     var insideHost = !!window.__adobe_cep__;
 
-    var el = {
-        status: null, log: null,
-        jitter: null, jitterValue: null, holdKeys: null,
-        apply: null, mogrt: null, find: null, findTerm: null
-    };
+    // control state
+    var jitter = 40;                 // 0..100, rotary knob
+    var fps = 12;                    // 8 | 12
+    var STYLES = [
+        { label: "Random Boil", hold: true },   // hold keyframes per boil frame
+        { label: "Smooth Wave", hold: false }    // continuous, quantized by Posterize Time
+    ];
+    var styleIdx = 0;
 
+    var el = {};
     function $(id) { return document.getElementById(id); }
 
     /* ---------- output helpers ---------- */
 
     function setStatus(msg, kind) {
+        el.status.innerHTML = "";
         el.status.textContent = msg;
-        el.status.className = "status" + (kind ? " " + kind : "");
+        el.status.className = "display" + (kind ? " " + kind : "");
     }
 
     function setLog(lines) {
@@ -36,24 +41,78 @@
         el.find.disabled = b;
     }
 
+    /* ---------- knob ---------- */
+
+    function intensityLabel(v) {
+        return v < 34 ? "Low" : (v < 67 ? "Med" : "High");
+    }
+
+    function renderKnob() {
+        el.jitterValue.textContent = jitter;
+        el.intensityReadout.textContent = intensityLabel(jitter);
+        // map 0..100 -> -135deg .. +135deg
+        var deg = -135 + (jitter / 100) * 270;
+        el.knobRim.style.transform = "rotate(" + deg + "deg)";
+    }
+
+    function setJitter(v) {
+        jitter = Math.max(0, Math.min(100, Math.round(v)));
+        renderKnob();
+    }
+
+    function bindKnobDrag() {
+        var dragging = false, startY = 0, startVal = 0;
+        function down(e) {
+            dragging = true;
+            startY = (e.touches ? e.touches[0].clientY : e.clientY);
+            startVal = jitter;
+            e.preventDefault();
+        }
+        function move(e) {
+            if (!dragging) return;
+            var y = (e.touches ? e.touches[0].clientY : e.clientY);
+            setJitter(startVal + (startY - y) * 0.7); // drag up = more
+        }
+        function up() { dragging = false; }
+        el.knob.addEventListener("mousedown", down);
+        el.knob.addEventListener("touchstart", down);
+        document.addEventListener("mousemove", move);
+        document.addEventListener("touchmove", move);
+        document.addEventListener("mouseup", up);
+        document.addEventListener("touchend", up);
+    }
+
+    /* ---------- style + rate ---------- */
+
+    function renderStyle() { el.styleLabel.textContent = STYLES[styleIdx].label; }
+
+    function cycleStyle(dir) {
+        styleIdx = (styleIdx + dir + STYLES.length) % STYLES.length;
+        renderStyle();
+    }
+
+    function setRate(value) {
+        fps = value;
+        var btns = el.rateToggle.getElementsByTagName("button");
+        for (var i = 0; i < btns.length; i++) {
+            if (parseInt(btns[i].getAttribute("data-fps"), 10) === fps) btns[i].className = "on";
+            else btns[i].className = "";
+        }
+    }
+
     /* ---------- backend bridge ---------- */
 
     function runJSX(call, cb) {
         cs.evalScript(call, function (res) {
             if (!res || res === "EvalScript error.") {
-                cb({ ok: false, message: "ExtendScript error — open http://localhost:8088 to debug, or check that jsx/HandDrawnAnimator.jsx loaded." });
+                cb({ ok: false, message: "ExtendScript error — see http://localhost:8088 to debug." });
                 return;
             }
-            try {
-                cb(JSON.parse(res));
-            } catch (e) {
-                cb({ ok: false, message: "Unreadable backend reply: " + res });
-            }
+            try { cb(JSON.parse(res)); }
+            catch (e) { cb({ ok: false, message: "Unreadable reply: " + res }); }
         });
     }
 
-    // ScriptPath in the manifest normally auto-loads the jsx; if the HDA
-    // namespace is missing (some hosts only load it lazily), evalFile it.
     function ensureBackend(cb) {
         cs.evalScript("typeof HDA", function (t) {
             if (t === "object") { cb(true); return; }
@@ -67,23 +126,16 @@
 
     /* ---------- actions ---------- */
 
-    function currentFps() {
-        return document.querySelector('input[name="fps"]:checked').value;
-    }
-
     function ping() {
-        runJSX("HDA.ping()", function (r) {
-            setStatus(r.message, r.ok ? "ok" : "err");
-        });
+        runJSX("HDA.ping()", function (r) { setStatus(r.message, r.ok ? "ok" : "err"); });
     }
 
-    function applyEffect() {
-        var jitter = parseInt(el.jitter.value, 10) || 0;
-        var hold = el.holdKeys.checked ? "true" : "false";
+    function animate() {
+        var hold = STYLES[styleIdx].hold ? "true" : "false";
         busy(true);
         setStatus("Applying hand-drawn effect…");
         setLog(null);
-        runJSX("HDA.applyEffect(" + jitter + "," + currentFps() + "," + hold + ")", function (r) {
+        runJSX("HDA.applyEffect(" + jitter + "," + fps + "," + hold + ")", function (r) {
             busy(false);
             setStatus(r.message, r.ok ? "ok" : "err");
             setLog(r.log);
@@ -91,11 +143,10 @@
     }
 
     function insertMogrt() {
-        var jitter = parseInt(el.jitter.value, 10) || 0;
         busy(true);
         setStatus("Inserting boil MOGRT…");
         setLog(null);
-        runJSX("HDA.applyBoilMogrt(" + jitter + "," + currentFps() + ")", function (r) {
+        runJSX("HDA.applyBoilMogrt(" + jitter + "," + fps + ")", function (r) {
             busy(false);
             setStatus(r.message, r.ok ? "ok" : "err");
             setLog(r.log);
@@ -103,32 +154,12 @@
     }
 
     function findEffects() {
-        // quotes/backslashes stripped: the term is embedded in an eval string
-        var term = el.findTerm.value.replace(/["'\\\r\n]/g, "");
         busy(true);
-        runJSX('HDA.listEffects("' + term + '")', function (r) {
+        runJSX('HDA.listEffects("")', function (r) {
             busy(false);
             setStatus(r.message, r.ok ? "ok" : "err");
             setLog(r.log);
         });
-    }
-
-    /* ---------- host theme sync ---------- */
-
-    function clamp8(v) { return Math.max(0, Math.min(255, Math.round(v))); }
-
-    function applyTheme() {
-        try {
-            var color = cs.getHostEnvironment().appSkinInfo.panelBackgroundColor.color;
-            var root = document.documentElement.style;
-            root.setProperty("--bg", "rgb(" + clamp8(color.red) + "," + clamp8(color.green) + "," + clamp8(color.blue) + ")");
-            root.setProperty("--card", "rgb(" + clamp8(color.red + 10) + "," + clamp8(color.green + 10) + "," + clamp8(color.blue + 10) + ")");
-            root.setProperty("--border", "rgb(" + clamp8(color.red + 24) + "," + clamp8(color.green + 24) + "," + clamp8(color.blue + 24) + ")");
-            if (color.red > 128) { // light UI themes
-                root.setProperty("--text", "#1f1f1f");
-                root.setProperty("--text-dim", "#5a5a5a");
-            }
-        } catch (e) { /* keep CSS defaults */ }
     }
 
     /* ---------- init ---------- */
@@ -136,40 +167,44 @@
     window.addEventListener("load", function () {
         el.status = $("status");
         el.log = $("log");
-        el.jitter = $("jitter");
+        el.knob = $("knob");
+        el.knobRim = el.knob.getElementsByClassName("knob-rim")[0];
         el.jitterValue = $("jitterValue");
-        el.holdKeys = $("holdKeys");
+        el.intensityReadout = $("intensityReadout");
+        el.styleLabel = $("styleLabel");
+        el.rateToggle = $("rateToggle");
         el.apply = $("apply");
         el.mogrt = $("mogrt");
         el.find = $("find");
-        el.findTerm = $("findTerm");
+        el.refresh = $("refresh");
 
-        el.jitter.addEventListener("input", function () {
-            el.jitterValue.textContent = el.jitter.value;
+        renderKnob();
+        renderStyle();
+        bindKnobDrag();
+
+        $("jitterDown").addEventListener("click", function () { setJitter(jitter - 5); });
+        $("jitterUp").addEventListener("click", function () { setJitter(jitter + 5); });
+        $("stylePrev").addEventListener("click", function () { cycleStyle(-1); });
+        $("styleNext").addEventListener("click", function () { cycleStyle(1); });
+        el.rateToggle.addEventListener("click", function (ev) {
+            var b = ev.target;
+            if (b && b.getAttribute("data-fps")) setRate(parseInt(b.getAttribute("data-fps"), 10));
         });
 
         if (!insideHost) {
-            setStatus("Running outside Premiere Pro — UI preview only.", "err");
+            setStatus("UI preview — open inside Premiere Pro to apply.", "err");
             busy(true);
             return;
         }
 
         cs = new CSInterface();
-        applyTheme();
-        cs.addEventListener(CSInterface.THEME_COLOR_CHANGED_EVENT, applyTheme);
-
-        el.apply.addEventListener("click", applyEffect);
+        el.apply.addEventListener("click", animate);
         el.mogrt.addEventListener("click", insertMogrt);
         el.find.addEventListener("click", findEffects);
-        el.findTerm.addEventListener("keydown", function (ev) {
-            if (ev.key === "Enter") findEffects();
-        });
+        el.refresh.addEventListener("click", ping);
 
         ensureBackend(function (ok) {
-            if (!ok) {
-                setStatus("Could not load jsx/HandDrawnAnimator.jsx into the host.", "err");
-                return;
-            }
+            if (!ok) { setStatus("Could not load HandDrawnAnimator.jsx.", "err"); return; }
             ping();
         });
     });

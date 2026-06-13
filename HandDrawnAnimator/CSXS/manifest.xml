@@ -49,16 +49,16 @@
           <Menu>Hand-Drawn Animator</Menu>
           <Geometry>
             <Size>
-              <Height>620</Height>
-              <Width>340</Width>
+              <Height>380</Height>
+              <Width>800</Width>
             </Size>
             <MinSize>
-              <Height>480</Height>
-              <Width>300</Width>
+              <Height>340</Height>
+              <Width>460</Width>
             </MinSize>
             <MaxSize>
-              <Height>1400</Height>
-              <Width>700</Width>
+              <Height>900</Height>
+              <Width>1200</Width>
             </MaxSize>
           </Geometry>
         </UI>
