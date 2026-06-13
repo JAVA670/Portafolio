@@ -75,13 +75,15 @@
         }
     }
     function addDropdown(layer, name, items) {
-        var e = fx(layer, "ADBE Dropdown Control", name);
-        try { e.property(1).setPropertyParameters(items); } catch (er) {}
-        // Link to EGP NOW, while `e` is a fresh, valid reference. Resolving
-        // these by name at the end of the script returns null in some AE
-        // builds, so link eagerly. e.property(1) is the dropdown's menu.
-        egp(function () { return e.property(1); }, name);
-        return e;
+        var added = layer.property("ADBE Effect Parade").addProperty("ADBE Dropdown Control");
+        var idx = added.propertyIndex;                  // stable position on the layer
+        // setPropertyParameters() rebuilds the menu and INVALIDATES `added`
+        // (and resets the effect name), so do it first, then re-fetch by index
+        // for the rename and EGP link — never reuse the pre-call reference.
+        try { added.property(1).setPropertyParameters(items); } catch (er) {}
+        try { layer.property("ADBE Effect Parade").property(idx).name = name; } catch (eN) {}
+        egp(function () { return layer.property("ADBE Effect Parade").property(idx).property(1); }, name);
+        return layer.property("ADBE Effect Parade").property(idx);
     }
 
     // ---- master comp -----------------------------------------------------
@@ -124,19 +126,19 @@
     // Turbulent Displace = line wobble; Evolution animates infinitely via time*.
     var tdisp = fx(txt, "ADBE Turbulent Displace", "Boil Wobble");
     expr(tdisp.property("Amount"), lines(
-        "var sp = thisComp.layer('CONTROLS').effect('Animation Speed')('Menu');",
+        "var sp = thisComp.layer('CONTROLS').effect('Animation Speed')(1);",
         "(sp==1)?15:(sp==2)?32:60;"   // Light / Normal / Heavy displacement
     ));
     tdisp.property("Size").setValue(40);
     expr(tdisp.property("Evolution"), lines(
-        "var sp = thisComp.layer('CONTROLS').effect('Animation Speed')('Menu');",
+        "var sp = thisComp.layer('CONTROLS').effect('Animation Speed')(1);",
         "time * ((sp==1)?40:(sp==2)?90:160);"   // infinite boil, speed-scaled
     ));
 
     // Roughen Edges = marker/pencil edge; Evolution also time-driven.
     var rough = fx(txt, "ADBE Roughen Edges", "Edge Texture");
     expr(rough.property("Border"), lines(
-        "var s = thisComp.layer('CONTROLS').effect('Style')('Menu');",
+        "var s = thisComp.layer('CONTROLS').effect('Style')(1);",
         "(s==2)?22:8;"   // Grunge = rougher border
     ));
     expr(rough.property("Evolution"), "time * 70;");
@@ -144,15 +146,15 @@
     // Posterize Time = stepped 'animated-on-twos' look; ~12fps (Heavy = chunkier).
     var post = fx(txt, "ADBE Posterize Time", "Stepped Boil");
     expr(post.property("Frame Rate"), lines(
-        "var sp = thisComp.layer('CONTROLS').effect('Animation Speed')('Menu');",
+        "var sp = thisComp.layer('CONTROLS').effect('Animation Speed')(1);",
         "(sp==3)?8:12;"
     ));
 
     // --- directional in/out transition (Position expression, no keyframes)
     expr(txt.property("ADBE Transform Group").property("ADBE Position"), lines(
         "var ctrl = thisComp.layer('CONTROLS');",
-        "var inD  = ctrl.effect('Transition In')('Menu');",   // 1 Up,2 Down,3 Left,4 Right
-        "var outD = ctrl.effect('Transition Out')('Menu');",
+        "var inD  = ctrl.effect('Transition In')(1);",   // 1 Up,2 Down,3 Left,4 Right
+        "var outD = ctrl.effect('Transition Out')(1);",
         "var c = [thisComp.width/2, thisComp.height/2];",
         "var dur = " + TRANS + ";",
         "var dist = thisComp.width;",
@@ -169,7 +171,7 @@
     // Each overlay's opacity = (Style == itsIndex) ? 100 : 0
     function gateOpacity(layer, styleIndex) {
         expr(layer.property("ADBE Transform Group").property("ADBE Opacity"), lines(
-            "var s = thisComp.layer('CONTROLS').effect('Style')('Menu');",
+            "var s = thisComp.layer('CONTROLS').effect('Style')(1);",
             "(s==" + styleIndex + ")?100:0;"
         ));
     }
