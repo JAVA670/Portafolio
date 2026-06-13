@@ -52,24 +52,26 @@
     }
     function expr(prop, str) { try { prop.expression = str; } catch (e) { /* expressions off */ } }
     function lines() { var a = []; for (var i = 0; i < arguments.length; i++) a.push(arguments[i]); return a.join("\n"); }
+    // Safely turn any thrown value into a string. Implicitly coercing an
+    // ExtendScript Error object with "+" throws "object of type error found
+    // where a number/array/property is needed", so never concatenate raw `e`.
+    function safeErr(e) {
+        try { return String(e.toString()); } catch (x1) {}
+        try { return String(e.description); } catch (x2) {}
+        return "unknown error";
+    }
     // `getProp` is a function so a stale/invalid reference is caught here, not
     // at the call site. Adding effects to a layer invalidates previously
     // stored references to its other effects, so callers re-resolve by name.
     var egpReport = [];
     function egp(getProp, name) {
-        var prop;
-        try { prop = getProp(); } catch (e) { egpReport.push("✗ " + name + " (unavailable: " + e + ")"); return; }
-        if (!prop) { egpReport.push("✗ " + name + " (not found)"); return; }
-        try {
-            var can = true;
-            try { can = prop.canAddToMotionGraphicsTemplate(comp); } catch (eC) { can = true; }
-            if (can && prop.addToMotionGraphicsTemplateAs) prop.addToMotionGraphicsTemplateAs(comp, name);
-            else if (prop.addToMotionGraphicsTemplate) prop.addToMotionGraphicsTemplate(comp);
-            else prop.addToMotionGraphicsTemplateAs(comp, name);
-            egpReport.push("✓ " + name);
-        } catch (e2) {
-            try { prop.addToMotionGraphicsTemplate(comp); egpReport.push("✓ " + name + " (default name)"); }
-            catch (e3) { egpReport.push("✗ " + name + " (" + e2 + ")"); }
+        var prop = null;
+        try { prop = getProp(); } catch (e) { egpReport.push("[skip] " + name + ": " + safeErr(e)); return; }
+        if (!prop) { egpReport.push("[skip] " + name + ": property not found"); return; }
+        try { prop.addToMotionGraphicsTemplateAs(comp, name); egpReport.push("[ok] " + name); return; }
+        catch (e2) {
+            try { prop.addToMotionGraphicsTemplate(comp); egpReport.push("[ok] " + name + " (default name)"); return; }
+            catch (e3) { egpReport.push("[skip] " + name + ": " + safeErr(e3)); }
         }
     }
     function addDropdown(layer, name, items) {
