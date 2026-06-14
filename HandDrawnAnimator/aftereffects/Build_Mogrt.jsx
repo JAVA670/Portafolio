@@ -40,6 +40,7 @@
     var STYLE_ITEMS = ["None", "Grunge", "Film", "VHS", "Paper"];
     var SPEED_ITEMS = ["Light", "Normal", "Heavy"];
     var DIR_ITEMS   = ["Up", "Down", "Left", "Right"];
+    var BUILDER_VERSION = "v8-clean"; // shown in the final alert to verify this build
 
     if (!app.project) app.newProject();
     app.beginUndoGroup("Build Hand-Drawn Master MOGRT");
@@ -255,15 +256,22 @@
 
     app.endUndoGroup();
 
-    var report = "\n\nEssential Graphics controls:\n  " + egpReport.join("\n  ");
+    // Count any controls that failed to link.
+    var skips = 0;
+    for (var ri = 0; ri < egpReport.length; ri++) { if (egpReport[ri].indexOf("[skip]") === 0) skips++; }
+    var header = "Hand-Drawn Animator builder " + BUILDER_VERSION + "\n";
+    var clean = (skips === 0)
+        ? "\n\nAll 6 controls linked OK. Also check the comp viewer: there should be NO orange 'expression errors' banner. If it's clean, the MOGRT is good."
+        : "\n\n*** WARNING: " + skips + " control(s) did NOT link ([skip] below). The MOGRT is INCOMPLETE — send me this list before importing. ***";
+    var report = clean + "\n\nEssential Graphics controls:\n  " + egpReport.join("\n  ");
 
     if (primaryPath) {
-        var msg = "Hand-Drawn Master exported to:\n" + primaryPath;
-        if (copyPath) msg += "\n(also copied to: " + copyPath + ")";
-        msg += "\n\nThe Premiere panel checks your Documents folder automatically — just click ANIMATE.";
+        var msg = header + "Exported to:\n" + primaryPath;
+        if (copyPath) msg += "\n(also copied to the extension /assets: " + copyPath + ")";
+        msg += "\n\nThe Premiere panel finds it automatically — click ANIMATE.";
         alert(msg + report);
     } else {
-        alert("Hand-Drawn Master comp built and opened in Essential Graphics, but AUTO-EXPORT FAILED" +
+        alert(header + "Comp built and opened in Essential Graphics, but AUTO-EXPORT FAILED" +
               (exportErr ? " (" + exportErr + ")" : "") + ".\n\n" +
               "Export it by hand: in the Essential Graphics panel click 'Export Motion Graphics Template…' " +
               "and save it as HandDrawnMaster.mogrt inside:\n" +
