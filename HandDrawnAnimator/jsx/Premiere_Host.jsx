@@ -1,29 +1,48 @@
 /*
  * Premiere_Host.jsx — Hand-Drawn Animator back-end (Premiere Pro)
  * ===========================================================================
- * Receives a JSON payload from the panel (main.js → CSInterface.evalScript),
- * imports HandDrawnMaster.mogrt onto the active sequence at the playhead, and
- * injects the user's text / color / style / transition choices into the
- * MOGRT's Essential Graphics parameters.
+ * NATIVE mode: applies the hand-drawn look directly to the clip you've
+ * selected on the timeline — no After Effects, no MOGRT, no importMGT (which
+ * proved unreliable for scripted import of AE-built MOGRTs on some setups).
  *
- * ExtendScript is ES3. Premiere has no guaranteed JSON object, so the payload
- * is parsed with a guarded eval (the data is produced by our own UI). All
- * host calls are wrapped so failures are reported, not thrown.
+ * Workflow: make a text/shape graphic in Premiere (Type tool), select it on
+ * the timeline, set the panel controls, click ANIMATE. This script then:
+ *   1. adds Turbulent Displace (or Wave Warp) + Roughen Edges + Posterize Time
+ *      via the QE DOM and tunes them for a SUBTLE, readable boil,
+ *   2. keyframes Evolution/Phase for the infinite "boil" jitter,
+ *   3. keyframes Motion>Position + Opacity for the directional in/out.
  *
- * API surface (and why):
- *   activeSequence.importMGT(path, ticksString, vTrackIndex, aTrackIndex)
- *       imports the .mogrt at the playhead on the top video track.
- *   trackItem.getMGTComponent()
- *       returns the MOGRT's parameter component (the EGP controls).
- *   mgtComponent.properties.getParamForDisplayName(name)
- *       resolves an exposed control by the name we gave it in After Effects;
- *       ComponentParam.setValue(value, updateUI) writes it (this is the
- *       documented equivalent of the conceptual "setParameterValue").
+ * ExtendScript is ES3. Every host call is wrapped so failures are reported,
+ * not thrown.
+ *
+ * API used: app.enableQE() + qe.project.getVideoEffectByName() +
+ * qeClip.addVideoEffect() (the only scripting route to ADD an effect);
+ * trackItem.components[].properties[] ComponentParam keyframing
+ * (setValue/setTimeVarying/addKey/setValueAtKey/setInterpolationTypeAtKey,
+ * 0=Linear,4=Hold,5=Bezier; times are clip seconds inPoint→outPoint).
  */
 
 $.global.HDA_HOST = (function () {
 
-    var HOST_VERSION = "v7-trackoffset"; // bump on each host change to verify the loaded build
+    var HOST_VERSION = "v9-native";
+    var KF_LINEAR = 0, KF_HOLD = 4, KF_BEZIER = 5;
+    var MAX_KEYS = 1500;
+
+    var FX = {
+        warp: ["Turbulent Displace", "Desplazamiento turbulento", "Wave Warp", "Deformación de onda"],
+        edges: ["Roughen Edges", "Bordes rugosos", "Brush Strokes", "Trazos de pincel"],
+        posterize: ["Posterize Time", "Tiempo de posterización"]
+    };
+
+    // Animation Speed (1 Light, 2 Normal, 3 Heavy) -> subtle, READABLE boil.
+    var SPEED = [
+        null,
+        { amount: 4,  fps: 12 },   // Light
+        { amount: 8,  fps: 12 },   // Normal
+        { amount: 15, fps: 8 }     // Heavy
+    ];
+    // Style (1 None..5 Paper) -> edge-texture border (0 = skip Roughen Edges).
+    var STYLE_BORDER = [0, 1, 6, 2, 2, 3]; // index 0 unused; None=1px,Grunge=6,...
 
     /* ---------------- JSON reply (ES3 has no JSON) ---------------------- */
     function jsonStr(s) {
@@ -39,7 +58,7 @@ $.global.HDA_HOST = (function () {
         return '"' + out + '"';
     }
     function reply(ok, message, log) {
-        var r = '{"ok":' + (ok ? "true" : "false") + ',"message":' + jsonStr(message);
+        var r = '{"ok":' + (ok ? "true" : "false") + ',"message":' + jsonStr("[" + HOST_VERSION + "] " + message);
         if (log && log.length) {
             r += ',"log":[';
             for (var i = 0; i < log.length; i++) r += (i ? "," : "") + jsonStr(log[i]);
@@ -47,9 +66,6 @@ $.global.HDA_HOST = (function () {
         }
         return r + "}";
     }
-
-    /* ---------------- payload parsing ----------------------------------- */
-    // The payload is our own UI's JSON; parse with JSON if present, else eval.
     function parsePayload(s) {
         s = String(s == null ? "" : s);
         if (typeof JSON !== "undefined" && JSON.parse) { try { return JSON.parse(s); } catch (e) {} }
@@ -57,63 +73,195 @@ $.global.HDA_HOST = (function () {
         if (t.charAt(0) !== "{") return null;
         try { return eval("(" + t + ")"); } catch (e2) { return null; }
     }
+    function clampNum(v, lo, hi, d) { v = Number(v); if (isNaN(v)) v = d; if (v < lo) v = lo; if (v > hi) v = hi; return v; }
+    function round2(v) { return Math.round(v * 100) / 100; }
+    function lc(s) { return String(s == null ? "" : s).toLowerCase(); }
 
-    function hexToRgbNorm(hex) {
-        hex = String(hex || "#ffffff").replace("#", "");
-        if (hex.length === 3) hex = hex.charAt(0) + hex.charAt(0) + hex.charAt(1) + hex.charAt(1) + hex.charAt(2) + hex.charAt(2);
-        var r = parseInt(hex.substr(0, 2), 16) / 255;
-        var g = parseInt(hex.substr(2, 2), 16) / 255;
-        var b = parseInt(hex.substr(4, 2), 16) / 255;
-        if (isNaN(r) || isNaN(g) || isNaN(b)) return [1, 1, 1, 1];
-        return [r, g, b, 1];
+    /* ---------------- selection + QE lookup ----------------------------- */
+    function selectedVideoClips(seq) {
+        var out = [];
+        for (var t = 0; t < seq.videoTracks.numTracks; t++) {
+            var track = seq.videoTracks[t];
+            for (var c = 0; c < track.clips.numItems; c++) {
+                var ti = track.clips[c], sel = false;
+                try { sel = ti.isSelected(); } catch (e) { sel = false; }
+                if (sel) out.push({ clip: ti, trackIndex: t, clipOrdinal: c });
+            }
+        }
+        return out;
     }
-
-    /* ---------------- MOGRT parameter injection ------------------------- */
-    function getParam(mgt, name) {
-        try { return mgt.properties.getParamForDisplayName(name); } catch (e) { return null; }
-    }
-    function setText(mgt, name, value, log) {
-        var p = getParam(mgt, name);
-        if (!p) { log.push(name + ": not exposed in this MOGRT"); return false; }
-        try { p.setValue(String(value), 1); log.push(name + ' = "' + value + '"'); return true; }
-        catch (e) { log.push(name + ": setValue failed (" + e + ")"); return false; }
-    }
-    function setIndex(mgt, name, idx, log) {
-        var p = getParam(mgt, name);
-        if (!p) { log.push(name + ": not exposed in this MOGRT"); return false; }
-        // Dropdown EGP params are 1-based (matching the AE menu order).
-        try { p.setValue(idx, 1); log.push(name + " = " + idx); return true; }
-        catch (e) { log.push(name + ": setValue failed (" + e + ")"); return false; }
-    }
-    function setColor(mgt, name, hex, log) {
-        var p = getParam(mgt, name);
-        if (!p) { log.push(name + ": not exposed in this MOGRT"); return false; }
-        var rgbaN = hexToRgbNorm(hex);
-        // Color params vary by build: try normalized [r,g,b,a] 0..1, then 0..255.
-        try { p.setValue(rgbaN, 1); log.push(name + " = " + hex); return true; } catch (e) {}
-        try {
-            var rgba255 = [Math.round(rgbaN[0] * 255), Math.round(rgbaN[1] * 255), Math.round(rgbaN[2] * 255), 255];
-            p.setValue(rgba255, 1); log.push(name + " = " + hex + " (0-255)"); return true;
-        } catch (e2) { log.push(name + ": setValue failed (" + e2 + ")"); return false; }
-    }
-
-    // The MOGRT can live next to the installed extension OR in the neutral
-    // Documents location Build_Mogrt.jsx exports to (the AE script and the
-    // installed panel are usually in different folders, so we check both).
-    function candidatePaths() {
-        var root = new File($.fileName).parent.parent.fsName; // extension root
-        var docs = Folder.myDocuments ? Folder.myDocuments.fsName : root;
-        return [
-            root + "/assets/HandDrawnMaster.mogrt",
-            docs + "/HandDrawnAnimator/HandDrawnMaster.mogrt"
-        ];
-    }
-    function findMogrt() {
-        var p = candidatePaths();
-        for (var i = 0; i < p.length; i++) { var f = new File(p[i]); if (f.exists) return f; }
+    function qeClipAt(trackIndex, clipOrdinal) {
+        var qeSeq = qe.project.getActiveSequence();
+        if (!qeSeq) return null;
+        var qeTrack = null;
+        try { qeTrack = qeSeq.getVideoTrackAt(trackIndex); } catch (e) { return null; }
+        if (!qeTrack) return null;
+        var ord = -1;
+        for (var i = 0; i < qeTrack.numItems; i++) {
+            var it = null;
+            try { it = qeTrack.getItemAt(i); } catch (e2) { it = null; }
+            if (it && String(it.type) !== "Empty") { ord++; if (ord === clipOrdinal) return it; }
+        }
         return null;
     }
-    function pathsList() { return candidatePaths().join("  |  "); }
+
+    /* ---------------- effects + params ---------------------------------- */
+    function findComponentByNames(domClip, names) {
+        var comps = domClip.components;
+        for (var n = 0; n < names.length; n++) {
+            var want = lc(names[n]), found = null;
+            for (var i = 0; i < comps.numItems; i++) {
+                var c = comps[i];
+                if (c && lc(c.displayName) === want) found = c;
+            }
+            if (found) return { comp: found, name: names[n] };
+        }
+        return null;
+    }
+    function ensureEffect(domClip, qeClip, candidates, log, label) {
+        var existing = findComponentByNames(domClip, candidates);
+        if (existing) { log.push(label + ': reusing "' + existing.name + '"'); return existing; }
+        for (var i = 0; i < candidates.length; i++) {
+            var fx = null;
+            try { fx = qe.project.getVideoEffectByName(candidates[i]); } catch (e) { fx = null; }
+            if (!fx) continue;
+            try { qeClip.addVideoEffect(fx); } catch (e2) { continue; }
+            var added = findComponentByNames(domClip, [candidates[i]]);
+            if (added) { log.push(label + ': added "' + candidates[i] + '"'); return added; }
+        }
+        log.push(label + ": no candidate effect available — skipped");
+        return null;
+    }
+    function findParam(component, names) {
+        var props = component.properties;
+        for (var n = 0; n < names.length; n++) {
+            var want = lc(names[n]);
+            for (var i = 0; i < props.numItems; i++) {
+                var p = props[i];
+                if (p && lc(p.displayName) === want) return p;
+            }
+        }
+        return null;
+    }
+    function setNum(component, names, value, log, label) {
+        var p = findParam(component, names);
+        if (!p) { log.push(label + ": param not found"); return false; }
+        try { p.setTimeVarying(false); } catch (e0) {}
+        try { p.setValue(value, true); log.push(label + " = " + value); return true; }
+        catch (e) { log.push(label + ": setValue failed"); return false; }
+    }
+
+    /* ---------------- keyframes ----------------------------------------- */
+    function clearKeys(param, t0, t1) { try { param.removeKeyRange(t0 - 1, t1 + 1, true); } catch (e) {} }
+    function setKeys(param, keys, interp) {
+        if (!param || !keys.length) return false;
+        try { param.setTimeVarying(true); } catch (e) { return false; }
+        clearKeys(param, keys[0][0], keys[keys.length - 1][0]);
+        for (var i = 0; i < keys.length; i++) {
+            try { param.addKey(keys[i][0]); param.setValueAtKey(keys[i][0], keys[i][1], false); param.setInterpolationTypeAtKey(keys[i][0], interp, false); } catch (e2) {}
+        }
+        return true;
+    }
+    function boilHoldKeys(param, t0, t1, fps, log, label) {
+        try { param.setTimeVarying(true); } catch (e) { log.push(label + ": not keyframeable"); return; }
+        clearKeys(param, t0, t1);
+        var step = 1 / fps, n = Math.floor((t1 - t0) / step) + 1;
+        if (n > MAX_KEYS) n = MAX_KEYS;
+        for (var i = 0; i < n; i++) {
+            var t = t0 + i * step, v = round2((i * 137.508) % 360);
+            param.addKey(t); param.setValueAtKey(t, v, false);
+            try { param.setInterpolationTypeAtKey(t, KF_HOLD, false); } catch (e2) {}
+        }
+        log.push(label + ": " + n + " boil keys @ " + fps + "fps");
+    }
+
+    /* ---------------- transition (Position + Opacity) ------------------- */
+    function readCenter(pos) {
+        var c = null; try { c = pos.getValue(); } catch (e) { return null; }
+        if (!c || c.length !== 2) return null;
+        var cx = c[0], cy = c[1], norm = (Math.abs(cx) <= 2 && Math.abs(cy) <= 2);
+        return { cx: cx, cy: cy, ox: norm ? 1.2 : (Math.abs(cx) * 2 || 1920), oy: norm ? 1.2 : (Math.abs(cy) * 2 || 1080) };
+    }
+    function startPos(dir, c) { // 1 Up,2 Down,3 Left,4 Right — direction of travel
+        if (dir === 1) return [c.cx, c.cy + c.oy];
+        if (dir === 2) return [c.cx, c.cy - c.oy];
+        if (dir === 3) return [c.cx + c.ox, c.cy];
+        if (dir === 4) return [c.cx - c.ox, c.cy];
+        return [c.cx, c.cy];
+    }
+    function endPos(dir, c) {
+        if (dir === 1) return [c.cx, c.cy - c.oy];
+        if (dir === 2) return [c.cx, c.cy + c.oy];
+        if (dir === 3) return [c.cx - c.ox, c.cy];
+        if (dir === 4) return [c.cx + c.ox, c.cy];
+        return [c.cx, c.cy];
+    }
+    function applyTransition(clip, t0, t1, inDir, outDir, log) {
+        if (!inDir && !outDir) { log.push("transition: none"); return; }
+        var dur = Math.min(0.5, (t1 - t0) / 3);
+        if (dur <= 0.001) { log.push("transition: clip too short"); return; }
+        var motion = findComponentByNames(clip, ["Motion", "Movimiento"]);
+        var pos = motion ? findParam(motion.comp, ["Position", "Posición"]) : null;
+        var opC = findComponentByNames(clip, ["Opacity", "Opacidad"]);
+        var op = opC ? findParam(opC.comp, ["Opacity", "Opacidad"]) : null;
+        if (pos) {
+            var c = readCenter(pos);
+            if (c) {
+                var k = [];
+                if (inDir) { k.push([t0, startPos(inDir, c)]); k.push([t0 + dur, [c.cx, c.cy]]); }
+                if (outDir) { k.push([t1 - dur, [c.cx, c.cy]]); k.push([t1, endPos(outDir, c)]); }
+                setKeys(pos, k, KF_BEZIER);
+                log.push("transition: position slide");
+            } else { log.push("transition: position unreadable — opacity only"); }
+        }
+        if (op) {
+            var ok = [];
+            if (inDir) { ok.push([t0, 0]); ok.push([t0 + dur, 100]); }
+            if (outDir) { ok.push([t1 - dur, 100]); ok.push([t1, 0]); }
+            setKeys(op, ok, KF_LINEAR);
+        }
+    }
+
+    /* ---------------- per-clip application ------------------------------ */
+    function applyToClip(entry, speed, border, inDir, outDir, log) {
+        var clip = entry.clip;
+        var qeClip = qeClipAt(entry.trackIndex, entry.clipOrdinal);
+        if (!qeClip) { log.push("QE counterpart not found — skipped"); return false; }
+        var t0 = clip.inPoint.seconds, t1 = clip.outPoint.seconds;
+
+        var warp = ensureEffect(clip, qeClip, FX.warp, log, "warp");
+        if (warp) {
+            var nm = lc(warp.name);
+            if (nm.indexOf("turbulent") !== -1 || nm.indexOf("turbulento") !== -1) {
+                setNum(warp.comp, ["Amount", "Cantidad"], speed.amount, log, "Turbulent > Amount");
+                setNum(warp.comp, ["Size", "Tamaño"], 60, log, "Turbulent > Size"); // large = smooth, readable
+                var evo = findParam(warp.comp, ["Evolution", "Evolución"]);
+                if (evo) boilHoldKeys(evo, t0, t1, speed.fps, log, "Turbulent > Evolution");
+            } else {
+                var wt = findParam(warp.comp, ["Wave Type", "Tipo de onda"]);
+                if (wt) { try { wt.setValue(8, true); } catch (e) {} }
+                setNum(warp.comp, ["Wave Height", "Altura de onda"], Math.round(speed.amount / 4), log, "Wave > Height");
+                setNum(warp.comp, ["Wave Width", "Anchura de onda"], 60, log, "Wave > Width");
+                var ph = findParam(warp.comp, ["Phase", "Fase"]);
+                if (ph) { setNum(warp.comp, ["Wave Speed", "Velocidad de onda"], 0, log, "Wave > Speed"); boilHoldKeys(ph, t0, t1, speed.fps, log, "Wave > Phase"); }
+            }
+        }
+
+        if (border > 0) {
+            var edges = ensureEffect(clip, qeClip, FX.edges, log, "edges");
+            if (edges && lc(edges.name).indexOf("roughen") !== -1) {
+                setNum(edges.comp, ["Border", "Borde"], border, log, "Roughen > Border");
+                var revo = findParam(edges.comp, ["Evolution", "Evolución"]);
+                if (revo) boilHoldKeys(revo, t0, t1, speed.fps, log, "Roughen > Evolution");
+            }
+        }
+
+        var post = ensureEffect(clip, qeClip, FX.posterize, log, "posterize");
+        if (post) setNum(post.comp, ["Frame Rate", "Velocidad de fotogramas"], speed.fps, log, "Posterize > Frame Rate");
+
+        applyTransition(clip, t0, t1, inDir, outDir, log);
+        return true;
+    }
 
     /* ---------------- public API ---------------------------------------- */
     var api = {};
@@ -121,60 +269,57 @@ $.global.HDA_HOST = (function () {
     api.ping = function () {
         try {
             var seq = app.project ? app.project.activeSequence : null;
-            var has = findMogrt() ? "MOGRT found" : "MOGRT MISSING (run Build_Mogrt.jsx in After Effects)";
-            if (!seq) return reply(true, "[host " + HOST_VERSION + "] no sequence — " + has);
-            return reply(!!findMogrt(), '[host ' + HOST_VERSION + '] "' + seq.name + '" — ' + has);
+            if (!seq) return reply(true, "no sequence open");
+            var n = selectedVideoClips(seq).length;
+            return reply(true, '"' + seq.name + '" — ' + n + " clip(s) selected" + (n ? "" : " (select a text/graphic clip)"));
         } catch (e) { return reply(false, "ping failed: " + e); }
     };
 
     /*
-     * animate(jsonString)
-     * payload = { text, color, speedIndex, styleIndex, inIndex, outIndex }
+     * animate(jsonString) — applies the look to every selected video clip.
+     * payload = { speedIndex 1-3, styleIndex 1-5, inIndex 1-4, outIndex 1-4 }
+     * Directions: 0/none disables that side; 1 Up,2 Down,3 Left,4 Right.
      */
     api.animate = function (jsonString) {
         var log = [];
         try {
-            var d = parsePayload(jsonString);
-            if (!d) return reply(false, "Could not parse the panel payload.");
-
+            var d = parsePayload(jsonString) || {};
             if (!app.project || !app.project.activeSequence) return reply(false, "Open a sequence first.");
             var seq = app.project.activeSequence;
+            app.enableQE();
 
-            var mogrt = findMogrt();
-            if (!mogrt) {
-                return reply(false, "HandDrawnMaster.mogrt not found. Put it in one of these exact paths (or re-run Build_Mogrt.jsx, which now exports to your Documents): " + pathsList(), log);
+            var sel = selectedVideoClips(seq);
+            if (!sel.length) return reply(false, "Select a text or graphic clip on the timeline first (make one with the Type tool).");
+
+            var speed = SPEED[clampNum(d.speedIndex, 1, 3, 2)];
+            var border = STYLE_BORDER[clampNum(d.styleIndex, 1, 5, 1)];
+            var inDir = clampNum(d.inIndex, 0, 4, 0);
+            var outDir = clampNum(d.outIndex, 0, 4, 0);
+
+            var done = 0;
+            for (var i = 0; i < sel.length; i++) {
+                log.push("▸ " + sel[i].clip.name);
+                if (applyToClip(sel[i], speed, border, inDir, outDir, log)) done++;
             }
-            log.push("using MOGRT: " + mogrt.fsName);
-
-            // vidTrackOffset / audTrackOffset are OFFSETS, not absolute track
-            // indices — Adobe's own PProPanel sample hardcodes 0, 0. Passing a
-            // track index here makes importMGT fail and return nothing.
-            var vidTrackOffset = 0, audTrackOffset = 0;
-            var startTicks = "0";
-            try { startTicks = seq.getPlayerPosition().ticks; } catch (e) {}
-
-            var item = null;
-            try { item = seq.importMGT(mogrt.fsName, startTicks, vidTrackOffset, audTrackOffset); }
-            catch (eImp) { return reply(false, "importMGT failed: " + eImp, log); }
-            if (!item) return reply(false, "importMGT returned nothing (check the MOGRT exported cleanly).", log);
-            log.push("MOGRT imported at playhead");
-
-            var mgt = null;
-            try { mgt = item.getMGTComponent(); } catch (eC) { mgt = null; }
-            if (!mgt) return reply(true, "Graphic placed on the timeline, but its controls weren't reachable by script — adjust Text/Style/etc. in the Essential Graphics panel.", log);
-
-            // Inject every control. Names MUST match those set in Build_Mogrt.jsx.
-            if (d.text != null && String(d.text) !== "") setText(mgt, "Source Text", d.text, log);
-            if (d.color != null) setColor(mgt, "Fill Color", d.color, log);
-            if (d.speedIndex != null) setIndex(mgt, "Animation Speed", Number(d.speedIndex), log);
-            if (d.styleIndex != null) setIndex(mgt, "Style", Number(d.styleIndex), log);
-            if (d.inIndex != null) setIndex(mgt, "Transition In", Number(d.inIndex), log);
-            if (d.outIndex != null) setIndex(mgt, "Transition Out", Number(d.outIndex), log);
-
-            return reply(true, "Animated " + (d.text ? '"' + d.text + '"' : "graphic") + " on the timeline.", log);
+            return reply(done > 0, "Hand-drawn look applied to " + done + " clip(s). Tip: a bold/thick font reads best.", log);
         } catch (e) {
             return reply(false, "animate failed: " + e + (e.line ? " (line " + e.line + ")" : ""), log);
         }
+    };
+
+    api.listEffects = function (filter) {
+        var log = [];
+        try {
+            app.enableQE();
+            var list = null; try { list = qe.project.getVideoEffectList(); } catch (e1) { list = null; }
+            if (!list || !list.length) return reply(false, "effect list unavailable");
+            var f = lc(filter || ""), hits = 0;
+            for (var i = 0; i < list.length; i++) {
+                var nm = String(list[i]);
+                if (!f || lc(nm).indexOf(f) !== -1) { log.push(nm); if (++hits >= 60) { log.push("…"); break; } }
+            }
+            return reply(true, hits + ' effect(s) matching "' + (filter || "") + '"', log);
+        } catch (e) { return reply(false, "listEffects failed: " + e); }
     };
 
     return api;

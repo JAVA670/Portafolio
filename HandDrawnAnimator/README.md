@@ -1,9 +1,30 @@
-# Hand-Drawn Animator — Premiere Pro plugin (two-part architecture)
+# Hand-Drawn Animator — Premiere Pro plugin
 
-A "Hand-Drawn Animator" for Premiere Pro that drops animated, boiling/jittery
-hand-drawn **text** onto your timeline with one click. The visual complexity
-lives in an After-Effects-built MOGRT; the Premiere panel just imports it and
-pushes your choices into its Essential Graphics controls.
+A "Hand-Drawn Animator" panel for Premiere Pro that gives text/graphics a
+boiling, jittery hand-drawn look with directional in/out transitions.
+
+## Native mode (default — no After Effects needed)
+
+The panel applies the effect **directly to a selected clip** using Premiere's
+own effects — no MOGRT, no `importMGT`:
+
+1. Make a text layer in Premiere (**Type tool**) — set the font/size/color
+   there. A **bold/thick font reads best** (thin serifs get eaten by the boil).
+2. **Select that clip** on the timeline.
+3. In the panel pick **Animation Speed / Style / Transition In / Out** and
+   click **ANIMATE**. The host (`jsx/Premiere_Host.jsx`) adds Turbulent
+   Displace (or Wave Warp) + Roughen Edges + Posterize Time via the QE DOM,
+   keyframes the boil, and keyframes Motion▸Position + Opacity for the in/out.
+
+This avoids the documented unreliability of scripted `importMGT` for AE-built
+MOGRTs. The MOGRT route below is kept as optional and only works where your
+Premiere build imports AE MOGRTs cleanly via script.
+
+## Optional MOGRT route (After Effects)
+
+The original design built an AE MOGRT and imported it; the visual complexity
+lives in the MOGRT and the panel pushes values into its Essential Graphics
+controls. Use this only if scripted MOGRT import works on your machine.
 
 ```
 HandDrawnAnimator/

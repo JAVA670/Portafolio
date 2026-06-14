@@ -44,13 +44,12 @@
     function ping() { runJSX("HDA_HOST.ping()", function (r) { setStatus(r.message, r.ok ? "ok" : "err"); }); }
 
     function animate() {
-        // Bundle the UI into a JSON object exactly as the spec requires.
+        // Applies the hand-drawn look to the SELECTED clip (no text/color —
+        // those are set in Premiere directly on the text layer).
         var payload = {
-            text: el.text.value,
-            color: el.color.value,                       // "#rrggbb"
             speedIndex: parseInt(el.speed.value, 10),    // 1 Light, 2 Normal, 3 Heavy
             styleIndex: parseInt(el.style.value, 10),    // 1 None … 5 Paper
-            inIndex: parseInt(el.transIn.value, 10),     // 1 Up … 4 Right
+            inIndex: parseInt(el.transIn.value, 10),     // 0 None, 1 Up … 4 Right
             outIndex: parseInt(el.transOut.value, 10)
         };
         var json = JSON.stringify(payload);
@@ -69,17 +68,11 @@
     window.addEventListener("load", function () {
         el.status = $("status");
         el.log = $("log");
-        el.text = $("text");
-        el.color = $("color");
-        el.hex = $("hex");
         el.speed = $("speed");
         el.style = $("style");
         el.transIn = $("transIn");
         el.transOut = $("transOut");
         el.apply = $("apply");
-
-        el.color.addEventListener("input", function () { el.hex.textContent = el.color.value.toUpperCase(); });
-        el.hex.textContent = el.color.value.toUpperCase();
 
         if (!insideHost) {
             setStatus("UI preview — open inside Premiere Pro to animate.", "err");

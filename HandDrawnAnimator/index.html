@@ -22,6 +22,8 @@
 
     <div class="form">
 
+      <p class="howto">Select a <b>text or shape clip</b> on the timeline (make one with the Type&nbsp;tool), then click ANIMATE.</p>
+
       <label class="field">
         <span class="lbl">Animation Speed</span>
         <select id="speed">
@@ -29,19 +31,6 @@
           <option value="2" selected>Normal</option>
           <option value="3">Heavy</option>
         </select>
-      </label>
-
-      <label class="field">
-        <span class="lbl">Text</span>
-        <textarea id="text" rows="2" placeholder="Hello World" spellcheck="false">Hello World</textarea>
-      </label>
-
-      <label class="field">
-        <span class="lbl">Fill Color</span>
-        <span class="color-wrap">
-          <input type="color" id="color" value="#ffffff">
-          <span class="hex" id="hex">#FFFFFF</span>
-        </span>
       </label>
 
       <label class="field">
@@ -59,6 +48,7 @@
         <label class="field">
           <span class="lbl">Transition In</span>
           <select id="transIn">
+            <option value="0">None</option>
             <option value="1" selected>Up</option>
             <option value="2">Down</option>
             <option value="3">Left</option>
@@ -68,6 +58,7 @@
         <label class="field">
           <span class="lbl">Transition Out</span>
           <select id="transOut">
+            <option value="0">None</option>
             <option value="1">Up</option>
             <option value="2" selected>Down</option>
             <option value="3">Left</option>

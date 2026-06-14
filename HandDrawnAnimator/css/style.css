@@ -77,6 +77,12 @@ html, body {
 /* ---------------- form fields ---------------- */
 
 .form { display: flex; flex-direction: column; gap: 11px; }
+.howto {
+  margin: 0; padding: 8px 10px; border-radius: 6px;
+  background: rgba(0,0,0,.06); border: 1px dashed rgba(120,116,106,.6);
+  font-size: 11px; line-height: 1.4; color: #4a463f;
+}
+.howto b { color: #2a2722; }
 .field { display: flex; flex-direction: column; gap: 5px; }
 .field-row { display: flex; gap: 10px; }
 .field-row .field { flex: 1; }
