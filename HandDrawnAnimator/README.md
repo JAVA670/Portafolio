@@ -5,24 +5,41 @@ are two ways to use it depending on how rich you want the result.
 
 ## A) After Effects animator — full look (recommended)
 
-`aftereffects/HandDrawnAnimator_AE.jsx` builds the complete animation in an AE
-comp: **real hand-drawn fonts, edge texture, per-style looks, and word-by-word
-MORPH** (one word transforming into the next). Premiere scripting can do none
-of those, so this is the way to match the brush-font kinetic look.
+`aftereffects/HandDrawnAnimator_AE.jsx` (v2) builds the complete animation in
+an AE comp. It does everything Premiere scripting can't:
 
+- **Voice sync** — import an `.srt` and the words land exactly on your speech
+  (Phrase or Word-by-word). Get the SRT free from Premiere:
+  **Window ▸ Text ▸ Transcribe → Create Captions → Export `.srt`** (or any
+  tool). Try `assets/sample.srt` to see it instantly.
+- **Real hand-drawn fonts** (auto-detects installed brush/marker fonts).
+- **In/Out animation library** — Fade, Slide (4 dirs), Pop, Bounce, Scale,
+  Spin, Blur, Rise, Hard — with **smooth eased keyframes** (Low/Med/High).
+- **Word-by-word morph** (crossfade + scale between chunks).
+- **8 styles** — Hand-Drawn, Grunge, Marker, Film, VHS, Paper, Neon, Clean.
+- **Subtitle readability** — outline + drop shadow, and auto-fit so long lines
+  don't overflow the frame.
+- **Quick presets** — TikTok Captions, Hand-Drawn Boil, Clean Subtitle,
+  Kinetic Pop set everything in one click.
+
+Steps:
 1. Install the panel: copy `HandDrawnAnimator_AE.jsx` into AE's
-   `Scripts/ScriptUI Panels/` folder and restart AE (or run it once via
-   **File ▸ Scripts ▸ Run Script File…**). Enable **Preferences ▸ Scripting &
-   Expressions ▸ "Allow Scripts to Write Files and Access Network"**.
-2. Install a hand-drawn font first (the texture comes from the *font*). Free
-   options: Permanent Marker, Caveat, Rock Salt, Shadows Into Light, Gochi
-   Hand, Patrick Hand (Google Fonts). The panel auto-detects installed
-   hand-drawn fonts.
-3. In the panel: type your text (use `/` or new lines to mark sentences), pick
-   font / color / style / speed / split (word-by-word, etc.) / frames-each, and
-   keep **Morph crossfade** on. Click **BUILD ANIMATION**.
+   `Scripts/ScriptUI Panels/` and restart AE (or run once via **File ▸ Scripts
+   ▸ Run Script File…**). Enable **Preferences ▸ Scripting & Expressions ▸
+   "Allow Scripts to Write Files and Access Network"**.
+2. Install a hand-drawn font (the texture comes from the *font*): Permanent
+   Marker, Caveat, Rock Salt, Bangers, Anton, Patrick Hand (Google Fonts).
+3. Either type text, **or** tick *Import .srt* and choose your subtitle file.
+   Pick a Quick Preset (or set font/style/in/out/speed yourself) and click
+   **BUILD ANIMATION**.
 4. It creates a finished comp. **Render it**, or **dynamic-link** the comp into
    Premiere (no MOGRT, no `importMGT`).
+
+How the boil stays crisp while transitions stay smooth: the boil/texture
+(Turbulent Displace + Roughen Edges + Posterize Time) is applied as **layer
+effects**, which AE evaluates *before* the layer transform — so the text
+content boils "on twos" while the Position/Scale/Opacity in-out eases
+smoothly on top.
 
 ## B) Premiere panel — quick boil on a selected clip
 
