@@ -198,8 +198,8 @@
     function P(layer, name) { return tg(layer).property(name); }
     function key(prop, t, v) { prop.setValueAtTime(t, v); }
 
-    function applyIn(layer, comp, t0, dur, preset) {
-        var cx = comp.width / 2, cy = comp.height / 2, off = 200;
+    function applyIn(layer, cx, cy, t0, dur, preset) {
+        var off = 200;
         var op = P(layer, "ADBE Opacity"), pos = P(layer, "ADBE Position"), sc = P(layer, "ADBE Scale"), rot = P(layer, "ADBE Rotate Z");
         if (preset !== "Hard") { key(op, t0, 0); key(op, t0 + dur, 100); } else { key(op, t0, 100); }
         switch (preset) {
@@ -215,8 +215,8 @@
             case "Blur":        try { var gb = addFx(layer, "ADBE Gaussian Blur 2"); var bp = gb.property(1); bp.setValueAtTime(t0, 60); bp.setValueAtTime(t0 + dur, 0); } catch (e) {} break;
         }
     }
-    function applyOut(layer, comp, t1, dur, preset) {
-        var cx = comp.width / 2, cy = comp.height / 2, off = 200, s = t1 - dur;
+    function applyOut(layer, cx, cy, t1, dur, preset) {
+        var off = 200, s = t1 - dur;
         var op = P(layer, "ADBE Opacity"), pos = P(layer, "ADBE Position"), sc = P(layer, "ADBE Scale"), rot = P(layer, "ADBE Rotate Z");
         if (preset !== "Hard") { key(op, s, 100); key(op, t1, 0); } else { key(op, t1, 100); }
         switch (preset) {
@@ -280,12 +280,18 @@
             var r = tl.sourceRectAtTime(item.inSec + Math.min(animDur, (item.outSec - item.inSec) / 2), false);
             tg(tl).property("ADBE Anchor Point").setValue([r.left + r.width / 2, r.top + r.height / 2]);
         } catch (e2) {}
-        tg(tl).property("ADBE Position").setValue([comp.width / 2, comp.height / 2]);
+        var cx = comp.width / 2, cy = opts.posY;
+        tg(tl).property("ADBE Position").setValue([cx, cy]);
+
+        // organic hand-drawn tilt (kept unless the Spin preset keyframes rotation)
+        if (opts.jitter && opts.inAnim !== "Spin" && opts.outAnim !== "Spin") {
+            try { tg(tl).property("ADBE Rotate Z").setValue((Math.random() * 6) - 3); } catch (eJ) {}
+        }
 
         var d = Math.min(animDur, (item.outSec - item.inSec) / 2.2);
         if (d <= 0) d = 1 / FPS;
-        applyIn(tl, comp, item.inSec, d, opts.inAnim);
-        applyOut(tl, comp, item.outSec, d, opts.outAnim);
+        applyIn(tl, cx, cy, item.inSec, d, opts.inAnim);
+        applyOut(tl, cx, cy, item.outSec, d, opts.outAnim);
         easeLayer(tl, infl);
         applyBoil(tl, speed, cfg);
         if (opts.shadow) { try { var ds = addFx(tl, "ADBE Drop Shadow"); setP(ds, "Opacity", 160); setP(ds, "Distance", 8); setP(ds, "Softness", 18); } catch (e3) {} }
@@ -312,6 +318,7 @@
             var infl = SMOOTH[opts.smooth] || 66;
             var fontPS = resolveFont(opts.font);
             var animDur = 0.33;
+            opts.posY = (opts.position === "Lower third") ? H * 0.78 : (opts.position === "Top") ? H * 0.20 : H / 2;
 
             for (var c = 0; c < chunks.length; c++) addChunk(comp, chunks[c], opts, fontPS, speed, cfg, animDur, infl);
 
@@ -377,6 +384,9 @@
         var styleDD = gStyle.add("dropdownlist", undefined, ["Hand-Drawn", "Grunge", "Marker", "Film", "VHS", "Paper", "Neon", "Clean"]); styleDD.selection = 0;
         var gRead = rowg(look); lbl(gRead, "Readable", 70);
         var outlineChk = gRead.add("checkbox", undefined, "Outline"); var shadowChk = gRead.add("checkbox", undefined, "Shadow");
+        var gPos = rowg(look); lbl(gPos, "Position", 70);
+        var posDD = gPos.add("dropdownlist", undefined, ["Center", "Lower third", "Top"]); posDD.selection = 0;
+        var jitterChk = gPos.add("checkbox", undefined, "Hand jitter (tilt)"); jitterChk.value = true;
 
         // ANIMATION
         var anim = section("ANIMATION");
@@ -421,6 +431,7 @@
                 font: trim(fontTxt.text) || "Arial", size: size, color: color,
                 style: styleDD.selection ? styleDD.selection.text : "Hand-Drawn",
                 outline: outlineChk.value, shadow: shadowChk.value,
+                position: posDD.selection ? posDD.selection.text : "Center", jitter: jitterChk.value,
                 inAnim: inDD.selection ? inDD.selection.text : "Fade",
                 outAnim: outDD.selection ? outDD.selection.text : "Fade",
                 speed: speedDD.selection ? speedDD.selection.text : "Normal",
