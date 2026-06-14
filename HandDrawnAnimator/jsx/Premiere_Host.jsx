@@ -23,6 +23,8 @@
 
 $.global.HDA_HOST = (function () {
 
+    var HOST_VERSION = "v7-trackoffset"; // bump on each host change to verify the loaded build
+
     /* ---------------- JSON reply (ES3 has no JSON) ---------------------- */
     function jsonStr(s) {
         s = String(s); var out = "";
@@ -120,8 +122,8 @@ $.global.HDA_HOST = (function () {
         try {
             var seq = app.project ? app.project.activeSequence : null;
             var has = findMogrt() ? "MOGRT found" : "MOGRT MISSING (run Build_Mogrt.jsx in After Effects)";
-            if (!seq) return reply(true, "PPro " + app.version + " — no sequence — " + has);
-            return reply(!!findMogrt(), '"' + seq.name + '" — ' + has);
+            if (!seq) return reply(true, "[host " + HOST_VERSION + "] no sequence — " + has);
+            return reply(!!findMogrt(), '[host ' + HOST_VERSION + '] "' + seq.name + '" — ' + has);
         } catch (e) { return reply(false, "ping failed: " + e); }
     };
 
