@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hand-Drawn Animator (AE)</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="device">
+  <div class="panel">
+
+    <i class="screw s-tl"></i><i class="screw s-tr"></i>
+    <i class="screw s-bl"></i><i class="screw s-br"></i>
+
+    <header class="brand">
+      <div class="logo">
+        <span class="logo-script">Hand&nbsp;Drawn</span>
+        <span class="logo-bold">ANIMATOR</span>
+      </div>
+      <span class="version">AE 2.0</span>
+    </header>
+
+    <div class="form">
+
+      <p class="howto">Type your text (use <b>/</b> or new lines for sentences), or load an <b>.srt</b> to sync to your voice. Then hit ANIMATE.</p>
+
+      <label class="field">
+        <span class="lbl">Text</span>
+        <textarea id="text" rows="2" placeholder="A DESIRE TO GROW" spellcheck="false">A DESIRE TO GROW</textarea>
+      </label>
+
+      <div class="field">
+        <span class="lbl">Voice sync (.srt)</span>
+        <div class="srt-row">
+          <button class="mini" id="loadSrt">Load .srt…</button>
+          <span class="srt-name" id="srtName">none</span>
+        </div>
+        <label class="check"><input type="checkbox" id="useSrt"><span>Use subtitle timing</span></label>
+      </div>
+
+      <div class="field-row">
+        <label class="field"><span class="lbl">Font</span>
+          <input type="text" id="font" list="fontlist" value="Permanent Marker" spellcheck="false">
+          <datalist id="fontlist">
+            <option value="Permanent Marker"><option value="Caveat"><option value="Rock Salt">
+            <option value="Bangers"><option value="Anton"><option value="Patrick Hand">
+            <option value="Shadows Into Light"><option value="Arial">
+          </datalist>
+        </label>
+        <label class="field" style="max-width:88px"><span class="lbl">Size</span>
+          <input type="number" id="size" value="200" min="20" max="800">
+        </label>
+      </div>
+
+      <div class="field-row">
+        <label class="field"><span class="lbl">Fill Color</span>
+          <span class="color-wrap"><input type="color" id="color" value="#ffffff"><span class="hex" id="hex">#FFFFFF</span></span>
+        </label>
+        <label class="field"><span class="lbl">Style</span>
+          <select id="style">
+            <option>Hand-Drawn</option><option>Grunge</option><option>Marker</option>
+            <option>Film</option><option>VHS</option><option>Paper</option><option>Neon</option><option>Clean</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="field-row">
+        <label class="field"><span class="lbl">Transition In</span>
+          <select id="inAnim"></select>
+        </label>
+        <label class="field"><span class="lbl">Transition Out</span>
+          <select id="outAnim"></select>
+        </label>
+      </div>
+
+      <div class="field-row">
+        <label class="field"><span class="lbl">Speed</span>
+          <select id="speed"><option>Light</option><option selected>Normal</option><option>Heavy</option></select>
+        </label>
+        <label class="field"><span class="lbl">Smoothness</span>
+          <select id="smooth"><option>Low</option><option>Medium</option><option selected>High</option></select>
+        </label>
+      </div>
+
+      <div class="field-row">
+        <label class="field"><span class="lbl">Split</span>
+          <select id="split">
+            <option>Word by word</option><option>2 words</option><option>3 words</option>
+            <option>Sentences</option><option>Whole line</option>
+          </select>
+        </label>
+        <label class="field" style="max-width:96px"><span class="lbl">Frames each</span>
+          <input type="number" id="frames" value="12" min="2" max="90">
+        </label>
+      </div>
+
+      <div class="field-row">
+        <label class="field"><span class="lbl">Position</span>
+          <select id="position"><option>Center</option><option>Lower third</option><option>Top</option></select>
+        </label>
+        <label class="field"><span class="lbl">SRT sync</span>
+          <select id="sync"><option>Word</option><option>Phrase</option></select>
+        </label>
+      </div>
+
+      <div class="checks">
+        <label class="check"><input type="checkbox" id="morph" checked><span>Morph</span></label>
+        <label class="check"><input type="checkbox" id="outline"><span>Outline</span></label>
+        <label class="check"><input type="checkbox" id="shadow"><span>Shadow</span></label>
+        <label class="check"><input type="checkbox" id="jitter" checked><span>Hand jitter</span></label>
+        <label class="check"><input type="checkbox" id="darkBG"><span>Dark BG</span></label>
+      </div>
+
+      <div class="field">
+        <span class="lbl">Quick presets</span>
+        <div class="presets" id="presets">
+          <button class="mini" data-preset="TikTok Captions">TikTok</button>
+          <button class="mini" data-preset="Hand-Drawn Boil">Hand-Drawn</button>
+          <button class="mini" data-preset="Clean Subtitle">Clean Sub</button>
+          <button class="mini" data-preset="Kinetic Pop">Kinetic</button>
+        </div>
+      </div>
+
+    </div>
+
+    <button class="animate-btn" id="apply">ANIMATE</button>
+    <pre id="log" class="log" hidden></pre>
+    <div id="status" class="statusline">Connecting&hellip;</div>
+  </div>
+</div>
+
+  <script src="lib/CSInterface.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
