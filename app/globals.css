@@ -308,3 +308,36 @@ body {
     display: none;
   }
 }
+
+/* ── Coliving app scope ─────────────────────────────────────────────
+   The /coliving route ships its own light theme; these rules keep the
+   portfolio's dark chrome from bleeding into it. */
+body:has([data-coliving]) {
+  background: #f5f5f4;
+  color-scheme: light;
+}
+
+body.grain:has([data-coliving])::before {
+  display: none;
+}
+
+[data-coliving] ::selection {
+  background: #0f766e;
+  color: #ffffff;
+}
+
+[data-coliving] :focus-visible {
+  outline: 2px solid #0d9488;
+  outline-offset: 2px;
+}
+
+@keyframes coliving-sheet-in {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
