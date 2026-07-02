@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { ID } from "@/lib/coliving/types";
 import { formatDate } from "@/lib/coliving/utils";
 import { useHouse } from "../HouseProvider";
-import { Avatar, Card, EmptyState, SectionLabel } from "../ui";
+import { Avatar, Card, EmptyState, GRADIENT_BTN, INPUT_CLASSES, SectionLabel } from "../ui";
 import { IconPlus, IconTrash, IconX } from "../icons";
 
 export function RosterView({ onToast }: { onToast: (msg: string) => void }) {
@@ -44,8 +44,8 @@ export function RosterView({ onToast }: { onToast: (msg: string) => void }) {
     <div className="space-y-4">
       <div className="flex items-end justify-between">
         <div>
-          <h1 className="text-xl font-bold text-stone-900">The roster</h1>
-          <p className="text-sm text-stone-500">
+          <h1 className="text-xl font-bold text-white">The roster</h1>
+          <p className="text-sm text-slate-400">
             {state.tenants.length} resident{state.tenants.length === 1 ? "" : "s"} ·{" "}
             {state.rooms.length} room{state.rooms.length === 1 ? "" : "s"}
           </p>
@@ -55,7 +55,7 @@ export function RosterView({ onToast }: { onToast: (msg: string) => void }) {
             setAddingRoom(true);
             setTenantFormRoomId(null);
           }}
-          className="flex items-center gap-1.5 rounded-xl bg-teal-600 px-3.5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-700 active:scale-95"
+          className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-semibold ${GRADIENT_BTN}`}
         >
           <IconPlus className="size-4" />
           Add room
@@ -77,13 +77,13 @@ export function RosterView({ onToast }: { onToast: (msg: string) => void }) {
           return (
             <Card key={room.id}>
               <div className="mb-3 flex items-center justify-between gap-2">
-                <h2 className="truncate text-base font-bold text-stone-900">{room.name}</h2>
+                <h2 className="truncate text-base font-bold text-white">{room.name}</h2>
                 <div className="flex shrink-0 items-center gap-2">
                   <span
                     className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${
                       occupants.length > 0
-                        ? "bg-teal-50 text-teal-700"
-                        : "bg-stone-100 text-stone-500"
+                        ? "bg-teal-400/10 text-teal-300"
+                        : "bg-white/5 text-slate-500"
                     }`}
                   >
                     {occupants.length > 0
@@ -99,7 +99,7 @@ export function RosterView({ onToast }: { onToast: (msg: string) => void }) {
                         }
                       }}
                       aria-label={`Delete ${room.name}`}
-                      className="rounded-full p-1.5 text-stone-300 transition hover:bg-rose-50 hover:text-rose-600"
+                      className="rounded-full p-1.5 text-slate-600 transition hover:bg-rose-500/10 hover:text-rose-400"
                     >
                       <IconTrash className="size-4" />
                     </button>
@@ -113,20 +113,20 @@ export function RosterView({ onToast }: { onToast: (msg: string) => void }) {
                     <li key={t.id} className="flex items-center gap-3">
                       <Avatar tenant={t} />
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-semibold text-stone-900">
+                        <p className="truncate text-sm font-semibold text-slate-200">
                           {t.name}
                           {state.activeTenantId === t.id && (
-                            <span className="ml-1.5 text-xs font-medium text-teal-600">(you)</span>
+                            <span className="ml-1.5 text-xs font-medium text-fuchsia-400">
+                              (you)
+                            </span>
                           )}
                         </p>
-                        <p className="text-xs text-stone-400">
-                          Moved in {formatDate(t.joinedAt)}
-                        </p>
+                        <p className="text-xs text-slate-500">Moved in {formatDate(t.joinedAt)}</p>
                       </div>
                       <button
                         onClick={() => confirmRemoveTenant(t.id, t.name)}
                         aria-label={`Remove ${t.name}`}
-                        className="rounded-full p-1.5 text-stone-300 transition hover:bg-rose-50 hover:text-rose-600"
+                        className="rounded-full p-1.5 text-slate-600 transition hover:bg-rose-500/10 hover:text-rose-400"
                       >
                         <IconX className="size-4" />
                       </button>
@@ -134,7 +134,7 @@ export function RosterView({ onToast }: { onToast: (msg: string) => void }) {
                   ))}
                 </ul>
               ) : (
-                <p className="rounded-xl bg-stone-50 px-3 py-2.5 text-xs text-stone-400">
+                <p className="rounded-xl bg-white/5 px-3 py-2.5 text-xs text-slate-500">
                   Nobody lives here yet.
                 </p>
               )}
@@ -152,12 +152,12 @@ export function RosterView({ onToast }: { onToast: (msg: string) => void }) {
                     value={tenantName}
                     onChange={(e) => setTenantName(e.target.value)}
                     placeholder="Resident name"
-                    className="min-w-0 flex-1 rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-teal-400"
+                    className={`min-w-0 flex-1 ${INPUT_CLASSES}`}
                   />
                   <button
                     type="submit"
                     disabled={!tenantName.trim()}
-                    className="rounded-xl bg-teal-600 px-3 py-2 text-sm font-semibold text-white transition enabled:hover:bg-teal-700 disabled:opacity-40"
+                    className={`rounded-xl px-3 py-2 text-sm font-semibold ${GRADIENT_BTN}`}
                   >
                     Add
                   </button>
@@ -167,7 +167,7 @@ export function RosterView({ onToast }: { onToast: (msg: string) => void }) {
                       setTenantFormRoomId(null);
                       setTenantName("");
                     }}
-                    className="rounded-xl px-2 py-2 text-sm text-stone-500 transition hover:bg-stone-100"
+                    className="rounded-xl px-2 py-2 text-sm text-slate-400 transition hover:bg-white/5"
                   >
                     Cancel
                   </button>
@@ -179,7 +179,7 @@ export function RosterView({ onToast }: { onToast: (msg: string) => void }) {
                     setTenantName("");
                     setAddingRoom(false);
                   }}
-                  className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-stone-200 py-2 text-sm font-medium text-stone-500 transition hover:border-teal-300 hover:text-teal-700"
+                  className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-white/10 py-2 text-sm font-medium text-slate-400 transition hover:border-fuchsia-400/40 hover:text-fuchsia-300"
                 >
                   <IconPlus className="size-4" />
                   Add resident
@@ -204,11 +204,11 @@ export function RosterView({ onToast }: { onToast: (msg: string) => void }) {
                 value={roomName}
                 onChange={(e) => setRoomName(e.target.value)}
                 placeholder={suggestedRoomName}
-                className="min-w-0 flex-1 rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-teal-400"
+                className={`min-w-0 flex-1 ${INPUT_CLASSES}`}
               />
               <button
                 type="submit"
-                className="rounded-xl bg-teal-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-teal-700"
+                className={`rounded-xl px-3 py-2 text-sm font-semibold ${GRADIENT_BTN}`}
               >
                 Add
               </button>
@@ -218,7 +218,7 @@ export function RosterView({ onToast }: { onToast: (msg: string) => void }) {
                   setAddingRoom(false);
                   setRoomName("");
                 }}
-                className="rounded-xl px-2 py-2 text-sm text-stone-500 transition hover:bg-stone-100"
+                className="rounded-xl px-2 py-2 text-sm text-slate-400 transition hover:bg-white/5"
               >
                 Cancel
               </button>

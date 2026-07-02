@@ -7,21 +7,21 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "CoHouse — Coliving House Manager",
   description:
-    "Rooms, residents, chores and supplies for your coliving house — who did what, and when.",
+    "Rooms, residents, chores and supplies for your coliving house — synced live with your roommates.",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f5f5f4",
+  themeColor: "#020617",
 };
 
 /**
- * The coliving app lives inside the portfolio site but ships its own light
+ * The coliving app lives inside the portfolio site but ships its own dark
  * theme. The data-coliving attribute scopes the CSS overrides in globals.css
- * (grain overlay off, light color-scheme, focus/selection colors).
+ * (grain overlay off, focus/selection colors).
  */
 export default function ColivingLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div data-coliving className={`${inter.className} min-h-dvh bg-stone-100 text-stone-900`}>
+    <div data-coliving className={`${inter.className} min-h-dvh bg-slate-950 text-slate-100`}>
       <HouseProvider>{children}</HouseProvider>
     </div>
   );

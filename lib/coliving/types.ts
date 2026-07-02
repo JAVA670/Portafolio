@@ -1,13 +1,19 @@
 /**
  * Coliving house data model.
  *
- * Everything hangs off a single HouseState document. In the future SaaS,
- * one HouseState maps to one tenant-org record in the database, so every
- * entity carries its own id and ISO timestamps instead of being derived
- * from array positions or UI state.
+ * Backed by Firestore: `houses/{houseId}` holds the house doc, with
+ * subcollections `rooms`, `tenants`, `chores`, `choreLogs`, `supplies`.
+ * The houseId doubles as the human-shareable invite code. Every entity
+ * carries its own id and ISO timestamps.
  */
 
 export type ID = string;
+
+/** What this device remembers between visits: which house and who I am in it. */
+export interface Session {
+  houseId: ID;
+  tenantId: ID | null;
+}
 
 /** Avatar hues assigned round-robin when a tenant joins. */
 export const TENANT_COLORS = [

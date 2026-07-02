@@ -1,3 +1,14 @@
+/** Unambiguous alphabet (no 0/O, 1/I/L) for house invite codes people read aloud. */
+const CODE_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+
+export function makeHouseCode(length = 6): string {
+  let code = "";
+  for (let i = 0; i < length; i++) {
+    code += CODE_ALPHABET[Math.floor(Math.random() * CODE_ALPHABET.length)];
+  }
+  return code;
+}
+
 export function uid(): string {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID();
