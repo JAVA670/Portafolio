@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { ID } from "@/lib/coliving/types";
 import { formatWhen, timeAgo } from "@/lib/coliving/utils";
 import { useHouse } from "../HouseProvider";
-import { Card, EmptyState, SectionLabel, TenantSheet } from "../ui";
+import { Card, EmptyState, GRADIENT_BTN, INPUT_CLASSES, SectionLabel, TenantSheet } from "../ui";
 import { IconCheck, IconX } from "../icons";
 
 /** What the tenant sheet is being asked to attribute. */
@@ -58,8 +58,8 @@ export function SuppliesView({ onToast }: { onToast: (msg: string) => void }) {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-xl font-bold text-stone-900">House ledger</h1>
-        <p className="text-sm text-stone-500">
+        <h1 className="text-xl font-bold text-white">House ledger</h1>
+        <p className="text-sm text-slate-400">
           {needed.length === 0
             ? "Nothing needed right now"
             : `${needed.length} item${needed.length === 1 ? "" : "s"} to buy`}
@@ -78,12 +78,12 @@ export function SuppliesView({ onToast }: { onToast: (msg: string) => void }) {
             value={itemName}
             onChange={(e) => setItemName(e.target.value)}
             placeholder="What does the house need?"
-            className="min-w-0 flex-1 rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-teal-400"
+            className={`min-w-0 flex-1 ${INPUT_CLASSES}`}
           />
           <button
             type="submit"
             disabled={!itemName.trim()}
-            className="rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition enabled:hover:bg-teal-700 disabled:opacity-40"
+            className={`rounded-xl px-4 py-2 text-sm font-semibold ${GRADIENT_BTN}`}
           >
             Request
           </button>
@@ -94,7 +94,11 @@ export function SuppliesView({ onToast }: { onToast: (msg: string) => void }) {
         <SectionLabel>Needed</SectionLabel>
         {needed.length === 0 ? (
           <div className="mt-2">
-            <EmptyState emoji="🎉" title="All stocked up" hint="Request anything the house runs out of." />
+            <EmptyState
+              emoji="🎉"
+              title="All stocked up"
+              hint="Request anything the house runs out of."
+            />
           </div>
         ) : (
           <ul className="mt-2 space-y-2">
@@ -102,14 +106,14 @@ export function SuppliesView({ onToast }: { onToast: (msg: string) => void }) {
               <li key={item.id}>
                 <Card className="flex items-center gap-3 !p-3">
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-stone-900">{item.name}</p>
-                    <p className="truncate text-xs text-stone-500">
+                    <p className="truncate text-sm font-semibold text-white">{item.name}</p>
+                    <p className="truncate text-xs text-slate-500">
                       Asked by {tenantName(item.requestedBy)} · {timeAgo(item.requestedAt)}
                     </p>
                   </div>
                   <button
                     onClick={() => handlePurchase(item.id)}
-                    className="flex shrink-0 items-center gap-1.5 rounded-xl bg-teal-50 px-3 py-2 text-xs font-bold text-teal-700 transition hover:bg-teal-100 active:scale-95"
+                    className="flex shrink-0 items-center gap-1.5 rounded-xl bg-teal-400/10 px-3 py-2 text-xs font-bold text-teal-300 ring-1 ring-teal-400/20 transition hover:bg-teal-400/20 active:scale-95"
                   >
                     <IconCheck className="size-4" />
                     Got it
@@ -117,7 +121,7 @@ export function SuppliesView({ onToast }: { onToast: (msg: string) => void }) {
                   <button
                     onClick={() => removeSupply(item.id)}
                     aria-label={`Remove ${item.name}`}
-                    className="shrink-0 rounded-full p-1.5 text-stone-300 transition hover:bg-rose-50 hover:text-rose-600"
+                    className="shrink-0 rounded-full p-1.5 text-slate-600 transition hover:bg-rose-500/10 hover:text-rose-400"
                   >
                     <IconX className="size-4" />
                   </button>
@@ -134,13 +138,13 @@ export function SuppliesView({ onToast }: { onToast: (msg: string) => void }) {
           <ul className="mt-2 space-y-2">
             {purchased.map((item) => (
               <li key={item.id}>
-                <Card className="flex items-center gap-3 !p-3 opacity-80">
-                  <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-teal-50 text-teal-600">
+                <Card className="flex items-center gap-3 !p-3 opacity-75">
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-teal-400/10 text-teal-300 ring-1 ring-teal-400/20">
                     <IconCheck className="size-4" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-stone-700">{item.name}</p>
-                    <p className="truncate text-xs text-stone-400">
+                    <p className="truncate text-sm font-medium text-slate-300">{item.name}</p>
+                    <p className="truncate text-xs text-slate-500">
                       Bought by {tenantName(item.purchasedBy ?? "")}
                       {item.purchasedAt ? ` · ${formatWhen(item.purchasedAt)}` : ""}
                     </p>
@@ -149,7 +153,7 @@ export function SuppliesView({ onToast }: { onToast: (msg: string) => void }) {
                     onClick={() => {
                       request(item.name, state.activeTenantId ?? item.requestedBy);
                     }}
-                    className="shrink-0 rounded-xl px-3 py-2 text-xs font-semibold text-stone-500 transition hover:bg-stone-100"
+                    className="shrink-0 rounded-xl px-3 py-2 text-xs font-semibold text-slate-400 transition hover:bg-white/5 hover:text-slate-200"
                   >
                     Need again
                   </button>

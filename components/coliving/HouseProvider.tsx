@@ -5,9 +5,21 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useReducer,
   useState,
 } from "react";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  query,
+  setDoc,
+  updateDoc,
+  where,
+  writeBatch,
+} from "firebase/firestore";
 import type {
   Chore,
   ChoreCadence,
@@ -15,107 +27,63 @@ import type {
   HouseState,
   ID,
   Room,
+  Session,
   SupplyItem,
   Tenant,
 } from "@/lib/coliving/types";
 import { TENANT_COLORS } from "@/lib/coliving/types";
-import { makeSeedState } from "@/lib/coliving/seed";
-import { uid } from "@/lib/coliving/utils";
+import { firebaseReady, getDb } from "@/lib/coliving/firebase";
+import { makeHouseCode, uid } from "@/lib/coliving/utils";
 
-const STORAGE_KEY = "coliving.house.v1";
+const SESSION_KEY = "cohouse.session.v1";
 
-type HouseAction =
-  | { type: "REPLACE"; state: HouseState }
-  | { type: "RENAME_HOUSE"; name: string }
-  | { type: "ADD_ROOM"; room: Room }
-  | { type: "REMOVE_ROOM"; roomId: ID }
-  | { type: "ADD_TENANT"; tenant: Tenant }
-  | { type: "REMOVE_TENANT"; tenantId: ID }
-  | { type: "SET_ACTIVE_TENANT"; tenantId: ID | null }
-  | { type: "ADD_CHORE"; chore: Chore }
-  | { type: "REMOVE_CHORE"; choreId: ID }
-  | { type: "ADD_LOG"; log: ChoreLog }
-  | { type: "REMOVE_LOG"; logId: ID }
-  | { type: "ADD_SUPPLY"; item: SupplyItem }
-  | { type: "MARK_PURCHASED"; supplyId: ID; purchasedBy: ID; purchasedAt: string }
-  | { type: "REMOVE_SUPPLY"; supplyId: ID };
+export type Phase =
+  | "boot" // before first client render — keeps SSR and hydration identical
+  | "setup-missing" // Firebase env vars not configured
+  | "onboarding" // no house on this device yet
+  | "loading" // subscribed, waiting for first snapshots
+  | "house-missing" // session points at a deleted/unknown house
+  | "ready";
 
-function reducer(state: HouseState, action: HouseAction): HouseState {
-  switch (action.type) {
-    case "REPLACE":
-      return action.state;
-    case "RENAME_HOUSE":
-      return { ...state, houseName: action.name };
-    case "ADD_ROOM":
-      return { ...state, rooms: [...state.rooms, action.room] };
-    case "REMOVE_ROOM":
-      // Occupied rooms can't be deleted; the UI hides the button but guard anyway.
-      if (state.tenants.some((t) => t.roomId === action.roomId)) return state;
-      return { ...state, rooms: state.rooms.filter((r) => r.id !== action.roomId) };
-    case "ADD_TENANT":
-      return { ...state, tenants: [...state.tenants, action.tenant] };
-    case "REMOVE_TENANT":
-      // Chore logs are kept: history stays truthful even after someone moves out.
-      return {
-        ...state,
-        tenants: state.tenants.filter((t) => t.id !== action.tenantId),
-        activeTenantId:
-          state.activeTenantId === action.tenantId ? null : state.activeTenantId,
-      };
-    case "SET_ACTIVE_TENANT":
-      return { ...state, activeTenantId: action.tenantId };
-    case "ADD_CHORE":
-      return { ...state, chores: [...state.chores, action.chore] };
-    case "REMOVE_CHORE":
-      return {
-        ...state,
-        chores: state.chores.filter((c) => c.id !== action.choreId),
-        choreLogs: state.choreLogs.filter((l) => l.choreId !== action.choreId),
-      };
-    case "ADD_LOG":
-      return { ...state, choreLogs: [...state.choreLogs, action.log] };
-    case "REMOVE_LOG":
-      return { ...state, choreLogs: state.choreLogs.filter((l) => l.id !== action.logId) };
-    case "ADD_SUPPLY":
-      return { ...state, supplies: [...state.supplies, action.item] };
-    case "MARK_PURCHASED":
-      return {
-        ...state,
-        supplies: state.supplies.map((s) =>
-          s.id === action.supplyId
-            ? { ...s, purchasedBy: action.purchasedBy, purchasedAt: action.purchasedAt }
-            : s,
-        ),
-      };
-    case "REMOVE_SUPPLY":
-      return { ...state, supplies: state.supplies.filter((s) => s.id !== action.supplyId) };
-  }
+/** What the join/create screens need to show before a profile exists. */
+export interface HousePreview {
+  houseId: ID;
+  name: string;
+  rooms: Room[];
+  tenantCount: number;
 }
 
-function loadStoredState(): HouseState | null {
+function loadSession(): Session | null {
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = window.localStorage.getItem(SESSION_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as HouseState;
-    if (
-      !parsed ||
-      typeof parsed.houseName !== "string" ||
-      !Array.isArray(parsed.rooms) ||
-      !Array.isArray(parsed.tenants) ||
-      !Array.isArray(parsed.chores) ||
-      !Array.isArray(parsed.choreLogs) ||
-      !Array.isArray(parsed.supplies)
-    ) {
-      return null;
-    }
-    return parsed;
+    const parsed = JSON.parse(raw) as Session;
+    return parsed && typeof parsed.houseId === "string" ? parsed : null;
   } catch {
     return null;
   }
 }
 
+function docsToList<T>(snap: { docs: { id: string; data(): unknown }[] }): T[] {
+  return snap.docs.map((d) => ({ id: d.id, ...(d.data() as object) }) as T);
+}
+
+const byCreated = (a: { createdAt: string }, b: { createdAt: string }) =>
+  a.createdAt.localeCompare(b.createdAt);
+
 export interface HouseApi {
+  phase: Phase;
   state: HouseState;
+  /** The shareable invite code (same as houseId). */
+  houseCode: string | null;
+
+  // Onboarding
+  createHouse(name: string, roomCount: number): Promise<HousePreview>;
+  lookupHouse(code: string): Promise<HousePreview | null>;
+  createProfile(preview: HousePreview, name: string, roomId: ID): Promise<void>;
+  leaveHouse(): void;
+
+  // House actions (optimistic — Firestore latency compensation updates the UI instantly)
   renameHouse(name: string): void;
   addRoom(name: string): Room;
   removeRoom(roomId: ID): void;
@@ -129,104 +97,280 @@ export interface HouseApi {
   addSupply(name: string, requestedBy: ID): SupplyItem;
   markPurchased(supplyId: ID, purchasedBy: ID): void;
   removeSupply(supplyId: ID): void;
-  resetHouse(): void;
+
   tenantById(id: ID): Tenant | undefined;
-  /** Display name that survives move-outs (logs reference tenants by id). */
   tenantName(id: ID): string;
 }
 
 const HouseContext = createContext<HouseApi | null>(null);
 
 export function HouseProvider({ children }: { children: React.ReactNode }) {
-  const [state, dispatch] = useReducer(reducer, undefined, makeSeedState);
-  const [hydrated, setHydrated] = useState(false);
+  const [booted, setBooted] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
 
-  // Load persisted state after mount so server and first client render match.
+  // Live slices from Firestore. undefined/null distinguish "not loaded" from "empty".
+  const [houseDoc, setHouseDoc] = useState<{ name: string } | null | undefined>(undefined);
+  const [rooms, setRooms] = useState<Room[] | null>(null);
+  const [tenants, setTenants] = useState<Tenant[] | null>(null);
+  const [chores, setChores] = useState<Chore[] | null>(null);
+  const [choreLogs, setChoreLogs] = useState<ChoreLog[] | null>(null);
+  const [supplies, setSupplies] = useState<SupplyItem[] | null>(null);
+
   useEffect(() => {
-    const stored = loadStoredState();
-    if (stored) dispatch({ type: "REPLACE", state: stored });
-    setHydrated(true);
+    setSession(loadSession());
+    setBooted(true);
   }, []);
 
-  useEffect(() => {
-    if (!hydrated) return;
+  function persistSession(next: Session | null) {
     try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      if (next) window.localStorage.setItem(SESSION_KEY, JSON.stringify(next));
+      else window.localStorage.removeItem(SESSION_KEY);
     } catch {
-      // Storage full or blocked (private mode) — the session still works in memory.
+      // Private mode — the session still works in memory.
     }
-  }, [state, hydrated]);
+    setSession(next);
+  }
+
+  const houseId = session?.houseId ?? null;
+
+  // Real-time subscriptions: one listener per collection, torn down on house change.
+  useEffect(() => {
+    if (!booted || !firebaseReady || !houseId) return;
+    const houseRef = doc(getDb(), "houses", houseId);
+    const unsubs = [
+      onSnapshot(
+        houseRef,
+        (snap) => setHouseDoc(snap.exists() ? (snap.data() as { name: string }) : null),
+        () => setHouseDoc(null),
+      ),
+      onSnapshot(collection(houseRef, "rooms"), (s) =>
+        setRooms(docsToList<Room>(s).sort(byCreated)),
+      ),
+      onSnapshot(collection(houseRef, "tenants"), (s) =>
+        setTenants(docsToList<Tenant>(s).sort((a, b) => a.joinedAt.localeCompare(b.joinedAt))),
+      ),
+      onSnapshot(collection(houseRef, "chores"), (s) =>
+        setChores(docsToList<Chore>(s).sort(byCreated)),
+      ),
+      onSnapshot(collection(houseRef, "choreLogs"), (s) => setChoreLogs(docsToList<ChoreLog>(s))),
+      onSnapshot(collection(houseRef, "supplies"), (s) => setSupplies(docsToList<SupplyItem>(s))),
+    ];
+    return () => {
+      unsubs.forEach((u) => u());
+      setHouseDoc(undefined);
+      setRooms(null);
+      setTenants(null);
+      setChores(null);
+      setChoreLogs(null);
+      setSupplies(null);
+    };
+  }, [booted, houseId]);
+
+  const phase: Phase = !booted
+    ? "boot"
+    : !firebaseReady
+      ? "setup-missing"
+      : !houseId
+        ? "onboarding"
+        : houseDoc === undefined || !rooms || !tenants || !chores || !choreLogs || !supplies
+          ? houseDoc === null
+            ? "house-missing"
+            : "loading"
+          : houseDoc === null
+            ? "house-missing"
+            : "ready";
 
   const api = useMemo<HouseApi>(() => {
+    const state: HouseState = {
+      houseId: houseId ?? "",
+      houseName: houseDoc?.name ?? "",
+      activeTenantId: session?.tenantId ?? null,
+      rooms: rooms ?? [],
+      tenants: tenants ?? [],
+      chores: chores ?? [],
+      choreLogs: choreLogs ?? [],
+      supplies: supplies ?? [],
+    };
     const tenantMap = new Map(state.tenants.map((t) => [t.id, t]));
     const now = () => new Date().toISOString();
+    const houseRef = () => doc(getDb(), "houses", houseId as string);
+    const write = (p: Promise<unknown>) => {
+      p.catch((err) => console.error("[cohouse] write failed:", err));
+    };
 
     return {
+      phase,
       state,
+      houseCode: houseId,
+
+      async createHouse(name, roomCount) {
+        const db = getDb();
+        // Retry a few times in the (unlikely) event of a code collision.
+        let code = makeHouseCode();
+        for (let i = 0; i < 5; i++) {
+          const existing = await getDoc(doc(db, "houses", code));
+          if (!existing.exists()) break;
+          code = makeHouseCode();
+        }
+        const batch = writeBatch(db);
+        const houseRef = doc(db, "houses", code);
+        batch.set(houseRef, { name, createdAt: now() });
+        const newRooms: Room[] = [];
+        for (let i = 1; i <= roomCount; i++) {
+          const roomRef = doc(collection(houseRef, "rooms"));
+          // Zero-padded suffix keeps rooms in order when sorted by createdAt.
+          const createdAt = new Date(Date.now() + i).toISOString();
+          const room: Room = { id: roomRef.id, name: `Room ${i}`, createdAt };
+          batch.set(roomRef, { name: room.name, createdAt });
+          newRooms.push(room);
+        }
+        await batch.commit();
+        return { houseId: code, name, rooms: newRooms, tenantCount: 0 };
+      },
+
+      async lookupHouse(code) {
+        const db = getDb();
+        const normalized = code.trim().toUpperCase();
+        if (!normalized) return null;
+        const houseSnap = await getDoc(doc(db, "houses", normalized));
+        if (!houseSnap.exists()) return null;
+        const houseRef = doc(db, "houses", normalized);
+        const [roomSnap, tenantSnap] = await Promise.all([
+          getDocs(collection(houseRef, "rooms")),
+          getDocs(collection(houseRef, "tenants")),
+        ]);
+        return {
+          houseId: normalized,
+          name: (houseSnap.data() as { name: string }).name,
+          rooms: docsToList<Room>(roomSnap).sort(byCreated),
+          tenantCount: tenantSnap.size,
+        };
+      },
+
+      async createProfile(preview, name, roomId) {
+        const tenantRef = doc(collection(doc(getDb(), "houses", preview.houseId), "tenants"));
+        const tenant: Tenant = {
+          id: tenantRef.id,
+          name,
+          roomId,
+          color: TENANT_COLORS[preview.tenantCount % TENANT_COLORS.length],
+          joinedAt: now(),
+        };
+        await setDoc(tenantRef, {
+          name: tenant.name,
+          roomId: tenant.roomId,
+          color: tenant.color,
+          joinedAt: tenant.joinedAt,
+        });
+        persistSession({ houseId: preview.houseId, tenantId: tenant.id });
+      },
+
+      leaveHouse() {
+        persistSession(null);
+      },
+
       renameHouse(name) {
-        dispatch({ type: "RENAME_HOUSE", name });
+        write(updateDoc(houseRef(), { name }));
       },
       addRoom(name) {
-        const room: Room = { id: uid(), name, createdAt: now() };
-        dispatch({ type: "ADD_ROOM", room });
+        const ref = doc(collection(houseRef(), "rooms"));
+        const room: Room = { id: ref.id, name, createdAt: now() };
+        write(setDoc(ref, { name: room.name, createdAt: room.createdAt }));
         return room;
       },
       removeRoom(roomId) {
-        dispatch({ type: "REMOVE_ROOM", roomId });
+        if (state.tenants.some((t) => t.roomId === roomId)) return;
+        write(deleteDoc(doc(houseRef(), "rooms", roomId)));
       },
       addTenant(roomId, name) {
+        const ref = doc(collection(houseRef(), "tenants"));
         const tenant: Tenant = {
-          id: uid(),
+          id: ref.id,
           name,
           roomId,
           color: TENANT_COLORS[state.tenants.length % TENANT_COLORS.length],
           joinedAt: now(),
         };
-        dispatch({ type: "ADD_TENANT", tenant });
+        write(
+          setDoc(ref, {
+            name: tenant.name,
+            roomId: tenant.roomId,
+            color: tenant.color,
+            joinedAt: tenant.joinedAt,
+          }),
+        );
         return tenant;
       },
       removeTenant(tenantId) {
-        dispatch({ type: "REMOVE_TENANT", tenantId });
+        // Chore logs are kept: history stays truthful even after someone moves out.
+        write(deleteDoc(doc(houseRef(), "tenants", tenantId)));
+        if (session?.tenantId === tenantId) {
+          persistSession({ houseId: houseId as string, tenantId: null });
+        }
       },
       setActiveTenant(tenantId) {
-        dispatch({ type: "SET_ACTIVE_TENANT", tenantId });
+        persistSession({ houseId: houseId as string, tenantId });
       },
       addChore(title, icon, cadence) {
-        const chore: Chore = { id: uid(), title, icon, cadence, createdAt: now() };
-        dispatch({ type: "ADD_CHORE", chore });
+        const ref = doc(collection(houseRef(), "chores"));
+        const chore: Chore = { id: ref.id, title, icon, cadence, createdAt: now() };
+        write(setDoc(ref, { title, icon, cadence, createdAt: chore.createdAt }));
         return chore;
       },
       removeChore(choreId) {
-        dispatch({ type: "REMOVE_CHORE", choreId });
+        const db = getDb();
+        write(
+          (async () => {
+            const logs = await getDocs(
+              query(collection(houseRef(), "choreLogs"), where("choreId", "==", choreId)),
+            );
+            const batch = writeBatch(db);
+            batch.delete(doc(houseRef(), "chores", choreId));
+            logs.docs.forEach((d) => batch.delete(d.ref));
+            await batch.commit();
+          })(),
+        );
       },
       logChore(choreId, tenantId) {
+        const ref = doc(collection(houseRef(), "choreLogs"));
         const log: ChoreLog = {
-          id: uid(),
+          id: ref.id,
           choreId,
           tenantId,
           action: "completed",
           timestamp: now(),
         };
-        dispatch({ type: "ADD_LOG", log });
+        write(
+          setDoc(ref, {
+            choreId,
+            tenantId,
+            action: log.action,
+            timestamp: log.timestamp,
+          }),
+        );
         return log;
       },
       undoLog(logId) {
-        dispatch({ type: "REMOVE_LOG", logId });
+        write(deleteDoc(doc(houseRef(), "choreLogs", logId)));
       },
       addSupply(name, requestedBy) {
-        const item: SupplyItem = { id: uid(), name, requestedBy, requestedAt: now() };
-        dispatch({ type: "ADD_SUPPLY", item });
+        const ref = doc(collection(houseRef(), "supplies"));
+        const item: SupplyItem = { id: ref.id, name, requestedBy, requestedAt: now() };
+        write(setDoc(ref, { name, requestedBy, requestedAt: item.requestedAt }));
         return item;
       },
       markPurchased(supplyId, purchasedBy) {
-        dispatch({ type: "MARK_PURCHASED", supplyId, purchasedBy, purchasedAt: now() });
+        write(
+          updateDoc(doc(houseRef(), "supplies", supplyId), {
+            purchasedBy,
+            purchasedAt: now(),
+          }),
+        );
       },
       removeSupply(supplyId) {
-        dispatch({ type: "REMOVE_SUPPLY", supplyId });
+        write(deleteDoc(doc(houseRef(), "supplies", supplyId)));
       },
-      resetHouse() {
-        dispatch({ type: "REPLACE", state: makeSeedState() });
-      },
+
       tenantById(id) {
         return tenantMap.get(id);
       },
@@ -234,17 +378,8 @@ export function HouseProvider({ children }: { children: React.ReactNode }) {
         return tenantMap.get(id)?.name ?? "Former resident";
       },
     };
-  }, [state]);
-
-  if (!hydrated) {
-    return (
-      <div className="flex min-h-dvh items-center justify-center">
-        <div className="animate-pulse text-4xl" role="status" aria-label="Loading house">
-          🏠
-        </div>
-      </div>
-    );
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, houseId, session?.tenantId, houseDoc, rooms, tenants, chores, choreLogs, supplies]);
 
   return <HouseContext.Provider value={api}>{children}</HouseContext.Provider>;
 }
@@ -254,3 +389,6 @@ export function useHouse(): HouseApi {
   if (!ctx) throw new Error("useHouse must be used inside <HouseProvider>");
   return ctx;
 }
+
+/** `uid` re-export kept for potential offline id needs in views. */
+export { uid };

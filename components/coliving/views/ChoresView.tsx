@@ -4,7 +4,16 @@ import { useState } from "react";
 import type { Chore, ChoreCadence, ID } from "@/lib/coliving/types";
 import { formatWhen, startOfWeek } from "@/lib/coliving/utils";
 import { useHouse } from "../HouseProvider";
-import { Avatar, Card, EmptyState, SectionLabel, TenantSheet } from "../ui";
+import {
+  Avatar,
+  Card,
+  EmptyState,
+  GRADIENT_BTN,
+  GRADIENT_TEXT,
+  INPUT_CLASSES,
+  SectionLabel,
+  TenantSheet,
+} from "../ui";
 import { IconCheck, IconPlus, IconTrash } from "../icons";
 
 const CHORE_ICONS = ["🗑️", "🧹", "🍽️", "🚿", "🧽", "🧺", "🌿", "🐕", "🛏️", "🪟"];
@@ -55,14 +64,14 @@ export function ChoresView({
     <div className="space-y-4">
       <div className="flex items-end justify-between">
         <div>
-          <h1 className="text-xl font-bold text-stone-900">Accountability board</h1>
-          <p className="text-sm text-stone-500">
+          <h1 className="text-xl font-bold text-white">Accountability board</h1>
+          <p className="text-sm text-slate-400">
             {doneThisWeek} done this week · resets Monday
           </p>
         </div>
         <button
           onClick={() => setAdding((v) => !v)}
-          className="flex items-center gap-1.5 rounded-xl bg-teal-600 px-3.5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-700 active:scale-95"
+          className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-semibold ${GRADIENT_BTN}`}
         >
           <IconPlus className="size-4" />
           Add chore
@@ -84,7 +93,7 @@ export function ChoresView({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Water the plants"
-              className="w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-teal-400"
+              className={`w-full ${INPUT_CLASSES}`}
             />
             <div className="flex flex-wrap gap-1.5">
               {CHORE_ICONS.map((e) => (
@@ -94,7 +103,9 @@ export function ChoresView({
                   onClick={() => setIcon(e)}
                   aria-pressed={icon === e}
                   className={`rounded-xl p-2 text-lg transition ${
-                    icon === e ? "bg-teal-100 ring-2 ring-teal-400" : "bg-stone-50 hover:bg-stone-100"
+                    icon === e
+                      ? "bg-fuchsia-500/15 ring-2 ring-fuchsia-400"
+                      : "bg-white/5 hover:bg-white/10"
                   }`}
                 >
                   {e}
@@ -102,7 +113,7 @@ export function ChoresView({
               ))}
             </div>
             <div className="flex items-center gap-2">
-              <div className="flex flex-1 rounded-xl bg-stone-100 p-1">
+              <div className="flex flex-1 rounded-xl bg-slate-800/60 p-1 ring-1 ring-white/10">
                 {(["daily", "weekly"] as const).map((c) => (
                   <button
                     key={c}
@@ -110,7 +121,7 @@ export function ChoresView({
                     onClick={() => setCadence(c)}
                     aria-pressed={cadence === c}
                     className={`flex-1 rounded-lg py-1.5 text-sm font-medium capitalize transition ${
-                      cadence === c ? "bg-white text-stone-900 shadow-sm" : "text-stone-500"
+                      cadence === c ? "bg-slate-700 text-white shadow-sm" : "text-slate-400"
                     }`}
                   >
                     {c}
@@ -120,7 +131,7 @@ export function ChoresView({
               <button
                 type="submit"
                 disabled={!title.trim()}
-                className="rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition enabled:hover:bg-teal-700 disabled:opacity-40"
+                className={`rounded-xl px-4 py-2 text-sm font-semibold ${GRADIENT_BTN}`}
               >
                 Add
               </button>
@@ -207,21 +218,23 @@ function ChoreCard({
   return (
     <Card>
       <div className="flex items-start gap-3">
-        <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-stone-100 text-xl">
+        <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-white/5 text-xl ring-1 ring-white/10">
           {chore.icon}
         </span>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <h2 className="truncate text-base font-bold text-stone-900">{chore.title}</h2>
+            <h2 className="truncate text-base font-bold text-white">{chore.title}</h2>
             <span
               className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
-                chore.cadence === "daily" ? "bg-sky-50 text-sky-700" : "bg-violet-50 text-violet-700"
+                chore.cadence === "daily"
+                  ? "bg-cyan-400/10 text-cyan-300"
+                  : "bg-violet-400/10 text-violet-300"
               }`}
             >
               {chore.cadence}
             </span>
           </div>
-          <p className="mt-0.5 truncate text-xs text-stone-500">
+          <p className="mt-0.5 truncate text-xs text-slate-500">
             {latestLog
               ? `Last: ${latestBy?.name ?? "Former resident"} · ${formatWhen(latestLog.timestamp)}`
               : "Never done yet — be the first!"}
@@ -230,7 +243,7 @@ function ChoreCard({
         <button
           onClick={onRemove}
           aria-label={`Remove ${chore.title}`}
-          className="rounded-full p-1.5 text-stone-300 transition hover:bg-rose-50 hover:text-rose-600"
+          className="rounded-full p-1.5 text-slate-600 transition hover:bg-rose-500/10 hover:text-rose-400"
         >
           <IconTrash className="size-4" />
         </button>
@@ -238,7 +251,7 @@ function ChoreCard({
 
       <button
         onClick={onLog}
-        className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-teal-600 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-700 active:scale-[0.98]"
+        className={`mt-3 flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold ${GRADIENT_BTN}`}
       >
         <IconCheck className="size-4" />
         I did this just now
@@ -252,7 +265,7 @@ function ChoreCard({
               <li key={tenant.id} className="flex items-center gap-2.5">
                 <Avatar tenant={tenant} size="sm" />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-stone-800">
+                  <p className="truncate text-sm font-medium text-slate-200">
                     {tenant.name}
                     {weekCount > 0 && weekCount === maxCount && (
                       <span className="ml-1" role="img" aria-label="Leader">
@@ -260,16 +273,16 @@ function ChoreCard({
                       </span>
                     )}
                     {state.activeTenantId === tenant.id && (
-                      <span className="ml-1.5 text-xs font-normal text-teal-600">(you)</span>
+                      <span className="ml-1.5 text-xs font-normal text-fuchsia-400">(you)</span>
                     )}
                   </p>
-                  <p className="truncate text-[11px] text-stone-400">
+                  <p className="truncate text-[11px] text-slate-500">
                     {lastDone ? `Last done: ${formatWhen(lastDone)}` : "Not yet"}
                   </p>
                 </div>
                 <span
-                  className={`text-base font-bold tabular-nums ${
-                    weekCount > 0 ? "text-stone-900" : "text-stone-300"
+                  className={`text-lg font-bold tabular-nums ${
+                    weekCount > 0 ? GRADIENT_TEXT : "text-slate-600"
                   }`}
                 >
                   {weekCount}
