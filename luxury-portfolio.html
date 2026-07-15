@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thrulenses — Cinematography for 5-Star Spaces &amp; Ultra-Luxury Hospitality</title>
+  <meta name="description" content="Thrulenses is a luxury hospitality videographer crafting cinematic films for 5-star resorts, private estates and ultra-premium real estate worldwide." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind (Play CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    window.tailwind = window.tailwind || {}; // stay silent if the CDN is unreachable
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            obsidian: '#0D0D0D',
+            ink: '#161616',
+            platinum: '#C5C5C5',
+            smoke: '#8A8A8A',
+          },
+          fontFamily: {
+            syne: ['Syne', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+          },
+          transitionTimingFunction: {
+            luxe: 'cubic-bezier(0.19, 1, 0.22, 1)',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+
+  <style>
+    /* ---------- Base ---------- */
+    html { background: #0D0D0D; }
+    body {
+      background: #0D0D0D;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    ::selection { background: #C5C5C5; color: #0D0D0D; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #0D0D0D; }
+    ::-webkit-scrollbar-thumb { background: #3a3a3a; }
+
+    /* ---------- Cinematic grain ---------- */
+    .grain {
+      position: fixed; inset: -50%;
+      width: 200%; height: 200%;
+      pointer-events: none;
+      z-index: 90;
+      opacity: 0.05;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ---------- Custom cursor ---------- */
+    #cursor {
+      position: fixed; top: 0; left: 0;
+      width: 12px; height: 12px;
+      border-radius: 999px;
+      background: #fff;
+      mix-blend-mode: difference;
+      pointer-events: none;
+      z-index: 400;
+      display: none;
+      align-items: center; justify-content: center;
+      will-change: transform;
+    }
+    #cursor .cursor-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      color: #0D0D0D;
+      opacity: 0;
+      white-space: nowrap;
+      transform: translateX(0.14em); /* optical centering for tracked text */
+    }
+    #cursor.is-badge { mix-blend-mode: normal; background: rgba(255,255,255,0.92); backdrop-filter: blur(4px); }
+    #cursor.is-badge .cursor-label { opacity: 1; }
+    @media (pointer: fine) { #cursor { display: flex; } }
+
+    /* ---------- Kinetic type helpers ---------- */
+    .mask-line { display: block; overflow: hidden; }
+    .mask-line > .mask-inner { display: block; will-change: transform; }
+    .char { display: inline-block; will-change: transform; }
+    .split-word { display: inline-block; white-space: nowrap; }
+    .word-space { display: inline-block; }
+
+    .stroke-text {
+      color: transparent;
+      -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.85);
+    }
+    @media (max-width: 767px) { .stroke-text { -webkit-text-stroke-width: 1px; } }
+
+    /* ---------- Header ---------- */
+    #site-header {
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      background: rgba(13, 13, 13, 0.35);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      transition: background 0.6s ease;
+    }
+    body.scrolled #site-header { background: rgba(13, 13, 13, 0.72); }
+
+    /* ---------- Work cards ---------- */
+    .work-card figure { transform: translateZ(0); }
+    .card-img {
+      transition: transform 1.4s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.8s ease;
+    }
+    .work-card:hover .card-img { transform: scale(1.07); }
+    .card-shade { transition: opacity 0.9s ease; }
+    .work-card:hover .card-shade { opacity: 0.35; }
+    .card-meta { transition: transform 0.9s cubic-bezier(0.19, 1, 0.22, 1); }
+    .work-card:hover .card-meta { transform: translateY(-8px); }
+    .card-tag { transition: transform 0.9s cubic-bezier(0.19, 1, 0.22, 1), background 0.5s ease; }
+    .work-card:hover .card-tag { transform: translateY(-8px); background: rgba(255,255,255,0.12); }
+
+    /* Designed fallback that sits behind each thumbnail (shows if an image fails) */
+    .card-fallback {
+      background:
+        radial-gradient(120% 90% at 20% 0%, rgba(197,197,197,0.14) 0%, transparent 55%),
+        linear-gradient(160deg, #1d1d1d 0%, #101010 60%, #0D0D0D 100%);
+    }
+
+    /* ---------- Philosophy ---------- */
+    .ph-word { opacity: 0.14; will-change: opacity; }
+
+    /* ---------- Footer giant type ---------- */
+    .footer-cta .grad-text {
+      background: linear-gradient(100deg, #ffffff 0%, #ffffff 42%, #C5C5C5 58%, #5d5d5d 78%, #ffffff 100%);
+      background-size: 240% 100%;
+      background-position: 0% 0%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      transition: background-position 1.4s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+    .footer-cta:hover .grad-text { background-position: 100% 0%; }
+
+    /* ---------- Marquee ---------- */
+    .marquee-content { flex-shrink: 0; min-width: 100%; will-change: transform; }
+
+    /* ---------- Modal ---------- */
+    #film-modal { display: none; }
+    #film-modal.open { display: flex; }
+    #modal-video::-webkit-media-controls-panel { background-image: linear-gradient(transparent, rgba(0,0,0,0.7)); }
+
+    /* ---------- Preloader ---------- */
+    #preloader { will-change: transform; }
+    .no-js #preloader { display: none; }
+
+    /* ---------- Reduced motion ---------- */
+    @media (prefers-reduced-motion: reduce) {
+      #cursor { display: none !important; }
+    }
+  </style>
+  <noscript><style>#preloader { display: none; } .grain { display: none; }</style></noscript>
+</head>
+
+<body class="bg-obsidian font-inter text-white antialiased selection:bg-platinum selection:text-obsidian">
+
+  <!-- ======================= CUSTOM CURSOR ======================= -->
+  <div id="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+
+  <!-- ======================= FILM GRAIN ======================= -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ======================= PRELOADER ======================= -->
+  <div id="preloader" class="fixed inset-0 z-[300] flex flex-col items-center justify-center bg-obsidian">
+    <div class="mask-line">
+      <div id="preloader-word" class="mask-inner font-syne text-sm font-extrabold tracking-[0.5em] text-platinum md:text-base">THRULENSES</div>
+    </div>
+    <div class="mt-7 h-px w-44 overflow-hidden bg-white/10">
+      <div id="preloader-bar" class="h-full w-full origin-left scale-x-0 bg-platinum"></div>
+    </div>
+    <div id="preloader-count" class="absolute bottom-8 right-8 font-syne text-5xl font-bold text-white/15 md:bottom-10 md:right-12 md:text-6xl">00</div>
+    <div class="absolute bottom-10 left-8 hidden text-[10px] tracking-[0.4em] text-white/25 md:left-12 md:block">LUXURY HOSPITALITY FILMS</div>
+  </div>
+
+  <!-- ======================= HEADER ======================= -->
+  <header id="site-header" class="fixed inset-x-0 top-0 z-[120]">
+    <nav class="mx-auto flex max-w-[1600px] items-center justify-between px-6 py-4 md:px-10 md:py-5">
+      <a href="#top" class="magnetic flex items-center gap-3" aria-label="Thrulenses — home">
+        <i data-lucide="aperture" class="h-[18px] w-[18px] text-platinum"></i>
+        <span class="font-syne text-sm font-extrabold uppercase tracking-[0.35em]">Thrulenses</span>
+      </a>
+
+      <div class="hidden items-center gap-10 text-[11px] uppercase tracking-[0.3em] text-smoke lg:flex">
+        <a href="#work" class="magnetic transition-colors duration-500 hover:text-white">Selected Work</a>
+        <a href="#philosophy" class="magnetic transition-colors duration-500 hover:text-white">Philosophy</a>
+        <a href="#capabilities" class="magnetic transition-colors duration-500 hover:text-white">Capabilities</a>
+      </div>
+
+      <a href="#contact"
+         class="magnetic group inline-flex items-center gap-3 whitespace-nowrap rounded-full border border-white/20 px-5 py-2.5 text-[10px] uppercase tracking-[0.3em] text-platinum transition-colors duration-700 hover:border-white hover:bg-white hover:text-obsidian md:px-6">
+        <span>Start a Project</span>
+        <i data-lucide="arrow-up-right" class="h-3.5 w-3.5 transition-transform duration-500 group-hover:rotate-45"></i>
+      </a>
+    </nav>
+  </header>
+
+  <main id="top">
+
+    <!-- ======================= HERO ======================= -->
+    <section id="hero" class="relative flex h-[100svh] min-h-[640px] flex-col justify-end overflow-hidden">
+      <!-- Ambient background: image base + video that fades in when playable -->
+      <div id="hero-media" class="absolute inset-0 will-change-transform">
+        <div class="absolute inset-0 card-fallback"></div>
+        <img id="hero-fallback"
+             src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=2400&auto=format&fit=crop"
+             alt="" aria-hidden="true"
+             class="absolute inset-0 h-full w-full object-cover opacity-60" />
+        <video id="hero-video" class="absolute inset-0 h-full w-full object-cover opacity-0" autoplay muted loop playsinline preload="auto">
+          <source src="https://videos.pexels.com/video-files/3571264/3571264-uhd_3840_2160_30fps.mp4" type="video/mp4" />
+        </video>
+        <!-- Cinematic wash -->
+        <div class="absolute inset-0 bg-gradient-to-b from-obsidian/80 via-obsidian/20 to-obsidian"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-obsidian/60 via-transparent to-obsidian/40"></div>
+      </div>
+
+      <div id="hero-content" class="relative z-10 mx-auto w-full max-w-[1600px] px-6 pb-28 md:px-10 md:pb-24">
+        <p id="hero-eyebrow" class="mb-6 flex items-center gap-4 text-[10px] uppercase tracking-[0.45em] text-platinum/80 md:mb-8 md:text-[11px]">
+          <span class="inline-block h-px w-10 bg-platinum/60"></span>
+          Luxury Hospitality Films — Worldwide
+        </p>
+
+        <h1 id="hero-headline" class="font-syne font-extrabold uppercase leading-[0.98] tracking-tight text-[clamp(2.3rem,6.6vw,6.6rem)]">
+          <span class="mask-line"><span class="mask-inner hl-line">Cinematography</span></span>
+          <span class="mask-line"><span class="mask-inner hl-line">for <span class="stroke-text">5-Star Spaces</span></span></span>
+          <span class="mask-line"><span class="mask-inner hl-line">&amp; Ultra-Luxury</span></span>
+          <span class="mask-line"><span class="mask-inner hl-line"><span class="text-platinum">Hospitality.</span></span></span>
+        </h1>
+
+        <div id="hero-foot" class="mt-10 flex flex-col gap-8 border-t border-white/10 pt-6 md:mt-14 md:flex-row md:items-center md:justify-between">
+          <p class="max-w-md text-[13px] leading-relaxed text-smoke">
+            Films for the world's most exclusive resorts, private estates and
+            architectural addresses — where every frame must earn its silence.
+          </p>
+          <div class="flex items-center gap-10 text-[10px] uppercase tracking-[0.35em] text-white/50">
+            <span>EST. MMXXI</span>
+            <span>4°36′N — 74°04′W</span>
+            <span class="hidden md:inline">S-LOG3 / 4K</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll indicator -->
+      <div id="scroll-indicator" class="absolute bottom-0 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-3 pb-6">
+        <span class="text-[9px] uppercase tracking-[0.5em] text-white/40">Scroll</span>
+        <span class="block h-14 w-px overflow-hidden bg-white/15">
+          <span id="scroll-line" class="block h-full w-px bg-platinum"></span>
+        </span>
+      </div>
+    </section>
+
+    <!-- ======================= MARQUEE ======================= -->
+    <section class="border-y border-white/10 py-5" aria-hidden="true">
+      <div class="flex overflow-hidden">
+        <div class="marquee-content flex items-center gap-10 whitespace-nowrap pr-10 font-syne text-xs font-bold uppercase tracking-[0.4em] text-white/35">
+          <span>Ultra-Luxury Resorts</span><span class="text-platinum/60">✦</span>
+          <span>Private Villas</span><span class="text-platinum/60">✦</span>
+          <span>Michelin Dining</span><span class="text-platinum/60">✦</span>
+          <span>Wellness &amp; Spa</span><span class="text-platinum/60">✦</span>
+          <span>Penthouse Real Estate</span><span class="text-platinum/60">✦</span>
+          <span>Yachts &amp; Private Aviation</span><span class="text-platinum/60">✦</span>
+        </div>
+        <div class="marquee-content flex items-center gap-10 whitespace-nowrap pr-10 font-syne text-xs font-bold uppercase tracking-[0.4em] text-white/35">
+          <span>Ultra-Luxury Resorts</span><span class="text-platinum/60">✦</span>
+          <span>Private Villas</span><span class="text-platinum/60">✦</span>
+          <span>Michelin Dining</span><span class="text-platinum/60">✦</span>
+          <span>Wellness &amp; Spa</span><span class="text-platinum/60">✦</span>
+          <span>Penthouse Real Estate</span><span class="text-platinum/60">✦</span>
+          <span>Yachts &amp; Private Aviation</span><span class="text-platinum/60">✦</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= SELECTED WORK ======================= -->
+    <section id="work" class="relative mx-auto max-w-[1600px] px-6 pt-24 md:px-10 md:pt-36">
+      <div class="mb-16 flex items-end justify-between md:mb-24">
+        <h2 class="font-syne font-extrabold uppercase leading-[0.95] tracking-tight text-[clamp(2.2rem,6vw,5.5rem)]">
+          <span class="mask-line"><span class="mask-inner reveal-line">Selected</span></span>
+          <span class="mask-line"><span class="mask-inner reveal-line text-platinum">Work</span></span>
+        </h2>
+        <div class="pb-2 text-right text-[10px] uppercase tracking-[0.35em] text-smoke" data-reveal>
+          <p>( 01 — 06 )</p>
+          <p class="mt-2 hidden md:block">Hospitality · Real Estate · Estates</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-x-10 lg:gap-y-6">
+
+        <!-- 01 -->
+        <article class="work-card group relative cursor-pointer lg:col-span-7" data-speed="0.35" data-cursor="PLAY"
+                 data-video="https://videos.pexels.com/video-files/2169880/2169880-uhd_2560_1440_30fps.mp4"
+                 data-title="Amansara Reverie" data-meta="Ultra-Luxury Resort — Siem Reap · MMXXVI"
+                 role="button" tabindex="0" aria-label="Play film: Amansara Reverie">
+          <figure class="relative aspect-[16/11] overflow-hidden bg-ink">
+            <div class="card-fallback absolute inset-0 flex items-end p-6">
+              <span class="font-syne text-7xl font-extrabold text-white/10">01</span>
+            </div>
+            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="eager"
+                 src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1800&auto=format&fit=crop"
+                 alt="Infinity pool of an ultra-luxury resort at dusk" />
+            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
+            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">01 / Resort Film</div>
+            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
+              <div class="card-meta">
+                <h3 class="font-syne text-xl font-bold md:text-2xl">Amansara Reverie</h3>
+                <p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Siem Reap — MMXXVI</p>
+              </div>
+              <span class="card-tag rounded-full border border-white/20 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">02:48</span>
+            </figcaption>
+          </figure>
+        </article>
+
+        <!-- 02 -->
+        <article class="work-card group relative cursor-pointer lg:col-span-5 lg:mt-40" data-speed="0.95" data-cursor="PLAY"
+                 data-video="https://videos.pexels.com/video-files/1409899/1409899-uhd_2560_1440_25fps.mp4"
+                 data-title="The Obsidian Penthouse" data-meta="Real Estate Film — Dubai · MMXXVI"
+                 role="button" tabindex="0" aria-label="Play film: The Obsidian Penthouse">
+          <figure class="relative aspect-[3/4] overflow-hidden bg-ink">
+            <div class="card-fallback absolute inset-0 flex items-end p-6">
+              <span class="font-syne text-7xl font-extrabold text-white/10">02</span>
+            </div>
+            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy"
+                 src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=1400&auto=format&fit=crop"
+                 alt="Modern luxury villa illuminated at night" />
+            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
+            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">02 / Real Estate</div>
+            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
+              <div class="card-meta">
+                <h3 class="font-syne text-xl font-bold md:text-2xl">The Obsidian Penthouse</h3>
+                <p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Dubai — MMXXVI</p>
+              </div>
+              <span class="card-tag rounded-full border border-white/20 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">01:56</span>
+            </figcaption>
+          </figure>
+        </article>
+
+        <!-- 03 -->
+        <article class="work-card group relative cursor-pointer lg:col-span-5 lg:mt-10" data-speed="0.75" data-cursor="PLAY"
+                 data-video="https://videos.pexels.com/video-files/3571264/3571264-uhd_3840_2160_30fps.mp4"
+                 data-title="Villa Serenità" data-meta="Private Estate — Lake Como · MMXXV"
+                 role="button" tabindex="0" aria-label="Play film: Villa Serenità">
+          <figure class="relative aspect-[4/5] overflow-hidden bg-ink">
+            <div class="card-fallback absolute inset-0 flex items-end p-6">
+              <span class="font-syne text-7xl font-extrabold text-white/10">03</span>
+            </div>
+            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy"
+                 src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1400&auto=format&fit=crop"
+                 alt="Contemporary estate with pool in the evening light" />
+            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
+            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">03 / Private Estate</div>
+            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
+              <div class="card-meta">
+                <h3 class="font-syne text-xl font-bold md:text-2xl">Villa Serenità</h3>
+                <p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Lake Como — MMXXV</p>
+              </div>
+              <span class="card-tag rounded-full border border-white/20 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">03:12</span>
+            </figcaption>
+          </figure>
+        </article>
+
+        <!-- 04 -->
+        <article class="work-card group relative cursor-pointer lg:col-span-7 lg:mt-48" data-speed="0.25" data-cursor="PLAY"
+                 data-video="https://videos.pexels.com/video-files/2169880/2169880-uhd_2560_1440_30fps.mp4"
+                 data-title="Maison Lumière" data-meta="Boutique Hotel — Paris · MMXXV"
+                 role="button" tabindex="0" aria-label="Play film: Maison Lumière">
+          <figure class="relative aspect-[16/10] overflow-hidden bg-ink">
+            <div class="card-fallback absolute inset-0 flex items-end p-6">
+              <span class="font-syne text-7xl font-extrabold text-white/10">04</span>
+            </div>
+            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy"
+                 src="https://images.unsplash.com/photo-1582719508461-905c673771fd?q=80&w=1800&auto=format&fit=crop"
+                 alt="Luxury hotel suite overlooking a private pool" />
+            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
+            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">04 / Boutique Hotel</div>
+            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
+              <div class="card-meta">
+                <h3 class="font-syne text-xl font-bold md:text-2xl">Maison Lumière</h3>
+                <p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Paris — MMXXV</p>
+              </div>
+              <span class="card-tag rounded-full border border-white/20 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">02:21</span>
+            </figcaption>
+          </figure>
+        </article>
+
+        <!-- 05 -->
+        <article class="work-card group relative cursor-pointer lg:col-span-6 lg:mt-6" data-speed="0.85" data-cursor="PLAY"
+                 data-video="https://videos.pexels.com/video-files/1409899/1409899-uhd_2560_1440_25fps.mp4"
+                 data-title="Cove of Stillness" data-meta="Wellness Retreat — Maldives · MMXXV"
+                 role="button" tabindex="0" aria-label="Play film: Cove of Stillness">
+          <figure class="relative aspect-[4/3] overflow-hidden bg-ink">
+            <div class="card-fallback absolute inset-0 flex items-end p-6">
+              <span class="font-syne text-7xl font-extrabold text-white/10">05</span>
+            </div>
+            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy"
+                 src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?q=80&w=1600&auto=format&fit=crop"
+                 alt="Overwater villas of a Maldives wellness retreat" />
+            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
+            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">05 / Wellness Retreat</div>
+            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
+              <div class="card-meta">
+                <h3 class="font-syne text-xl font-bold md:text-2xl">Cove of Stillness</h3>
+                <p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Maldives — MMXXV</p>
+              </div>
+              <span class="card-tag rounded-full border border-white/20 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">04:05</span>
+            </figcaption>
+          </figure>
+        </article>
+
+        <!-- 06 -->
+        <article class="work-card group relative cursor-pointer lg:col-span-6 lg:mt-56" data-speed="0.5" data-cursor="PLAY"
+                 data-video="https://videos.pexels.com/video-files/3571264/3571264-uhd_3840_2160_30fps.mp4"
+                 data-title="Ridgeview Estate" data-meta="Architectural Film — Aspen · MMXXIV"
+                 role="button" tabindex="0" aria-label="Play film: Ridgeview Estate">
+          <figure class="relative aspect-[16/11] overflow-hidden bg-ink">
+            <div class="card-fallback absolute inset-0 flex items-end p-6">
+              <span class="font-syne text-7xl font-extrabold text-white/10">06</span>
+            </div>
+            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy"
+                 src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1600&auto=format&fit=crop"
+                 alt="Warm minimalist interior of an architectural estate" />
+            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
+            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">06 / Architecture</div>
+            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
+              <div class="card-meta">
+                <h3 class="font-syne text-xl font-bold md:text-2xl">Ridgeview Estate</h3>
+                <p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Aspen — MMXXIV</p>
+              </div>
+              <span class="card-tag rounded-full border border-white/20 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">02:59</span>
+            </figcaption>
+          </figure>
+        </article>
+      </div>
+    </section>
+
+    <!-- ======================= PHILOSOPHY (pinned) ======================= -->
+    <section id="philosophy" class="relative mt-32 md:mt-48">
+      <div id="philosophy-pin" class="flex h-[100svh] min-h-[560px] items-center">
+        <div class="mx-auto w-full max-w-[1600px] px-6 md:px-10">
+          <p class="mb-8 flex items-center gap-4 text-[10px] uppercase tracking-[0.45em] text-platinum/70 md:mb-12" data-reveal>
+            <span class="inline-block h-px w-10 bg-platinum/60"></span>
+            The Philosophy
+          </p>
+          <p id="philosophy-text" class="max-w-5xl font-syne font-bold leading-[1.28] text-[clamp(1.55rem,3.6vw,3.4rem)]">
+            We do not document spaces. We choreograph light, silence and movement — so an address is not merely seen, it is felt. This is cinema in service of the world's most exclusive experiences.
+          </p>
+          <div class="mt-10 flex items-center gap-6 text-[10px] uppercase tracking-[0.4em] text-white/30 md:mt-14" data-reveal>
+            <span>Manifesto</span><span class="h-px w-16 bg-white/15"></span><span>MMXXVI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= CAPABILITIES ======================= -->
+    <section id="capabilities" class="mx-auto mt-28 max-w-[1600px] px-6 md:mt-40 md:px-10">
+      <div class="mb-14 flex items-end justify-between md:mb-20">
+        <h2 class="font-syne font-extrabold uppercase leading-[0.95] tracking-tight text-[clamp(2rem,5vw,4.5rem)]">
+          <span class="mask-line"><span class="mask-inner reveal-line">Capabilities</span></span>
+        </h2>
+        <p class="pb-2 text-right text-[10px] uppercase tracking-[0.35em] text-smoke" data-reveal>( Full Service )</p>
+      </div>
+
+      <div class="grid grid-cols-1 border-t border-white/10 md:grid-cols-3">
+        <div class="cap-card group border-b border-white/10 px-1 py-10 transition-colors duration-700 hover:bg-white/[0.03] md:border-b-0 md:border-r md:p-10 lg:p-14" data-cursor="VIEW">
+          <p class="text-[10px] uppercase tracking-[0.4em] text-white/30">01</p>
+          <i data-lucide="film" class="mt-8 h-6 w-6 text-platinum transition-transform duration-700 group-hover:-translate-y-1"></i>
+          <h3 class="mt-6 font-syne text-xl font-bold md:text-2xl">Cinematography<br />&amp; Direction</h3>
+          <p class="mt-5 text-[13px] leading-relaxed text-smoke">
+            End-to-end creative direction for flagship properties — from narrative
+            concept and storyboards to final delivery across every channel.
+          </p>
+          <ul class="mt-8 space-y-3 text-[11px] uppercase tracking-[0.25em] text-white/45">
+            <li class="border-t border-white/10 pt-3">Concept &amp; Storyboard</li>
+            <li class="border-t border-white/10 pt-3">Aerial &amp; FPV Units</li>
+            <li class="border-t border-white/10 pt-3">Talent Direction</li>
+          </ul>
+        </div>
+
+        <div class="cap-card group border-b border-white/10 px-1 py-10 transition-colors duration-700 hover:bg-white/[0.03] md:border-b-0 md:border-r md:p-10 lg:p-14" data-cursor="VIEW">
+          <p class="text-[10px] uppercase tracking-[0.4em] text-white/30">02</p>
+          <i data-lucide="sliders-horizontal" class="mt-8 h-6 w-6 text-platinum transition-transform duration-700 group-hover:-translate-y-1"></i>
+          <h3 class="mt-6 font-syne text-xl font-bold md:text-2xl">S-Log3 Premium<br />Grading</h3>
+          <p class="mt-5 text-[13px] leading-relaxed text-smoke">
+            Captured in 10-bit S-Log3 and hand-graded frame by frame — a signature
+            palette of deep blacks, soft highlights and true-to-material tones.
+          </p>
+          <ul class="mt-8 space-y-3 text-[11px] uppercase tracking-[0.25em] text-white/45">
+            <li class="border-t border-white/10 pt-3">HDR Masters</li>
+            <li class="border-t border-white/10 pt-3">Film-Emulation LUTs</li>
+            <li class="border-t border-white/10 pt-3">Editorial Stills</li>
+          </ul>
+        </div>
+
+        <div class="cap-card group px-1 py-10 transition-colors duration-700 hover:bg-white/[0.03] md:p-10 lg:p-14" data-cursor="VIEW">
+          <p class="text-[10px] uppercase tracking-[0.4em] text-white/30">03</p>
+          <i data-lucide="sparkles" class="mt-8 h-6 w-6 text-platinum transition-transform duration-700 group-hover:-translate-y-1"></i>
+          <h3 class="mt-6 font-syne text-xl font-bold md:text-2xl">Exclusive Event<br />Coverage</h3>
+          <p class="mt-5 text-[13px] leading-relaxed text-smoke">
+            Discreet, black-tie coverage of openings, galas and private occasions —
+            multi-camera crews that move invisibly through the room.
+          </p>
+          <ul class="mt-8 space-y-3 text-[11px] uppercase tracking-[0.25em] text-white/45">
+            <li class="border-t border-white/10 pt-3">Same-Day Edits</li>
+            <li class="border-t border-white/10 pt-3">Multi-Cam Crews</li>
+            <li class="border-t border-white/10 pt-3">Global Travel</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= FOOTER / CONTACT ======================= -->
+    <footer id="contact" class="relative mt-32 overflow-hidden border-t border-white/10 md:mt-48">
+      <div class="mx-auto max-w-[1600px] px-6 pb-10 pt-24 md:px-10 md:pt-36">
+        <p class="mb-10 flex items-center gap-4 text-[10px] uppercase tracking-[0.45em] text-platinum/70 md:mb-14" data-reveal>
+          <span class="inline-block h-px w-10 bg-platinum/60"></span>
+          Have a property the world should feel?
+        </p>
+
+        <a href="mailto:yeisonv670@gmail.com?subject=Project%20Inquiry%20—%20Thrulenses"
+           class="footer-cta magnetic block font-syne font-extrabold uppercase leading-[0.95] tracking-tight text-[clamp(2.6rem,9.5vw,10rem)]"
+           data-cursor="WRITE">
+          <span class="mask-line"><span class="mask-inner reveal-line grad-text">Let's Build</span></span>
+          <span class="mask-line"><span class="mask-inner reveal-line grad-text">Something Elite</span></span>
+        </a>
+
+        <div class="mt-16 flex flex-col gap-10 border-t border-white/10 pt-10 md:mt-24 md:flex-row md:items-center md:justify-between" data-reveal>
+          <div>
+            <p class="text-[10px] uppercase tracking-[0.4em] text-white/35">New Business</p>
+            <a href="mailto:yeisonv670@gmail.com" class="magnetic mt-3 inline-block text-sm tracking-wide text-platinum transition-colors duration-500 hover:text-white">
+              yeisonv670@gmail.com
+            </a>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+               class="magnetic flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-platinum transition-colors duration-500 hover:border-white hover:bg-white hover:text-obsidian">
+              <i data-lucide="instagram" class="h-4 w-4"></i>
+            </a>
+            <a href="https://vimeo.com" target="_blank" rel="noopener noreferrer" aria-label="Vimeo showreel"
+               class="magnetic flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-platinum transition-colors duration-500 hover:border-white hover:bg-white hover:text-obsidian">
+              <i data-lucide="play" class="h-4 w-4"></i>
+            </a>
+            <a href="mailto:yeisonv670@gmail.com" aria-label="Email"
+               class="magnetic flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-platinum transition-colors duration-500 hover:border-white hover:bg-white hover:text-obsidian">
+              <i data-lucide="mail" class="h-4 w-4"></i>
+            </a>
+          </div>
+
+          <button id="back-to-top"
+                  class="magnetic group inline-flex items-center gap-3 self-start text-[10px] uppercase tracking-[0.35em] text-white/45 transition-colors duration-500 hover:text-white md:self-auto">
+            Back to top
+            <i data-lucide="arrow-up-right" class="h-3.5 w-3.5 -rotate-45 transition-transform duration-500 group-hover:-translate-y-1"></i>
+          </button>
+        </div>
+
+        <div class="mt-10 flex flex-col gap-3 border-t border-white/10 pt-6 text-[9px] uppercase tracking-[0.35em] text-white/25 md:flex-row md:items-center md:justify-between">
+          <p>© MMXXVI Thrulenses — All films reserved</p>
+          <p>Filmed worldwide · Based at 4°36′N 74°04′W</p>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ======================= FILM MODAL ======================= -->
+  <div id="film-modal" class="fixed inset-0 z-[250] items-center justify-center p-4 md:p-10" role="dialog" aria-modal="true" aria-label="Film player">
+    <div id="modal-backdrop" class="absolute inset-0 bg-black/90 backdrop-blur-md"></div>
+    <div id="modal-dialog" class="relative w-full max-w-6xl">
+      <div class="mb-4 flex items-end justify-between gap-6">
+        <div>
+          <h3 id="modal-title" class="font-syne text-lg font-bold md:text-2xl"></h3>
+          <p id="modal-meta" class="mt-1 text-[10px] uppercase tracking-[0.3em] text-smoke"></p>
+        </div>
+        <button id="modal-close" aria-label="Close film"
+                class="magnetic flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full border border-white/20 text-white transition-colors duration-500 hover:border-white hover:bg-white hover:text-obsidian">
+          <i data-lucide="x" class="h-4 w-4"></i>
+        </button>
+      </div>
+      <div class="relative aspect-video overflow-hidden border border-white/10 bg-black">
+        <video id="modal-video" class="h-full w-full" controls playsinline preload="auto"></video>
+        <div id="modal-fallback" class="card-fallback absolute inset-0 hidden flex-col items-center justify-center gap-4 p-8 text-center">
+          <img id="modal-fallback-img" src="" alt="" class="absolute inset-0 h-full w-full object-cover opacity-40" />
+          <p class="relative font-syne text-sm font-bold uppercase tracking-[0.35em] text-platinum">Private Screening</p>
+          <p class="relative max-w-sm text-xs leading-relaxed text-white/60">This film is screened privately. Request the full cut and password via the inquiry link below.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================= SCRIPTS ======================= -->
+  <script>
+  (function () {
+    'use strict';
+
+    var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var finePointer = window.matchMedia('(pointer: fine)').matches;
+    var hasGSAP = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
+
+    /* ---------- Lucide icons (script is deferred; body may parse first) ---------- */
+    function mountIcons() {
+      if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', mountIcons);
+    } else {
+      mountIcons();
+    }
+    window.addEventListener('load', mountIcons);
+
+    /* ---------- Image resilience: if a stock thumbnail dies, reveal the designed fallback ---------- */
+    document.querySelectorAll('.card-img, #hero-fallback').forEach(function (img) {
+      function drop() { img.style.display = 'none'; }
+      img.addEventListener('error', drop);
+      if (img.complete && img.naturalWidth === 0 && img.src) drop();
+    });
+
+    /* ---------- Hero video: fade in only when actually playable ---------- */
+    var heroVideo = document.getElementById('hero-video');
+    if (heroVideo) {
+      heroVideo.addEventListener('canplay', function () {
+        if (hasGSAP) gsap.to(heroVideo, { opacity: 1, duration: 1.6, ease: 'power2.out' });
+        else heroVideo.style.opacity = '1';
+      });
+      var p = heroVideo.play();
+      if (p && p.catch) p.catch(function () { /* autoplay blocked — image base remains */ });
+    }
+
+    /* ---------- No-GSAP graceful path ---------- */
+    if (!hasGSAP) {
+      var pre = document.getElementById('preloader');
+      if (pre) pre.style.display = 'none';
+      document.body.style.overflow = '';
+      return; // page remains fully readable, statically
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.config({ nullTargetWarn: false });
+
+    /* ============================================================
+       Split helpers (lightweight SplitText stand-ins)
+       ============================================================ */
+    function splitChars(el) {
+      // chars are inline-block, so wrap each word in a nowrap span:
+      // lines then break between words, never mid-word
+      var text = el.textContent;
+      el.setAttribute('aria-label', text);
+      el.textContent = '';
+      var frag = document.createDocumentFragment();
+      text.split(' ').forEach(function (word, wi, arr) {
+        if (word !== '') {
+          var wordSpan = document.createElement('span');
+          wordSpan.className = 'split-word';
+          wordSpan.setAttribute('aria-hidden', 'true');
+          for (var i = 0; i < word.length; i++) {
+            var span = document.createElement('span');
+            span.className = 'char';
+            span.textContent = word[i];
+            wordSpan.appendChild(span);
+          }
+          frag.appendChild(wordSpan);
+        }
+        if (wi < arr.length - 1) frag.appendChild(document.createTextNode(' '));
+      });
+      el.appendChild(frag);
+      return el.querySelectorAll('.char');
+    }
+
+    function splitWords(el) {
+      var words = el.textContent.trim().split(/\s+/);
+      el.setAttribute('aria-label', el.textContent.trim());
+      el.textContent = '';
+      var frag = document.createDocumentFragment();
+      words.forEach(function (w, i) {
+        var span = document.createElement('span');
+        span.className = 'ph-word';
+        span.setAttribute('aria-hidden', 'true');
+        span.textContent = w;
+        frag.appendChild(span);
+        if (i < words.length - 1) frag.appendChild(document.createTextNode(' '));
+      });
+      el.appendChild(frag);
+      return el.querySelectorAll('.ph-word');
+    }
+
+    /* ============================================================
+       Custom magnetic cursor
+       ============================================================ */
+    var cursor = document.getElementById('cursor');
+    if (cursor && finePointer && !prefersReducedMotion) {
+      var label = cursor.querySelector('.cursor-label');
+      var xTo = gsap.quickTo(cursor, 'x', { duration: 0.35, ease: 'power3.out' });
+      var yTo = gsap.quickTo(cursor, 'y', { duration: 0.35, ease: 'power3.out' });
+      gsap.set(cursor, { xPercent: -50, yPercent: -50, autoAlpha: 0 }); // hidden until the mouse moves
+
+      var cursorSeen = false;
+      window.addEventListener('mousemove', function (e) {
+        if (!cursorSeen) {
+          cursorSeen = true;
+          gsap.set(cursor, { x: e.clientX, y: e.clientY });
+          gsap.to(cursor, { autoAlpha: 1, duration: 0.4 });
+        }
+        xTo(e.clientX);
+        yTo(e.clientY);
+      });
+
+      function badge(text) {
+        label.textContent = text;
+        cursor.classList.add('is-badge');
+        gsap.to(cursor, { width: 88, height: 88, duration: 0.5, ease: 'power4.out' });
+      }
+      function dot() {
+        cursor.classList.remove('is-badge');
+        gsap.to(cursor, { width: 12, height: 12, duration: 0.5, ease: 'power4.out' });
+      }
+      function grow() {
+        gsap.to(cursor, { width: 44, height: 44, duration: 0.45, ease: 'power4.out' });
+      }
+
+      document.querySelectorAll('[data-cursor]').forEach(function (el) {
+        el.addEventListener('mouseenter', function () { badge(el.getAttribute('data-cursor')); });
+        el.addEventListener('mouseleave', dot);
+      });
+      document.querySelectorAll('a:not([data-cursor]), button:not([data-cursor])').forEach(function (el) {
+        el.addEventListener('mouseenter', grow);
+        el.addEventListener('mouseleave', dot);
+      });
+      window.addEventListener('mousedown', function () { gsap.to(cursor, { scale: 0.85, duration: 0.25 }); });
+      window.addEventListener('mouseup', function () { gsap.to(cursor, { scale: 1, duration: 0.35, ease: 'back.out(3)' }); });
+    }
+
+    /* ============================================================
+       Magnetic elements
+       ============================================================ */
+    if (finePointer && !prefersReducedMotion) {
+      document.querySelectorAll('.magnetic').forEach(function (el) {
+        var strength = 0.35;
+        el.addEventListener('mousemove', function (e) {
+          var r = el.getBoundingClientRect();
+          var relX = e.clientX - (r.left + r.width / 2);
+          var relY = e.clientY - (r.top + r.height / 2);
+          gsap.to(el, { x: relX * strength, y: relY * strength, duration: 0.6, ease: 'power3.out' });
+        });
+        el.addEventListener('mouseleave', function () {
+          gsap.to(el, { x: 0, y: 0, duration: 1, ease: 'elastic.out(1, 0.4)' });
+        });
+      });
+    }
+
+    /* ============================================================
+       Preloader → hero intro
+       ============================================================ */
+    var heroChars = [];
+    document.querySelectorAll('#hero-headline .hl-line').forEach(function (line) {
+      // split each headline line into chars while preserving inner spans
+      line.querySelectorAll('*').length === 0
+        ? heroChars.push.apply(heroChars, splitChars(line))
+        : line.childNodes.forEach(function (node) {
+            if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== '') {
+              var holder = document.createElement('span');
+              holder.textContent = node.textContent;
+              node.parentNode.replaceChild(holder, node);
+              heroChars.push.apply(heroChars, splitChars(holder));
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+              heroChars.push.apply(heroChars, splitChars(node));
+            }
+          });
+    });
+
+    document.body.style.overflow = 'hidden';
+
+    var preWord = document.getElementById('preloader-word');
+    var preChars = preWord ? splitChars(preWord) : [];
+    var preCount = { v: 0 };
+    var preCountEl = document.getElementById('preloader-count');
+
+    var heroIntro = gsap.timeline({ paused: true });
+    heroIntro
+      .fromTo(heroChars, { yPercent: 115 }, { yPercent: 0, duration: 1.1, ease: 'power4.out', stagger: 0.018 }, 0)
+      .fromTo('#hero-eyebrow', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, 0.35)
+      .fromTo('#hero-foot', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, 0.55)
+      .fromTo('#scroll-indicator', { opacity: 0 }, { opacity: 1, duration: 1 }, 0.8)
+      .fromTo('#site-header', { yPercent: -100 }, { yPercent: 0, duration: 1, ease: 'power3.out' }, 0.45)
+      .fromTo('#hero-media', { scale: 1.14 }, { scale: 1, duration: 2.4, ease: 'power2.out' }, 0);
+
+    var preTl = gsap.timeline({
+      onComplete: function () {
+        document.body.style.overflow = '';
+        var pre = document.getElementById('preloader');
+        if (pre) pre.style.display = 'none';
+      }
+    });
+
+    if (prefersReducedMotion) {
+      preTl.set('#preloader', { autoAlpha: 0 });
+      heroIntro.progress(1);
+    } else {
+      preTl
+        .fromTo(preChars, { yPercent: 115 }, { yPercent: 0, duration: 0.9, ease: 'power4.out', stagger: 0.05 })
+        .fromTo('#preloader-bar', { scaleX: 0 }, { scaleX: 1, duration: 1.5, ease: 'power2.inOut' }, '-=0.3')
+        .to(preCount, {
+          v: 100, duration: 1.5, ease: 'power2.inOut', snap: { v: 1 },
+          onUpdate: function () { if (preCountEl) preCountEl.textContent = String(preCount.v).padStart(2, '0'); }
+        }, '<')
+        .to(preChars, { yPercent: -115, duration: 0.7, ease: 'power3.in', stagger: 0.03 }, '+=0.15')
+        .to('#preloader-bar', { scaleX: 0, transformOrigin: 'right center', duration: 0.6, ease: 'power3.in' }, '<')
+        .to('#preloader-count', { opacity: 0, duration: 0.4 }, '<')
+        .to('#preloader', { yPercent: -100, duration: 1.05, ease: 'power4.inOut' }, '-=0.1')
+        .add(function () { heroIntro.play(); }, '-=0.75');
+    }
+
+    /* ============================================================
+       Continuous scroll-line indicator
+       ============================================================ */
+    if (!prefersReducedMotion) {
+      gsap.fromTo('#scroll-line',
+        { yPercent: -100 },
+        { yPercent: 100, duration: 1.7, ease: 'power2.inOut', repeat: -1, repeatDelay: 0.4 });
+    }
+
+    /* ============================================================
+       Hero parallax exit
+       ============================================================ */
+    if (!prefersReducedMotion) {
+      gsap.to('#hero-media', {
+        yPercent: 18, ease: 'none',
+        scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
+      });
+      gsap.to('#hero-content', {
+        opacity: 0, y: -70, ease: 'none',
+        scrollTrigger: { trigger: '#hero', start: 'top top', end: '62% top', scrub: true }
+      });
+    }
+
+    /* ============================================================
+       Header state
+       ============================================================ */
+    ScrollTrigger.create({
+      start: 80,
+      onEnter: function () { document.body.classList.add('scrolled'); },
+      onLeaveBack: function () { document.body.classList.remove('scrolled'); }
+    });
+
+    /* ============================================================
+       Marquee
+       ============================================================ */
+    if (!prefersReducedMotion) {
+      gsap.to('.marquee-content', { xPercent: -100, duration: 30, ease: 'none', repeat: -1 });
+    }
+
+    /* ============================================================
+       Line-mask reveals (section titles, footer giant type)
+       ============================================================ */
+    gsap.utils.toArray('.reveal-line').forEach(function (el) {
+      gsap.fromTo(el,
+        { yPercent: 115 },
+        {
+          yPercent: 0, duration: 1.2, ease: 'power4.out',
+          scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+        });
+    });
+
+    /* ============================================================
+       Generic fade-up reveals
+       ============================================================ */
+    gsap.utils.toArray('[data-reveal]').forEach(function (el) {
+      gsap.fromTo(el,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1, y: 0, duration: 1.1, ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 90%', once: true }
+        });
+    });
+
+    /* ============================================================
+       Work grid: entrance + differential parallax (desktop only)
+       ============================================================ */
+    gsap.utils.toArray('.work-card').forEach(function (card) {
+      // entrance animates the inner figure so it never fights the
+      // parallax scrub, which owns `y` on the card itself
+      gsap.fromTo(card.querySelector('figure'),
+        { opacity: 0, y: 70 },
+        {
+          opacity: 1, y: 0, duration: 1.2, ease: 'power3.out',
+          scrollTrigger: { trigger: card, start: 'top 92%', once: true }
+        });
+    });
+
+    ScrollTrigger.matchMedia({
+      '(min-width: 1024px) and (prefers-reduced-motion: no-preference)': function () {
+        gsap.utils.toArray('.work-card').forEach(function (card) {
+          var speed = parseFloat(card.getAttribute('data-speed') || '0.5');
+          var shift = speed * 130;
+          gsap.fromTo(card,
+            { y: shift },
+            {
+              y: -shift, ease: 'none',
+              scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: 1.1 }
+            });
+        });
+      }
+    });
+
+    /* ============================================================
+       Philosophy: pinned, word-by-word illumination
+       ============================================================ */
+    var phText = document.getElementById('philosophy-text');
+    if (phText) {
+      var phWords = splitWords(phText);
+      if (prefersReducedMotion) {
+        gsap.set(phWords, { opacity: 1 });
+      } else {
+        gsap.to(phWords, {
+          opacity: 1,
+          stagger: 0.35,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '#philosophy-pin',
+            start: 'top top',
+            end: '+=160%',
+            scrub: 0.6,
+            pin: true,
+            anticipatePin: 1
+          }
+        });
+      }
+    }
+
+    /* ============================================================
+       Capabilities cards
+       ============================================================ */
+    gsap.utils.toArray('.cap-card').forEach(function (card, i) {
+      gsap.fromTo(card,
+        { opacity: 0, y: 60 },
+        {
+          opacity: 1, y: 0, duration: 1.1, ease: 'power3.out', delay: (i % 3) * 0.12,
+          scrollTrigger: { trigger: '#capabilities', start: 'top 78%', once: true }
+        });
+    });
+
+    /* ============================================================
+       Film modal
+       ============================================================ */
+    var modal = document.getElementById('film-modal');
+    var modalDialog = document.getElementById('modal-dialog');
+    var modalBackdrop = document.getElementById('modal-backdrop');
+    var modalVideo = document.getElementById('modal-video');
+    var modalTitle = document.getElementById('modal-title');
+    var modalMeta = document.getElementById('modal-meta');
+    var modalFallback = document.getElementById('modal-fallback');
+    var modalFallbackImg = document.getElementById('modal-fallback-img');
+    var modalOpen = false;
+
+    var modalTl = gsap.timeline({ paused: true })
+      .fromTo(modalBackdrop, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: 'power2.out' }, 0)
+      .fromTo(modalDialog,
+        { opacity: 0, scale: 0.86, y: 40 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.85, ease: 'power4.out' }, 0.08);
+
+    function openModal(card) {
+      var src = card.getAttribute('data-video') || '';
+      var thumb = card.querySelector('.card-img');
+
+      modalTitle.textContent = card.getAttribute('data-title') || '';
+      modalMeta.textContent = card.getAttribute('data-meta') || '';
+      modalFallback.classList.add('hidden');
+      modalFallback.classList.remove('flex');
+      modalVideo.classList.remove('hidden');
+
+      if (thumb && thumb.src && thumb.style.display !== 'none') {
+        modalVideo.setAttribute('poster', thumb.currentSrc || thumb.src);
+        modalFallbackImg.src = thumb.currentSrc || thumb.src;
+        modalFallbackImg.style.display = '';
+      } else {
+        modalVideo.removeAttribute('poster');
+        modalFallbackImg.removeAttribute('src');
+        modalFallbackImg.style.display = 'none';
+      }
+
+      modalVideo.src = src;
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      modalOpen = true;
+      modalTl.timeScale(1).restart();
+
+      var playP = modalVideo.play();
+      if (playP && playP.catch) playP.catch(function () { /* user can press play */ });
+    }
+
+    function closeModal() {
+      if (!modalOpen) return;
+      modalOpen = false;
+      modalTl.timeScale(1.6).reverse();
+      modalTl.eventCallback('onReverseComplete', function () {
+        modal.classList.remove('open');
+        modalVideo.pause();
+        modalVideo.removeAttribute('src');
+        modalVideo.load();
+        document.body.style.overflow = '';
+        modalTl.eventCallback('onReverseComplete', null);
+      });
+    }
+
+    modalVideo.addEventListener('error', function () {
+      // Video source unreachable → cinematic still + private-screening note
+      if (!modalOpen) return;
+      modalVideo.classList.add('hidden');
+      modalFallback.classList.remove('hidden');
+      modalFallback.classList.add('flex');
+    });
+    modalFallbackImg.addEventListener('error', function () {
+      modalFallbackImg.style.display = 'none';
+    });
+
+    document.querySelectorAll('.work-card').forEach(function (card) {
+      card.addEventListener('click', function () { openModal(card); });
+      card.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(card); }
+      });
+    });
+    document.getElementById('modal-close').addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', closeModal);
+    window.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+
+    /* ============================================================
+       Back to top
+       ============================================================ */
+    document.getElementById('back-to-top').addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+    });
+
+    /* ============================================================
+       Keep ScrollTrigger honest after fonts/images settle
+       ============================================================ */
+    window.addEventListener('load', function () { ScrollTrigger.refresh(); });
+  })();
+  </script>
+</body>
+</html>

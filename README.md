@@ -3,6 +3,16 @@
 Immersive digital portfolio for hard techno concert photography & videography.
 Next.js (App Router, TypeScript) · Tailwind CSS v4 · Framer Motion · Lenis.
 
+## Luxury hospitality edition (standalone)
+
+`luxury-portfolio.html` is a second, completely separate portfolio: a
+single-file, dark-editorial site for luxury hospitality / real-estate
+videography (Tailwind + GSAP ScrollTrigger via CDN — no build step, just open
+it in a browser). Placeholder footage and stills are hot-linked from
+Pexels/Unsplash; swap each card's `data-video` attribute and `<img src>` in
+the Selected Work grid (plus the hero `<video>` source) to go live with real
+films.
+
 ## Run it
 
 ```bash
