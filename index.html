@@ -66,6 +66,25 @@
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
+    /* ---------- Hero ambient aurora (designed background — not user media) ---------- */
+    .hero-aurora { overflow: hidden; background: #0A0A0A; }
+    .hero-aurora .aur {
+      position: absolute; border-radius: 50%;
+      filter: blur(90px); will-change: transform;
+    }
+    .hero-aurora .a1 { width: 52vw; height: 52vw; left: -4vw; top: -6vh;  background: radial-gradient(circle, rgba(202,202,208,0.34), transparent 68%); animation: aur1 26s ease-in-out infinite; }
+    .hero-aurora .a2 { width: 46vw; height: 46vw; right: -6vw; top: 0vh;  background: radial-gradient(circle, rgba(200,172,122,0.24), transparent 68%); animation: aur2 32s ease-in-out infinite; }
+    .hero-aurora .a3 { width: 60vw; height: 60vw; left: 18vw; bottom: -16vh; background: radial-gradient(circle, rgba(150,168,196,0.26), transparent 70%); animation: aur3 38s ease-in-out infinite; }
+    .hero-aurora .sheen {
+      position: absolute; inset: -20%;
+      background: conic-gradient(from 120deg at 50% 50%, transparent 0deg, rgba(197,197,197,0.07) 90deg, transparent 180deg, rgba(197,197,197,0.05) 300deg, transparent 360deg);
+      animation: sheen 60s linear infinite;
+    }
+    @keyframes aur1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(8vw,6vh) scale(1.15); } }
+    @keyframes aur2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-6vw,8vh) scale(1.1); } }
+    @keyframes aur3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-10vw,-6vh) scale(1.2); } }
+    @keyframes sheen { to { transform: rotate(360deg); } }
+
     /* ---------- Custom cursor ---------- */
     #cursor {
       position: fixed; top: 0; left: 0;
@@ -120,20 +139,23 @@
     .card-img {
       transition: transform 1.4s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.8s ease;
     }
-    .work-card:hover .card-img { transform: scale(1.07); }
+    .work-card:hover .card-img { transform: scale(1.05); }
     .card-shade { transition: opacity 0.9s ease; }
-    .work-card:hover .card-shade { opacity: 0.35; }
+    .work-card:hover .card-shade { opacity: 0.4; }
     .card-meta { transition: transform 0.9s cubic-bezier(0.19, 1, 0.22, 1); }
-    .work-card:hover .card-meta { transform: translateY(-8px); }
+    .work-card:hover .card-meta { transform: translateY(-6px); }
     .card-tag { transition: transform 0.9s cubic-bezier(0.19, 1, 0.22, 1), background 0.5s ease; }
-    .work-card:hover .card-tag { transform: translateY(-8px); background: rgba(255,255,255,0.12); }
+    .work-card:hover .card-tag { transform: translateY(-6px); background: rgba(255,255,255,0.12); }
 
-    /* Designed fallback that sits behind each thumbnail (shows if an image fails) */
+    /* Designed fallback that sits behind each tile (shows if a file fails) */
     .card-fallback {
       background:
         radial-gradient(120% 90% at 20% 0%, rgba(197,197,197,0.14) 0%, transparent 55%),
         linear-gradient(160deg, #1a1a1a 0%, #0e0e0e 60%, #0A0A0A 100%);
     }
+
+    /* ---------- Group headings ---------- */
+    .group-label { transition: color 0.5s ease; }
 
     /* ---------- Filter tabs ---------- */
     #work-tabs { position: relative; }
@@ -181,6 +203,7 @@
     /* ---------- Reduced motion ---------- */
     @media (prefers-reduced-motion: reduce) {
       #cursor { display: none !important; }
+      .hero-aurora .aur, .hero-aurora .sheen { animation: none !important; }
     }
   </style>
   <noscript><style>#preloader { display: none; } .grain { display: none; }</style></noscript>
@@ -234,26 +257,21 @@
     <!-- ======================= HERO ======================= -->
     <section id="hero" class="relative flex h-[100svh] min-h-[640px] flex-col justify-end overflow-hidden">
       <!-- ============================================================
-           ▓  YOUR FOOTAGE — HERO BACKGROUND FILM
-           ------------------------------------------------------------
-           • Swap the <source src> below for your own ambient clip,
-             e.g.  src="assets/hero.mp4".
-           • Must stay muted + looping so browsers allow autoplay.
-           • Also swap the poster <img src> for a matching still frame.
-           • Keep the clip short (~10–15s) and ~6–8 Mbps for smooth scroll.
+           HERO BACKGROUND — designed ambient aurora (NOT user media).
+           To use a different backdrop, replace the .hero-aurora block
+           with your own <img>/<video>; keep the gradient washes below
+           so the headline stays readable.
            ============================================================ -->
       <div id="hero-media" class="absolute inset-0 will-change-transform">
-        <div class="absolute inset-0 card-fallback"></div>
-        <img id="hero-fallback"
-             src="Fourseasons%202.jpg"
-             alt="" aria-hidden="true"
-             class="absolute inset-0 h-full w-full object-cover opacity-60" />
-        <video id="hero-video" class="absolute inset-0 h-full w-full object-cover opacity-0" autoplay muted loop playsinline preload="auto" poster="Fourseasons%202.jpg">
-          <source src="Four%20Seasons%20Pool%20And%20Beach.mp4" type="video/mp4" />
-        </video>
-        <!-- Cinematic wash -->
-        <div class="absolute inset-0 bg-gradient-to-b from-obsidian/80 via-obsidian/20 to-obsidian"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-obsidian/60 via-transparent to-obsidian/40"></div>
+        <div class="hero-aurora absolute inset-0">
+          <span class="aur a1"></span>
+          <span class="aur a2"></span>
+          <span class="aur a3"></span>
+          <span class="sheen"></span>
+        </div>
+        <!-- Cinematic wash (keeps the headline readable while letting the glow show) -->
+        <div class="absolute inset-0 bg-gradient-to-b from-obsidian/45 via-obsidian/10 to-obsidian"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-obsidian/50 via-transparent to-obsidian/30"></div>
       </div>
 
       <div id="hero-content" class="relative z-10 mx-auto w-full max-w-[1600px] px-6 pb-28 md:px-10 md:pb-24">
@@ -340,160 +358,160 @@
       </div>
 
       <!-- ============================================================
-           ▓  YOUR FOOTAGE & PHOTOS — THE WORK GRID
+           ▓  YOUR FOOTAGE & PHOTOS — THE WORK
            ------------------------------------------------------------
-           Every <article class="work-card"> below is ONE piece. For each:
-             • data-type="video" or "photo"  → decides the tab it lives
-               under, the PLAY/VIEW cursor, and how the modal displays it
-             • data-video="..."   (video cards only) → the film that plays
-               in the pop-up player  (e.g. assets/film-01.mp4)
-             • data-full="..."    (photo cards only) → the full-resolution
-               image the modal shows (e.g. assets/photo-01.jpg)
-             • <img class="card-img" src="...">  → the grid thumbnail
-             • data-title / data-meta → caption text
-           Drop your .mp4 / .jpg files in an /assets folder next to this
-           page and reference them with relative paths. Add or remove
-           <article> blocks freely — the tab counts update automatically.
+           Order: Four Seasons film → Four Seasons stills →
+                  Grand Hotel film → Grand Hotel stills.
+           • Films are <article data-type="video"> with an inline
+             <video class="card-img card-video"> that auto-plays muted
+             while on screen; data-video is the file played (with sound)
+             when the card is clicked.
+           • Stills are <article data-type="photo"> — data-full is the
+             large image shown in the viewer; each tile auto-sizes to the
+             photo's true shape, so nothing is cropped.
+           Swap the file paths to change media; add/remove <article>s and
+           the tab counts update automatically.
            ============================================================ -->
-      <div id="work-grid" class="grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-x-10 lg:gap-y-6">
+      <div id="work-grid" class="grid grid-cols-1 items-start gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-6">
 
-        <!-- 01 · FEATURED FILM · Four Seasons (the highlight) -->
-        <article class="work-card group relative cursor-pointer lg:col-span-12" data-speed="0.18" data-cursor="PLAY"
-                 data-type="video"
+        <!-- ===== GROUP · FOUR SEASONS ===== -->
+        <div class="col-span-1 flex items-end justify-between border-b border-platinum/10 pb-3 sm:col-span-2 lg:col-span-6" data-reveal>
+          <h3 class="group-label font-syne text-sm font-bold uppercase tracking-[0.35em] text-platinum">Four Seasons</h3>
+          <span class="text-[9px] uppercase tracking-[0.35em] text-white/35">Film &amp; Stills</span>
+        </div>
+
+        <!-- 01 · FEATURED FILM · Four Seasons (auto-plays on scroll) -->
+        <article class="work-card group relative cursor-pointer sm:col-span-2 lg:col-span-6" data-cursor="PLAY" data-type="video"
                  data-video="Four%20Seasons%20Pool%20And%20Beach.mp4"
                  data-title="Four Seasons — Pool &amp; Beach" data-meta="Featured Film — Four Seasons · MMXXVI"
                  role="button" tabindex="0" aria-label="Play featured film: Four Seasons Pool and Beach">
-          <figure class="relative aspect-[16/10] overflow-hidden bg-ink md:aspect-[21/9]">
+          <figure class="relative aspect-video max-h-[86vh] overflow-hidden bg-ink">
             <div class="card-fallback absolute inset-0 flex items-end p-6"><span class="font-syne text-7xl font-extrabold text-white/10">01</span></div>
-            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="eager" src="Fourseasons%201.jpg" alt="Four Seasons resort — pool and beach" />
-            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-black/30 opacity-90"></div>
+            <video class="card-img card-video absolute inset-0 h-full w-full object-cover" muted loop playsinline preload="metadata" src="Four%20Seasons%20Pool%20And%20Beach.mp4"></video>
+            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-black/20 opacity-80"></div>
             <div class="absolute left-5 top-5 flex items-center gap-2 text-[9px] uppercase tracking-[0.4em] text-white/75"><span class="inline-block h-1.5 w-1.5 rounded-full bg-platinum"></span> Featured Film</div>
             <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
-              <span class="flex h-20 w-20 items-center justify-center rounded-full border border-white/40 bg-black/20 backdrop-blur-sm transition-transform duration-700 group-hover:scale-110"><i data-lucide="play" class="h-6 w-6 text-white"></i></span>
+              <span class="flex h-16 w-16 items-center justify-center rounded-full border border-white/40 bg-black/25 backdrop-blur-sm transition-transform duration-700 group-hover:scale-110 md:h-20 md:w-20"><i data-lucide="play" class="h-5 w-5 text-white md:h-6 md:w-6"></i></span>
             </div>
             <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-8">
               <div class="card-meta"><h3 class="font-syne text-2xl font-bold md:text-4xl">Four Seasons</h3><p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/60">Pool &amp; Beach — MMXXVI</p></div>
-              <span class="card-tag rounded-full border border-platinum/30 bg-white/5 px-4 py-2 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Watch Film</span>
+              <span class="card-tag rounded-full border border-platinum/30 bg-white/5 px-4 py-2 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Watch with sound</span>
             </figcaption>
           </figure>
         </article>
 
         <!-- 02 · STILL · Four Seasons -->
-        <article class="work-card group relative cursor-pointer lg:col-span-7" data-speed="0.3" data-cursor="VIEW"
-                 data-type="photo" data-full="Fourseasons%201.jpg"
-                 data-title="Four Seasons — I" data-meta="Photography — Four Seasons · MMXXVI"
+        <article class="work-card group relative cursor-pointer sm:col-span-1 lg:col-span-2" data-cursor="VIEW" data-type="photo"
+                 data-full="Fourseasons%201.jpg" data-title="Four Seasons — I" data-meta="Photography — Four Seasons · MMXXVI"
                  role="button" tabindex="0" aria-label="View photograph: Four Seasons I">
-          <figure class="relative aspect-[16/10] overflow-hidden bg-ink">
-            <div class="card-fallback absolute inset-0 flex items-end p-6"><span class="font-syne text-7xl font-extrabold text-white/10">02</span></div>
+          <figure class="relative aspect-[4/3] overflow-hidden bg-ink">
+            <div class="card-fallback absolute inset-0 flex items-end p-5"><span class="font-syne text-6xl font-extrabold text-white/10">01</span></div>
             <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy" src="Fourseasons%201.jpg" alt="Four Seasons resort photograph I" />
-            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
-            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">02 / Still</div>
-            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
-              <div class="card-meta"><h3 class="font-syne text-xl font-bold md:text-2xl">Four Seasons</h3><p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Frame I — MMXXVI</p></div>
-              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Photo</span>
+            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/5 opacity-70"></div>
+            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-5">
+              <div class="card-meta"><h3 class="font-syne text-base font-bold md:text-lg">Four Seasons</h3><p class="mt-1 text-[9px] uppercase tracking-[0.3em] text-white/55">Frame I</p></div>
+              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3 py-1 text-[8px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">View</span>
             </figcaption>
           </figure>
         </article>
 
         <!-- 03 · STILL · Four Seasons -->
-        <article class="work-card group relative cursor-pointer lg:col-span-5 lg:mt-20" data-speed="0.9" data-cursor="VIEW"
-                 data-type="photo" data-full="Fourseasons%202.jpg"
-                 data-title="Four Seasons — II" data-meta="Photography — Four Seasons · MMXXVI"
+        <article class="work-card group relative cursor-pointer sm:col-span-1 lg:col-span-2" data-cursor="VIEW" data-type="photo"
+                 data-full="Fourseasons%202.jpg" data-title="Four Seasons — II" data-meta="Photography — Four Seasons · MMXXVI"
                  role="button" tabindex="0" aria-label="View photograph: Four Seasons II">
-          <figure class="relative aspect-[4/5] overflow-hidden bg-ink">
-            <div class="card-fallback absolute inset-0 flex items-end p-6"><span class="font-syne text-7xl font-extrabold text-white/10">03</span></div>
+          <figure class="relative aspect-[4/3] overflow-hidden bg-ink">
+            <div class="card-fallback absolute inset-0 flex items-end p-5"><span class="font-syne text-6xl font-extrabold text-white/10">02</span></div>
             <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy" src="Fourseasons%202.jpg" alt="Four Seasons resort photograph II" />
-            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
-            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">03 / Still</div>
-            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
-              <div class="card-meta"><h3 class="font-syne text-xl font-bold md:text-2xl">Four Seasons</h3><p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Frame II — MMXXVI</p></div>
-              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Photo</span>
+            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/5 opacity-70"></div>
+            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-5">
+              <div class="card-meta"><h3 class="font-syne text-base font-bold md:text-lg">Four Seasons</h3><p class="mt-1 text-[9px] uppercase tracking-[0.3em] text-white/55">Frame II</p></div>
+              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3 py-1 text-[8px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">View</span>
             </figcaption>
           </figure>
         </article>
 
-        <!-- 04 · STILL · The Grand Hotel -->
-        <article class="work-card group relative cursor-pointer lg:col-span-5" data-speed="0.7" data-cursor="VIEW"
-                 data-type="photo" data-full="Grand%20Hotel%201.jpg"
-                 data-title="The Grand Hotel — I" data-meta="Photography — The Grand Hotel · MMXXVI"
-                 role="button" tabindex="0" aria-label="View photograph: The Grand Hotel I">
-          <figure class="relative aspect-[4/5] overflow-hidden bg-ink">
-            <div class="card-fallback absolute inset-0 flex items-end p-6"><span class="font-syne text-7xl font-extrabold text-white/10">04</span></div>
-            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy" src="Grand%20Hotel%201.jpg" alt="The Grand Hotel photograph I" />
-            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
-            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">04 / Still</div>
-            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
-              <div class="card-meta"><h3 class="font-syne text-xl font-bold md:text-2xl">The Grand Hotel</h3><p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Frame I — MMXXVI</p></div>
-              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Photo</span>
-            </figcaption>
-          </figure>
-        </article>
-
-        <!-- 05 · STILL · The Grand Hotel -->
-        <article class="work-card group relative cursor-pointer lg:col-span-7 lg:mt-16" data-speed="0.35" data-cursor="VIEW"
-                 data-type="photo" data-full="Grand%20hotel%202.jpg"
-                 data-title="The Grand Hotel — II" data-meta="Photography — The Grand Hotel · MMXXVI"
-                 role="button" tabindex="0" aria-label="View photograph: The Grand Hotel II">
-          <figure class="relative aspect-[16/10] overflow-hidden bg-ink">
-            <div class="card-fallback absolute inset-0 flex items-end p-6"><span class="font-syne text-7xl font-extrabold text-white/10">05</span></div>
-            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy" src="Grand%20hotel%202.jpg" alt="The Grand Hotel photograph II" />
-            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
-            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">05 / Still</div>
-            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
-              <div class="card-meta"><h3 class="font-syne text-xl font-bold md:text-2xl">The Grand Hotel</h3><p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Frame II — MMXXVI</p></div>
-              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Photo</span>
-            </figcaption>
-          </figure>
-        </article>
-
-        <!-- 06 · STILL · Four Seasons -->
-        <article class="work-card group relative cursor-pointer lg:col-span-6" data-speed="0.85" data-cursor="VIEW"
-                 data-type="photo" data-full="Fourseasons%203.jpg"
-                 data-title="Four Seasons — III" data-meta="Photography — Four Seasons · MMXXVI"
+        <!-- 04 · STILL · Four Seasons -->
+        <article class="work-card group relative cursor-pointer sm:col-span-1 lg:col-span-2" data-cursor="VIEW" data-type="photo"
+                 data-full="Fourseasons%203.jpg" data-title="Four Seasons — III" data-meta="Photography — Four Seasons · MMXXVI"
                  role="button" tabindex="0" aria-label="View photograph: Four Seasons III">
           <figure class="relative aspect-[4/3] overflow-hidden bg-ink">
-            <div class="card-fallback absolute inset-0 flex items-end p-6"><span class="font-syne text-7xl font-extrabold text-white/10">06</span></div>
+            <div class="card-fallback absolute inset-0 flex items-end p-5"><span class="font-syne text-6xl font-extrabold text-white/10">03</span></div>
             <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy" src="Fourseasons%203.jpg" alt="Four Seasons resort photograph III" />
-            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
-            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">06 / Still</div>
-            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
-              <div class="card-meta"><h3 class="font-syne text-xl font-bold md:text-2xl">Four Seasons</h3><p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Frame III — MMXXVI</p></div>
-              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Photo</span>
+            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/5 opacity-70"></div>
+            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-5">
+              <div class="card-meta"><h3 class="font-syne text-base font-bold md:text-lg">Four Seasons</h3><p class="mt-1 text-[9px] uppercase tracking-[0.3em] text-white/55">Frame III</p></div>
+              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3 py-1 text-[8px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">View</span>
             </figcaption>
           </figure>
         </article>
 
-        <!-- 07 · FILM · Mackinac Island -->
-        <article class="work-card group relative cursor-pointer lg:col-span-6 lg:mt-16" data-speed="0.5" data-cursor="PLAY"
-                 data-type="video" data-video="mackiand%20Island%202026.mp4"
-                 data-title="Mackinac Island" data-meta="Film — Mackinac Island · MMXXVI"
-                 role="button" tabindex="0" aria-label="Play film: Mackinac Island">
+        <!-- ===== GROUP · THE GRAND HOTEL ===== -->
+        <div class="col-span-1 mt-6 flex items-end justify-between border-b border-platinum/10 pb-3 sm:col-span-2 lg:col-span-6 lg:mt-10" data-reveal>
+          <h3 class="group-label font-syne text-sm font-bold uppercase tracking-[0.35em] text-platinum">The Grand Hotel</h3>
+          <span class="text-[9px] uppercase tracking-[0.35em] text-white/35">Film &amp; Stills</span>
+        </div>
+
+        <!-- 05 · FEATURED FILM · The Grand Hotel (auto-plays on scroll) -->
+        <article class="work-card group relative cursor-pointer sm:col-span-2 lg:col-span-6" data-cursor="PLAY" data-type="video"
+                 data-video="mackiand%20Island%202026.mp4"
+                 data-title="The Grand Hotel" data-meta="Featured Film — Mackinac Island · MMXXVI"
+                 role="button" tabindex="0" aria-label="Play featured film: The Grand Hotel">
+          <figure class="relative aspect-video max-h-[86vh] overflow-hidden bg-ink">
+            <div class="card-fallback absolute inset-0 flex items-end p-6"><span class="font-syne text-7xl font-extrabold text-white/10">02</span></div>
+            <video class="card-img card-video absolute inset-0 h-full w-full object-cover" muted loop playsinline preload="metadata" src="mackiand%20Island%202026.mp4"></video>
+            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-black/20 opacity-80"></div>
+            <div class="absolute left-5 top-5 flex items-center gap-2 text-[9px] uppercase tracking-[0.4em] text-white/75"><span class="inline-block h-1.5 w-1.5 rounded-full bg-platinum"></span> Featured Film</div>
+            <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
+              <span class="flex h-16 w-16 items-center justify-center rounded-full border border-white/40 bg-black/25 backdrop-blur-sm transition-transform duration-700 group-hover:scale-110 md:h-20 md:w-20"><i data-lucide="play" class="h-5 w-5 text-white md:h-6 md:w-6"></i></span>
+            </div>
+            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-8">
+              <div class="card-meta"><h3 class="font-syne text-2xl font-bold md:text-4xl">The Grand Hotel</h3><p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/60">Mackinac Island — MMXXVI</p></div>
+              <span class="card-tag rounded-full border border-platinum/30 bg-white/5 px-4 py-2 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Watch with sound</span>
+            </figcaption>
+          </figure>
+        </article>
+
+        <!-- 06 · STILL · The Grand Hotel -->
+        <article class="work-card group relative cursor-pointer sm:col-span-1 lg:col-span-2" data-cursor="VIEW" data-type="photo"
+                 data-full="Grand%20Hotel%201.jpg" data-title="The Grand Hotel — I" data-meta="Photography — The Grand Hotel · MMXXVI"
+                 role="button" tabindex="0" aria-label="View photograph: The Grand Hotel I">
           <figure class="relative aspect-[4/3] overflow-hidden bg-ink">
-            <div class="card-fallback absolute inset-0 flex items-end p-6"><span class="font-syne text-7xl font-extrabold text-white/10">07</span></div>
-            <video class="card-img absolute inset-0 h-full w-full object-cover" muted playsinline preload="metadata" src="mackiand%20Island%202026.mp4#t=1"></video>
-            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
-            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">07 / Film</div>
-            <div class="pointer-events-none absolute inset-0 flex items-center justify-center"><span class="flex h-14 w-14 items-center justify-center rounded-full border border-white/40 bg-black/20 backdrop-blur-sm transition-transform duration-700 group-hover:scale-110"><i data-lucide="play" class="h-5 w-5 text-white"></i></span></div>
-            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
-              <div class="card-meta"><h3 class="font-syne text-xl font-bold md:text-2xl">Mackinac Island</h3><p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Film — MMXXVI</p></div>
-              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Watch</span>
+            <div class="card-fallback absolute inset-0 flex items-end p-5"><span class="font-syne text-6xl font-extrabold text-white/10">01</span></div>
+            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy" src="Grand%20Hotel%201.jpg" alt="The Grand Hotel photograph I" />
+            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/5 opacity-70"></div>
+            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-5">
+              <div class="card-meta"><h3 class="font-syne text-base font-bold md:text-lg">The Grand Hotel</h3><p class="mt-1 text-[9px] uppercase tracking-[0.3em] text-white/55">Frame I</p></div>
+              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3 py-1 text-[8px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">View</span>
+            </figcaption>
+          </figure>
+        </article>
+
+        <!-- 07 · STILL · The Grand Hotel -->
+        <article class="work-card group relative cursor-pointer sm:col-span-1 lg:col-span-2" data-cursor="VIEW" data-type="photo"
+                 data-full="Grand%20hotel%202.jpg" data-title="The Grand Hotel — II" data-meta="Photography — The Grand Hotel · MMXXVI"
+                 role="button" tabindex="0" aria-label="View photograph: The Grand Hotel II">
+          <figure class="relative aspect-[4/3] overflow-hidden bg-ink">
+            <div class="card-fallback absolute inset-0 flex items-end p-5"><span class="font-syne text-6xl font-extrabold text-white/10">02</span></div>
+            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy" src="Grand%20hotel%202.jpg" alt="The Grand Hotel photograph II" />
+            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/5 opacity-70"></div>
+            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-5">
+              <div class="card-meta"><h3 class="font-syne text-base font-bold md:text-lg">The Grand Hotel</h3><p class="mt-1 text-[9px] uppercase tracking-[0.3em] text-white/55">Frame II</p></div>
+              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3 py-1 text-[8px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">View</span>
             </figcaption>
           </figure>
         </article>
 
         <!-- 08 · STILL · The Grand Hotel -->
-        <article class="work-card group relative cursor-pointer lg:col-span-7" data-speed="0.4" data-cursor="VIEW"
-                 data-type="photo" data-full="Grand%20hotel%203.jpg"
-                 data-title="The Grand Hotel — III" data-meta="Photography — The Grand Hotel · MMXXVI"
+        <article class="work-card group relative cursor-pointer sm:col-span-1 lg:col-span-2" data-cursor="VIEW" data-type="photo"
+                 data-full="Grand%20hotel%203.jpg" data-title="The Grand Hotel — III" data-meta="Photography — The Grand Hotel · MMXXVI"
                  role="button" tabindex="0" aria-label="View photograph: The Grand Hotel III">
-          <figure class="relative aspect-[16/10] overflow-hidden bg-ink">
-            <div class="card-fallback absolute inset-0 flex items-end p-6"><span class="font-syne text-7xl font-extrabold text-white/10">08</span></div>
+          <figure class="relative aspect-[4/3] overflow-hidden bg-ink">
+            <div class="card-fallback absolute inset-0 flex items-end p-5"><span class="font-syne text-6xl font-extrabold text-white/10">03</span></div>
             <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy" src="Grand%20hotel%203.jpg" alt="The Grand Hotel photograph III" />
-            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
-            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">08 / Still</div>
-            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
-              <div class="card-meta"><h3 class="font-syne text-xl font-bold md:text-2xl">The Grand Hotel</h3><p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Frame III — MMXXVI</p></div>
-              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Photo</span>
+            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/5 opacity-70"></div>
+            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-5">
+              <div class="card-meta"><h3 class="font-syne text-base font-bold md:text-lg">The Grand Hotel</h3><p class="mt-1 text-[9px] uppercase tracking-[0.3em] text-white/55">Frame III</p></div>
+              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3 py-1 text-[8px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">View</span>
             </figcaption>
           </figure>
         </article>
@@ -762,21 +780,45 @@
     window.addEventListener('load', mountIcons);
 
     /* ---------- Image resilience: if a thumbnail dies, reveal the designed fallback ---------- */
-    document.querySelectorAll('.card-img, #hero-fallback').forEach(function (img) {
+    document.querySelectorAll('img.card-img').forEach(function (img) {
       function drop() { img.style.display = 'none'; }
       img.addEventListener('error', drop);
       if (img.complete && img.naturalWidth === 0 && img.src) drop();
     });
 
-    /* ---------- Hero video: fade in only when actually playable ---------- */
-    var heroVideo = document.getElementById('hero-video');
-    if (heroVideo) {
-      heroVideo.addEventListener('canplay', function () {
-        if (hasGSAP) gsap.to(heroVideo, { opacity: 1, duration: 1.6, ease: 'power2.out' });
-        else heroVideo.style.opacity = '1';
+    /* ---------- Fit each media tile to its TRUE aspect ratio (no cropping) ---------- */
+    function fitFigure(el, w, h) {
+      if (w > 0 && h > 0) {
+        var fig = el.closest('figure');
+        if (fig) { fig.style.aspectRatio = w + ' / ' + h; }
+      }
+      if (window.ScrollTrigger) ScrollTrigger.refresh();
+    }
+    document.querySelectorAll('img.card-img').forEach(function (img) {
+      if (img.complete && img.naturalWidth) fitFigure(img, img.naturalWidth, img.naturalHeight);
+      else img.addEventListener('load', function () { fitFigure(img, img.naturalWidth, img.naturalHeight); });
+    });
+    document.querySelectorAll('video.card-img').forEach(function (v) {
+      v.addEventListener('loadedmetadata', function () { fitFigure(v, v.videoWidth, v.videoHeight); });
+    });
+
+    /* ---------- Featured films: auto-play (muted) while on screen ---------- */
+    if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+      var cardVideoObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          var v = en.target;
+          if (en.isIntersecting) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+          else v.pause();
+        });
+      }, { threshold: 0.3 });
+      document.querySelectorAll('video.card-video').forEach(function (v) { cardVideoObserver.observe(v); });
+    }
+    function resumeVisibleCardVideos() {
+      if (prefersReducedMotion) return;
+      document.querySelectorAll('video.card-video').forEach(function (v) {
+        var r = v.getBoundingClientRect();
+        if (r.top < window.innerHeight && r.bottom > 0) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
       });
-      var p = heroVideo.play();
-      if (p && p.catch) p.catch(function () { /* autoplay blocked — image base remains */ });
     }
 
     /* ---------- Tab counts (always, even without GSAP) ---------- */
@@ -795,7 +837,6 @@
       var pre = document.getElementById('preloader');
       if (pre) pre.style.display = 'none';
       document.body.style.overflow = '';
-      // plain filtering still works
       tabs.forEach(function (tab) {
         tab.addEventListener('click', function () {
           var f = tab.getAttribute('data-filter');
@@ -996,7 +1037,7 @@
        ============================================================ */
     if (!prefersReducedMotion) {
       gsap.to('#hero-media', {
-        yPercent: 18, ease: 'none',
+        yPercent: 14, ease: 'none',
         scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
       });
       gsap.to('#hero-content', {
@@ -1051,32 +1092,15 @@
     });
 
     /* ============================================================
-       Work grid: entrance + differential parallax (desktop only)
+       Work tiles: soft entrance (clean, no per-card parallax)
        ============================================================ */
     gsap.utils.toArray('.work-card').forEach(function (card) {
-      // entrance animates the inner figure so it never fights the
-      // parallax scrub, which owns `y` on the card itself
       gsap.fromTo(card.querySelector('figure'),
-        { opacity: 0, y: 70 },
+        { opacity: 0, y: 60 },
         {
-          opacity: 1, y: 0, duration: 1.2, ease: 'power3.out',
+          opacity: 1, y: 0, duration: 1.1, ease: 'power3.out',
           scrollTrigger: { trigger: card, start: 'top 92%', once: true }
         });
-    });
-
-    ScrollTrigger.matchMedia({
-      '(min-width: 1024px) and (prefers-reduced-motion: no-preference)': function () {
-        gsap.utils.toArray('.work-card').forEach(function (card) {
-          var speed = parseFloat(card.getAttribute('data-speed') || '0.5');
-          var shift = speed * 130;
-          gsap.fromTo(card,
-            { y: shift },
-            {
-              y: -shift, ease: 'none',
-              scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: 1.1 }
-            });
-        });
-      }
     });
 
     /* ============================================================
@@ -1104,7 +1128,7 @@
         .map(function (c) { return c.querySelector('figure'); });
 
       gsap.to(visibleFigures, {
-        opacity: 0, y: 26, scale: 0.985, duration: 0.4, stagger: 0.025, ease: 'power2.in',
+        opacity: 0, y: 22, duration: 0.4, stagger: 0.02, ease: 'power2.in',
         onComplete: function () {
           cards.forEach(function (c) {
             c.style.display = (type === 'all' || c.getAttribute('data-type') === type) ? '' : 'none';
@@ -1114,10 +1138,10 @@
             .map(function (c) { return c.querySelector('figure'); });
           ScrollTrigger.refresh();
           gsap.fromTo(shown,
-            { opacity: 0, y: 46, scale: 0.985 },
+            { opacity: 0, y: 40 },
             {
-              opacity: 1, y: 0, scale: 1, duration: 0.8, stagger: 0.06, ease: 'power3.out', clearProps: 'scale',
-              onComplete: function () { filterBusy = false; }
+              opacity: 1, y: 0, duration: 0.75, stagger: 0.05, ease: 'power3.out',
+              onComplete: function () { filterBusy = false; resumeVisibleCardVideos(); }
             });
         }
       });
@@ -1131,7 +1155,6 @@
         applyFilter(tab.getAttribute('data-filter'));
       });
     });
-    // position the indicator under "All" once layout settles
     moveIndicator(activeTab(), true);
     window.addEventListener('load', function () { moveIndicator(activeTab(), true); });
     window.addEventListener('resize', function () { moveIndicator(activeTab(), true); });
@@ -1186,7 +1209,7 @@
     });
 
     /* ============================================================
-       Asset modal — films play, photographs display
+       Asset modal — films play (sound), photographs display
        ============================================================ */
     var modal = document.getElementById('asset-modal');
     var modalDialog = document.getElementById('modal-dialog');
@@ -1210,6 +1233,10 @@
       var thumb = card.querySelector('.card-img');
       var thumbIsImg = thumb && thumb.tagName === 'IMG';
       var thumbSrc = (thumbIsImg && thumb.src && thumb.style.display !== 'none') ? (thumb.currentSrc || thumb.src) : '';
+
+      // pause the inline preview so the modal's audio plays alone
+      var inline = card.querySelector('video.card-video');
+      if (inline) inline.pause();
 
       modalTitle.textContent = card.getAttribute('data-title') || '';
       modalMeta.textContent = card.getAttribute('data-meta') || '';
@@ -1260,11 +1287,11 @@
         modalPhoto.removeAttribute('src');
         document.body.style.overflow = '';
         modalTl.eventCallback('onReverseComplete', null);
+        resumeVisibleCardVideos();
       });
     }
 
     modalVideo.addEventListener('error', function () {
-      // Video source unreachable → cinematic still + private-screening note
       if (!modalOpen) return;
       modalVideo.classList.add('hidden');
       modalFallback.classList.remove('hidden');
