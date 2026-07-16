@@ -217,7 +217,15 @@
 
     <!-- ======================= HERO ======================= -->
     <section id="hero" class="relative flex h-[100svh] min-h-[640px] flex-col justify-end overflow-hidden">
-      <!-- Ambient background: image base + video that fades in when playable -->
+      <!-- ============================================================
+           ▓  YOUR FOOTAGE — HERO BACKGROUND FILM
+           ------------------------------------------------------------
+           • Swap the <source src> below for your own ambient clip,
+             e.g.  src="assets/hero.mp4".
+           • Must stay muted + looping so browsers allow autoplay.
+           • Also swap the poster <img src> for a matching still frame.
+           • Keep the clip short (~10–15s) and ~6–8 Mbps for smooth scroll.
+           ============================================================ -->
       <div id="hero-media" class="absolute inset-0 will-change-transform">
         <div class="absolute inset-0 card-fallback"></div>
         <img id="hero-fallback"
@@ -302,6 +310,21 @@
         </div>
       </div>
 
+      <!-- ============================================================
+           ▓  YOUR FOOTAGE — SELECTED WORK GRID
+           ------------------------------------------------------------
+           Every <article class="work-card"> below is ONE film. For each,
+           edit these four things to make it yours:
+             • data-video="..."          → the film that plays in the pop-up
+                                            player  (e.g. assets/film-01.mp4)
+             • <img class="card-img" src="...">  → the thumbnail still
+                                            (e.g. assets/thumb-01.jpg)
+             • data-title="..."          → project name shown on hover
+             • data-meta="..."           → "Location · Year" caption line
+           Drop your .mp4 / .jpg files in an /assets folder next to this
+           page and reference them with relative paths (assets/film-01.mp4).
+           Add or remove <article> blocks to change how many projects show.
+           ============================================================ -->
       <div class="grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-x-10 lg:gap-y-6">
 
         <!-- 01 -->

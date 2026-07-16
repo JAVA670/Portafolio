@@ -3,15 +3,47 @@
 Immersive digital portfolio for hard techno concert photography & videography.
 Next.js (App Router, TypeScript) · Tailwind CSS v4 · Framer Motion · Lenis.
 
-## Luxury hospitality edition (standalone)
+## Luxury hospitality edition — `index.html` (standalone, no build)
 
-`luxury-portfolio.html` is a second, completely separate portfolio: a
-single-file, dark-editorial site for luxury hospitality / real-estate
-videography (Tailwind + GSAP ScrollTrigger via CDN — no build step, just open
-it in a browser). Placeholder footage and stills are hot-linked from
-Pexels/Unsplash; swap each card's `data-video` attribute and `<img src>` in
-the Selected Work grid (plus the hero `<video>` source) to go live with real
-films.
+`index.html` is a second, completely separate portfolio: a single-file,
+dark-editorial site for luxury hospitality / real-estate videography
+(Tailwind + GSAP ScrollTrigger via CDN). No build step — open the file in a
+browser, or publish it with GitHub Pages (see below). It is independent of the
+Next.js app in the rest of this repo.
+
+### Put it online (GitHub Pages — free, public URL)
+
+1. Push this branch to GitHub (already done).
+2. On GitHub: **Settings → Pages**.
+3. Under **Build and deployment → Source**, choose **Deploy from a branch**.
+4. Pick this branch (`claude/luxury-videographer-portfolio-dazbxm`) — or `main`
+   after you merge — set the folder to **/ (root)**, and click **Save**.
+5. Wait ~1 minute. Your live URL will be:
+   **https://java670.github.io/portafolio/**
+
+Because `index.html` sits at the repo root, Pages serves it automatically.
+(`.nojekyll` tells GitHub to serve the file as-is.)
+
+### Add your own footage & videos
+
+All media lives in two easy-to-find spots inside `index.html`, each marked
+with a big `▓ YOUR FOOTAGE` comment:
+
+1. **Hero background film** — the `<video><source src="…">` near the top.
+2. **Selected Work grid** — each `<article class="work-card">` has:
+   - `data-video="…"` → the film that plays in the pop-up player
+   - `<img class="card-img" src="…">` → the thumbnail still
+   - `data-title` / `data-meta` → the caption text
+
+The simplest workflow: drop your `.mp4` and `.jpg` files into the **`assets/`**
+folder (see `assets/README.md` for suggested names), then point each `src` /
+`data-video` at e.g. `assets/film-01.mp4`. Add or delete `<article>` blocks to
+change how many projects appear. Update the contact email in the footer
+`mailto:` links.
+
+Until you swap them, the page shows tasteful placeholder footage/stills
+hot-linked from Pexels &amp; Unsplash, and every thumbnail has a designed
+gradient fallback if an image ever fails to load.
 
 ## Run it
 
