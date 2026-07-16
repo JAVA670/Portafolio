@@ -245,11 +245,11 @@
       <div id="hero-media" class="absolute inset-0 will-change-transform">
         <div class="absolute inset-0 card-fallback"></div>
         <img id="hero-fallback"
-             src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=2400&auto=format&fit=crop"
+             src="Fourseasons%202.jpg"
              alt="" aria-hidden="true"
              class="absolute inset-0 h-full w-full object-cover opacity-60" />
-        <video id="hero-video" class="absolute inset-0 h-full w-full object-cover opacity-0" autoplay muted loop playsinline preload="auto">
-          <source src="https://videos.pexels.com/video-files/3571264/3571264-uhd_3840_2160_30fps.mp4" type="video/mp4" />
+        <video id="hero-video" class="absolute inset-0 h-full w-full object-cover opacity-0" autoplay muted loop playsinline preload="auto" poster="Fourseasons%202.jpg">
+          <source src="Four%20Seasons%20Pool%20And%20Beach.mp4" type="video/mp4" />
         </video>
         <!-- Cinematic wash -->
         <div class="absolute inset-0 bg-gradient-to-b from-obsidian/80 via-obsidian/20 to-obsidian"></div>
@@ -357,202 +357,143 @@
            ============================================================ -->
       <div id="work-grid" class="grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-x-10 lg:gap-y-6">
 
-        <!-- 01 · FILM -->
-        <article class="work-card group relative cursor-pointer lg:col-span-7" data-speed="0.3" data-cursor="PLAY"
+        <!-- 01 · FEATURED FILM · Four Seasons (the highlight) -->
+        <article class="work-card group relative cursor-pointer lg:col-span-12" data-speed="0.18" data-cursor="PLAY"
                  data-type="video"
-                 data-video="https://videos.pexels.com/video-files/2169880/2169880-uhd_2560_1440_30fps.mp4"
-                 data-title="Amber Hour" data-meta="Resort Film — Siem Reap · MMXXVI"
-                 role="button" tabindex="0" aria-label="Play film: Amber Hour">
-          <figure class="relative aspect-[16/10] overflow-hidden bg-ink">
-            <div class="card-fallback absolute inset-0 flex items-end p-6">
-              <span class="font-syne text-7xl font-extrabold text-white/10">01</span>
+                 data-video="Four%20Seasons%20Pool%20And%20Beach.mp4"
+                 data-title="Four Seasons — Pool &amp; Beach" data-meta="Featured Film — Four Seasons · MMXXVI"
+                 role="button" tabindex="0" aria-label="Play featured film: Four Seasons Pool and Beach">
+          <figure class="relative aspect-[16/10] overflow-hidden bg-ink md:aspect-[21/9]">
+            <div class="card-fallback absolute inset-0 flex items-end p-6"><span class="font-syne text-7xl font-extrabold text-white/10">01</span></div>
+            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="eager" src="Fourseasons%201.jpg" alt="Four Seasons resort — pool and beach" />
+            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-black/30 opacity-90"></div>
+            <div class="absolute left-5 top-5 flex items-center gap-2 text-[9px] uppercase tracking-[0.4em] text-white/75"><span class="inline-block h-1.5 w-1.5 rounded-full bg-platinum"></span> Featured Film</div>
+            <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
+              <span class="flex h-20 w-20 items-center justify-center rounded-full border border-white/40 bg-black/20 backdrop-blur-sm transition-transform duration-700 group-hover:scale-110"><i data-lucide="play" class="h-6 w-6 text-white"></i></span>
             </div>
-            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="eager"
-                 src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1800&auto=format&fit=crop"
-                 alt="Infinity pool of an ultra-luxury resort at dusk" />
-            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
-            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">01 / Film</div>
-            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
-              <div class="card-meta">
-                <h3 class="font-syne text-xl font-bold md:text-2xl">Amber Hour</h3>
-                <p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Siem Reap — MMXXVI</p>
-              </div>
-              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">02:48</span>
+            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-8">
+              <div class="card-meta"><h3 class="font-syne text-2xl font-bold md:text-4xl">Four Seasons</h3><p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/60">Pool &amp; Beach — MMXXVI</p></div>
+              <span class="card-tag rounded-full border border-platinum/30 bg-white/5 px-4 py-2 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Watch Film</span>
             </figcaption>
           </figure>
         </article>
 
-        <!-- 02 · STILL -->
-        <article class="work-card group relative cursor-pointer lg:col-span-5 lg:mt-40" data-speed="0.9" data-cursor="VIEW"
-                 data-type="photo"
-                 data-full="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2400&auto=format&fit=crop"
-                 data-title="Stillness, Framed" data-meta="Interior Series — Milan · MMXXVI"
-                 role="button" tabindex="0" aria-label="View photograph: Stillness, Framed">
-          <figure class="relative aspect-[3/4] overflow-hidden bg-ink">
-            <div class="card-fallback absolute inset-0 flex items-end p-6">
-              <span class="font-syne text-7xl font-extrabold text-white/10">02</span>
-            </div>
-            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy"
-                 src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1400&auto=format&fit=crop"
-                 alt="Warm minimalist luxury interior" />
+        <!-- 02 · STILL · Four Seasons -->
+        <article class="work-card group relative cursor-pointer lg:col-span-7" data-speed="0.3" data-cursor="VIEW"
+                 data-type="photo" data-full="Fourseasons%201.jpg"
+                 data-title="Four Seasons — I" data-meta="Photography — Four Seasons · MMXXVI"
+                 role="button" tabindex="0" aria-label="View photograph: Four Seasons I">
+          <figure class="relative aspect-[16/10] overflow-hidden bg-ink">
+            <div class="card-fallback absolute inset-0 flex items-end p-6"><span class="font-syne text-7xl font-extrabold text-white/10">02</span></div>
+            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy" src="Fourseasons%201.jpg" alt="Four Seasons resort photograph I" />
             <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
             <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">02 / Still</div>
             <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
-              <div class="card-meta">
-                <h3 class="font-syne text-xl font-bold md:text-2xl">Stillness, Framed</h3>
-                <p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Milan — MMXXVI</p>
-              </div>
-              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Series</span>
+              <div class="card-meta"><h3 class="font-syne text-xl font-bold md:text-2xl">Four Seasons</h3><p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Frame I — MMXXVI</p></div>
+              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Photo</span>
             </figcaption>
           </figure>
         </article>
 
-        <!-- 03 · STILL -->
-        <article class="work-card group relative cursor-pointer lg:col-span-5 lg:mt-10" data-speed="0.7" data-cursor="VIEW"
-                 data-type="photo"
-                 data-full="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?q=80&w=2400&auto=format&fit=crop"
-                 data-title="Overwater" data-meta="Aerial Series — Maldives · MMXXV"
-                 role="button" tabindex="0" aria-label="View photograph: Overwater">
+        <!-- 03 · STILL · Four Seasons -->
+        <article class="work-card group relative cursor-pointer lg:col-span-5 lg:mt-20" data-speed="0.9" data-cursor="VIEW"
+                 data-type="photo" data-full="Fourseasons%202.jpg"
+                 data-title="Four Seasons — II" data-meta="Photography — Four Seasons · MMXXVI"
+                 role="button" tabindex="0" aria-label="View photograph: Four Seasons II">
           <figure class="relative aspect-[4/5] overflow-hidden bg-ink">
-            <div class="card-fallback absolute inset-0 flex items-end p-6">
-              <span class="font-syne text-7xl font-extrabold text-white/10">03</span>
-            </div>
-            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy"
-                 src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?q=80&w=1400&auto=format&fit=crop"
-                 alt="Overwater villas from above, Maldives" />
+            <div class="card-fallback absolute inset-0 flex items-end p-6"><span class="font-syne text-7xl font-extrabold text-white/10">03</span></div>
+            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy" src="Fourseasons%202.jpg" alt="Four Seasons resort photograph II" />
             <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
             <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">03 / Still</div>
             <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
-              <div class="card-meta">
-                <h3 class="font-syne text-xl font-bold md:text-2xl">Overwater</h3>
-                <p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Maldives — MMXXV</p>
-              </div>
-              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Series</span>
+              <div class="card-meta"><h3 class="font-syne text-xl font-bold md:text-2xl">Four Seasons</h3><p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Frame II — MMXXVI</p></div>
+              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Photo</span>
             </figcaption>
           </figure>
         </article>
 
-        <!-- 04 · FILM -->
-        <article class="work-card group relative cursor-pointer lg:col-span-7 lg:mt-44" data-speed="0.25" data-cursor="PLAY"
-                 data-type="video"
-                 data-video="https://videos.pexels.com/video-files/1409899/1409899-uhd_2560_1440_25fps.mp4"
-                 data-title="The Glass Pavilion" data-meta="Architectural Film — Ibiza · MMXXV"
-                 role="button" tabindex="0" aria-label="Play film: The Glass Pavilion">
-          <figure class="relative aspect-[16/9] overflow-hidden bg-ink">
-            <div class="card-fallback absolute inset-0 flex items-end p-6">
-              <span class="font-syne text-7xl font-extrabold text-white/10">04</span>
-            </div>
-            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy"
-                 src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1800&auto=format&fit=crop"
-                 alt="Modern glass villa in evening light" />
+        <!-- 04 · STILL · The Grand Hotel -->
+        <article class="work-card group relative cursor-pointer lg:col-span-5" data-speed="0.7" data-cursor="VIEW"
+                 data-type="photo" data-full="Grand%20Hotel%201.jpg"
+                 data-title="The Grand Hotel — I" data-meta="Photography — The Grand Hotel · MMXXVI"
+                 role="button" tabindex="0" aria-label="View photograph: The Grand Hotel I">
+          <figure class="relative aspect-[4/5] overflow-hidden bg-ink">
+            <div class="card-fallback absolute inset-0 flex items-end p-6"><span class="font-syne text-7xl font-extrabold text-white/10">04</span></div>
+            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy" src="Grand%20Hotel%201.jpg" alt="The Grand Hotel photograph I" />
             <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
-            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">04 / Film</div>
+            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">04 / Still</div>
             <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
-              <div class="card-meta">
-                <h3 class="font-syne text-xl font-bold md:text-2xl">The Glass Pavilion</h3>
-                <p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Ibiza — MMXXV</p>
-              </div>
-              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">01:56</span>
+              <div class="card-meta"><h3 class="font-syne text-xl font-bold md:text-2xl">The Grand Hotel</h3><p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Frame I — MMXXVI</p></div>
+              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Photo</span>
             </figcaption>
           </figure>
         </article>
 
-        <!-- 05 · FILM -->
-        <article class="work-card group relative cursor-pointer lg:col-span-6 lg:mt-6" data-speed="0.8" data-cursor="PLAY"
-                 data-type="video"
-                 data-video="https://videos.pexels.com/video-files/3571264/3571264-uhd_3840_2160_30fps.mp4"
-                 data-title="Obsidian Villa" data-meta="Private Estate Film — Dubai · MMXXV"
-                 role="button" tabindex="0" aria-label="Play film: Obsidian Villa">
+        <!-- 05 · STILL · The Grand Hotel -->
+        <article class="work-card group relative cursor-pointer lg:col-span-7 lg:mt-16" data-speed="0.35" data-cursor="VIEW"
+                 data-type="photo" data-full="Grand%20hotel%202.jpg"
+                 data-title="The Grand Hotel — II" data-meta="Photography — The Grand Hotel · MMXXVI"
+                 role="button" tabindex="0" aria-label="View photograph: The Grand Hotel II">
+          <figure class="relative aspect-[16/10] overflow-hidden bg-ink">
+            <div class="card-fallback absolute inset-0 flex items-end p-6"><span class="font-syne text-7xl font-extrabold text-white/10">05</span></div>
+            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy" src="Grand%20hotel%202.jpg" alt="The Grand Hotel photograph II" />
+            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
+            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">05 / Still</div>
+            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
+              <div class="card-meta"><h3 class="font-syne text-xl font-bold md:text-2xl">The Grand Hotel</h3><p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Frame II — MMXXVI</p></div>
+              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Photo</span>
+            </figcaption>
+          </figure>
+        </article>
+
+        <!-- 06 · STILL · Four Seasons -->
+        <article class="work-card group relative cursor-pointer lg:col-span-6" data-speed="0.85" data-cursor="VIEW"
+                 data-type="photo" data-full="Fourseasons%203.jpg"
+                 data-title="Four Seasons — III" data-meta="Photography — Four Seasons · MMXXVI"
+                 role="button" tabindex="0" aria-label="View photograph: Four Seasons III">
           <figure class="relative aspect-[4/3] overflow-hidden bg-ink">
-            <div class="card-fallback absolute inset-0 flex items-end p-6">
-              <span class="font-syne text-7xl font-extrabold text-white/10">05</span>
-            </div>
-            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy"
-                 src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=1600&auto=format&fit=crop"
-                 alt="Luxury villa illuminated at night" />
-            <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
-            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">05 / Film</div>
-            <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
-              <div class="card-meta">
-                <h3 class="font-syne text-xl font-bold md:text-2xl">Obsidian Villa</h3>
-                <p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Dubai — MMXXV</p>
-              </div>
-              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">03:12</span>
-            </figcaption>
-          </figure>
-        </article>
-
-        <!-- 06 · STILL -->
-        <article class="work-card group relative cursor-pointer lg:col-span-6 lg:mt-52" data-speed="0.45" data-cursor="VIEW"
-                 data-type="photo"
-                 data-full="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=2400&auto=format&fit=crop"
-                 data-title="Marble &amp; Light" data-meta="Detail Series — Santorini · MMXXV"
-                 role="button" tabindex="0" aria-label="View photograph: Marble and Light">
-          <figure class="relative aspect-[3/4] overflow-hidden bg-ink">
-            <div class="card-fallback absolute inset-0 flex items-end p-6">
-              <span class="font-syne text-7xl font-extrabold text-white/10">06</span>
-            </div>
-            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy"
-                 src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=1400&auto=format&fit=crop"
-                 alt="Resort pool detail in golden light" />
+            <div class="card-fallback absolute inset-0 flex items-end p-6"><span class="font-syne text-7xl font-extrabold text-white/10">06</span></div>
+            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy" src="Fourseasons%203.jpg" alt="Four Seasons resort photograph III" />
             <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
             <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">06 / Still</div>
             <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
-              <div class="card-meta">
-                <h3 class="font-syne text-xl font-bold md:text-2xl">Marble &amp; Light</h3>
-                <p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Santorini — MMXXV</p>
-              </div>
-              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Series</span>
+              <div class="card-meta"><h3 class="font-syne text-xl font-bold md:text-2xl">Four Seasons</h3><p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Frame III — MMXXVI</p></div>
+              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Photo</span>
             </figcaption>
           </figure>
         </article>
 
-        <!-- 07 · STILL -->
-        <article class="work-card group relative cursor-pointer lg:col-span-5 lg:mt-8" data-speed="0.85" data-cursor="VIEW"
-                 data-type="photo"
-                 data-full="https://images.unsplash.com/photo-1582719508461-905c673771fd?q=80&w=2400&auto=format&fit=crop"
-                 data-title="Suite Nocturne" data-meta="Hotel Series — Paris · MMXXIV"
-                 role="button" tabindex="0" aria-label="View photograph: Suite Nocturne">
-          <figure class="relative aspect-square overflow-hidden bg-ink">
-            <div class="card-fallback absolute inset-0 flex items-end p-6">
-              <span class="font-syne text-7xl font-extrabold text-white/10">07</span>
-            </div>
-            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy"
-                 src="https://images.unsplash.com/photo-1582719508461-905c673771fd?q=80&w=1400&auto=format&fit=crop"
-                 alt="Luxury hotel suite at dusk" />
+        <!-- 07 · FILM · Mackinac Island -->
+        <article class="work-card group relative cursor-pointer lg:col-span-6 lg:mt-16" data-speed="0.5" data-cursor="PLAY"
+                 data-type="video" data-video="mackiand%20Island%202026.mp4"
+                 data-title="Mackinac Island" data-meta="Film — Mackinac Island · MMXXVI"
+                 role="button" tabindex="0" aria-label="Play film: Mackinac Island">
+          <figure class="relative aspect-[4/3] overflow-hidden bg-ink">
+            <div class="card-fallback absolute inset-0 flex items-end p-6"><span class="font-syne text-7xl font-extrabold text-white/10">07</span></div>
+            <video class="card-img absolute inset-0 h-full w-full object-cover" muted playsinline preload="metadata" src="mackiand%20Island%202026.mp4#t=1"></video>
             <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
-            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">07 / Still</div>
+            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">07 / Film</div>
+            <div class="pointer-events-none absolute inset-0 flex items-center justify-center"><span class="flex h-14 w-14 items-center justify-center rounded-full border border-white/40 bg-black/20 backdrop-blur-sm transition-transform duration-700 group-hover:scale-110"><i data-lucide="play" class="h-5 w-5 text-white"></i></span></div>
             <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
-              <div class="card-meta">
-                <h3 class="font-syne text-xl font-bold md:text-2xl">Suite Nocturne</h3>
-                <p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Paris — MMXXIV</p>
-              </div>
-              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Series</span>
+              <div class="card-meta"><h3 class="font-syne text-xl font-bold md:text-2xl">Mackinac Island</h3><p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Film — MMXXVI</p></div>
+              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Watch</span>
             </figcaption>
           </figure>
         </article>
 
-        <!-- 08 · FILM -->
-        <article class="work-card group relative cursor-pointer lg:col-span-7 lg:mt-36" data-speed="0.35" data-cursor="PLAY"
-                 data-type="video"
-                 data-video="https://videos.pexels.com/video-files/2169880/2169880-uhd_2560_1440_30fps.mp4"
-                 data-title="Cove of Stillness" data-meta="Wellness Retreat Film — Bali · MMXXIV"
-                 role="button" tabindex="0" aria-label="Play film: Cove of Stillness">
+        <!-- 08 · STILL · The Grand Hotel -->
+        <article class="work-card group relative cursor-pointer lg:col-span-7" data-speed="0.4" data-cursor="VIEW"
+                 data-type="photo" data-full="Grand%20hotel%203.jpg"
+                 data-title="The Grand Hotel — III" data-meta="Photography — The Grand Hotel · MMXXVI"
+                 role="button" tabindex="0" aria-label="View photograph: The Grand Hotel III">
           <figure class="relative aspect-[16/10] overflow-hidden bg-ink">
-            <div class="card-fallback absolute inset-0 flex items-end p-6">
-              <span class="font-syne text-7xl font-extrabold text-white/10">08</span>
-            </div>
-            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy"
-                 src="https://images.unsplash.com/photo-1540541338287-41700207dee6?q=80&w=1800&auto=format&fit=crop"
-                 alt="Palm-lined beach resort at sunset" />
+            <div class="card-fallback absolute inset-0 flex items-end p-6"><span class="font-syne text-7xl font-extrabold text-white/10">08</span></div>
+            <img class="card-img absolute inset-0 h-full w-full object-cover" loading="lazy" src="Grand%20hotel%203.jpg" alt="The Grand Hotel photograph III" />
             <div class="card-shade absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/20 opacity-80"></div>
-            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">08 / Film</div>
+            <div class="absolute left-5 top-5 text-[9px] uppercase tracking-[0.4em] text-white/60">08 / Still</div>
             <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-7">
-              <div class="card-meta">
-                <h3 class="font-syne text-xl font-bold md:text-2xl">Cove of Stillness</h3>
-                <p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Bali — MMXXIV</p>
-              </div>
-              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">04:05</span>
+              <div class="card-meta"><h3 class="font-syne text-xl font-bold md:text-2xl">The Grand Hotel</h3><p class="mt-1.5 text-[10px] uppercase tracking-[0.3em] text-white/55">Frame III — MMXXVI</p></div>
+              <span class="card-tag rounded-full border border-platinum/25 bg-white/5 px-3.5 py-1.5 text-[9px] uppercase tracking-[0.3em] text-platinum backdrop-blur-sm">Photo</span>
             </figcaption>
           </figure>
         </article>
@@ -789,7 +730,7 @@
         </button>
       </div>
       <div class="relative aspect-video overflow-hidden border border-platinum/15 bg-black">
-        <video id="modal-video" class="hidden h-full w-full" controls playsinline preload="auto"></video>
+        <video id="modal-video" class="hidden h-full w-full bg-black object-contain" controls playsinline preload="auto"></video>
         <img id="modal-photo" class="hidden h-full w-full object-contain" src="" alt="" />
         <div id="modal-fallback" class="card-fallback absolute inset-0 hidden flex-col items-center justify-center gap-4 p-8 text-center">
           <img id="modal-fallback-img" src="" alt="" class="absolute inset-0 h-full w-full object-cover opacity-40" />
@@ -1267,7 +1208,8 @@
     function openModal(card) {
       var type = card.getAttribute('data-type') || 'video';
       var thumb = card.querySelector('.card-img');
-      var thumbSrc = (thumb && thumb.src && thumb.style.display !== 'none') ? (thumb.currentSrc || thumb.src) : '';
+      var thumbIsImg = thumb && thumb.tagName === 'IMG';
+      var thumbSrc = (thumbIsImg && thumb.src && thumb.style.display !== 'none') ? (thumb.currentSrc || thumb.src) : '';
 
       modalTitle.textContent = card.getAttribute('data-title') || '';
       modalMeta.textContent = card.getAttribute('data-meta') || '';
