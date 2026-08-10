@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Remote debug for AE panel: open http://localhost:8089 in Chromium. -->
+<ExtensionList>
+    <Extension Id="com.yeison.handdrawnanimator.ae.panel">
+        <HostList>
+            <Host Name="AEFT" Port="8089"/>
+        </HostList>
+    </Extension>
+</ExtensionList>

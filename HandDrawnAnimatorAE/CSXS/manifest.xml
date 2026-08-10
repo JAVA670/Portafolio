@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  Hand-Drawn Animator (After Effects) — CEP manifest.
+  Same panel UI as the Premiere version, but Host = AEFT so it runs in After
+  Effects, where the backend can create text, set fonts, and morph.
+  Targets After Effects 2022 (22.0) and newer (CEP 11 runtime).
+-->
+<ExtensionManifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   ExtensionBundleId="com.yeison.handdrawnanimator.ae"
+                   ExtensionBundleName="Hand-Drawn Animator AE"
+                   ExtensionBundleVersion="2.0.0"
+                   Version="7.0">
+
+  <ExtensionList>
+    <Extension Id="com.yeison.handdrawnanimator.ae.panel" Version="2.0.0"/>
+  </ExtensionList>
+
+  <ExecutionEnvironment>
+    <HostList>
+      <!-- AEFT = After Effects. [22.0,99.9] = AE 2022 minimum. -->
+      <Host Name="AEFT" Version="[22.0,99.9]"/>
+    </HostList>
+    <LocaleList>
+      <Locale Code="All"/>
+    </LocaleList>
+    <RequiredRuntimeList>
+      <RequiredRuntime Name="CSXS" Version="9.0"/>
+    </RequiredRuntimeList>
+  </ExecutionEnvironment>
+
+  <DispatchInfoList>
+    <Extension Id="com.yeison.handdrawnanimator.ae.panel">
+      <DispatchInfo>
+        <Resources>
+          <MainPath>./index.html</MainPath>
+          <ScriptPath>./jsx/AE_Host.jsx</ScriptPath>
+          <CEFCommandLine>
+            <Parameter>--allow-file-access</Parameter>
+            <Parameter>--allow-file-access-from-files</Parameter>
+          </CEFCommandLine>
+        </Resources>
+        <Lifecycle>
+          <AutoVisible>true</AutoVisible>
+        </Lifecycle>
+        <UI>
+          <Type>Panel</Type>
+          <Menu>Hand-Drawn Animator</Menu>
+          <Geometry>
+            <Size>
+              <Height>720</Height>
+              <Width>360</Width>
+            </Size>
+            <MinSize>
+              <Height>480</Height>
+              <Width>320</Width>
+            </MinSize>
+            <MaxSize>
+              <Height>1400</Height>
+              <Width>700</Width>
+            </MaxSize>
+          </Geometry>
+        </UI>
+      </DispatchInfo>
+    </Extension>
+  </DispatchInfoList>
+</ExtensionManifest>

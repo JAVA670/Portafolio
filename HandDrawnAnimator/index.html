@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hand-Drawn Animator</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="device">
+  <div class="panel">
+
+    <i class="screw s-tl"></i><i class="screw s-tr"></i>
+    <i class="screw s-bl"></i><i class="screw s-br"></i>
+
+    <header class="brand">
+      <div class="logo">
+        <span class="logo-script">Hand&nbsp;Drawn</span>
+        <span class="logo-bold">ANIMATOR</span>
+      </div>
+      <span class="version">V 1.0</span>
+    </header>
+
+    <div class="form">
+
+      <p class="howto">Select a <b>text or shape clip</b> on the timeline (make one with the Type&nbsp;tool), then click ANIMATE.</p>
+
+      <label class="field">
+        <span class="lbl">Animation Speed</span>
+        <select id="speed">
+          <option value="1">Light</option>
+          <option value="2" selected>Normal</option>
+          <option value="3">Heavy</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span class="lbl">Style</span>
+        <select id="style">
+          <option value="1" selected>None</option>
+          <option value="2">Grunge</option>
+          <option value="3">Film</option>
+          <option value="4">VHS</option>
+          <option value="5">Paper</option>
+        </select>
+      </label>
+
+      <div class="field-row">
+        <label class="field">
+          <span class="lbl">Transition In</span>
+          <select id="transIn">
+            <option value="0">None</option>
+            <option value="1" selected>Up</option>
+            <option value="2">Down</option>
+            <option value="3">Left</option>
+            <option value="4">Right</option>
+          </select>
+        </label>
+        <label class="field">
+          <span class="lbl">Transition Out</span>
+          <select id="transOut">
+            <option value="0">None</option>
+            <option value="1">Up</option>
+            <option value="2" selected>Down</option>
+            <option value="3">Left</option>
+            <option value="4">Right</option>
+          </select>
+        </label>
+      </div>
+
+    </div>
+
+    <button class="animate-btn" id="apply">ANIMATE</button>
+    <pre id="log" class="log" hidden></pre>
+    <div id="status" class="statusline">Connecting&hellip;</div>
+  </div>
+</div>
+
+  <script src="lib/CSInterface.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  Hand-Drawn Animator - CEP manifest
+  Targets Adobe Premiere Pro 2023 (v23.0) and newer. Premiere 2023-2025 ship
+  the CEP 11 runtime; RequiredRuntime is set to 9.0 (a minimum) so the panel
+  also loads on any newer CSXS runtime.
+-->
+<ExtensionManifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   ExtensionBundleId="com.yeison.handdrawnanimator"
+                   ExtensionBundleName="Hand-Drawn Animator"
+                   ExtensionBundleVersion="1.0.0"
+                   Version="7.0">
+
+  <ExtensionList>
+    <Extension Id="com.yeison.handdrawnanimator.panel" Version="1.0.0"/>
+  </ExtensionList>
+
+  <ExecutionEnvironment>
+    <HostList>
+      <!-- PPRO = Premiere Pro. [23.0,99.9] = Premiere Pro 2023 minimum. -->
+      <Host Name="PPRO" Version="[23.0,99.9]"/>
+    </HostList>
+    <LocaleList>
+      <Locale Code="All"/>
+    </LocaleList>
+    <RequiredRuntimeList>
+      <RequiredRuntime Name="CSXS" Version="9.0"/>
+    </RequiredRuntimeList>
+  </ExecutionEnvironment>
+
+  <DispatchInfoList>
+    <Extension Id="com.yeison.handdrawnanimator.panel">
+      <DispatchInfo>
+        <Resources>
+          <MainPath>./index.html</MainPath>
+          <!-- ScriptPath is auto-loaded into Premiere's ExtendScript engine
+               the first time the panel calls evalScript(). -->
+          <ScriptPath>./jsx/Premiere_Host.jsx</ScriptPath>
+          <CEFCommandLine>
+            <Parameter>--allow-file-access</Parameter>
+            <Parameter>--allow-file-access-from-files</Parameter>
+          </CEFCommandLine>
+        </Resources>
+        <Lifecycle>
+          <AutoVisible>true</AutoVisible>
+        </Lifecycle>
+        <UI>
+          <Type>Panel</Type>
+          <Menu>Hand-Drawn Animator</Menu>
+          <Geometry>
+            <Size>
+              <Height>380</Height>
+              <Width>800</Width>
+            </Size>
+            <MinSize>
+              <Height>340</Height>
+              <Width>460</Width>
+            </MinSize>
+            <MaxSize>
+              <Height>900</Height>
+              <Width>1200</Width>
+            </MaxSize>
+          </Geometry>
+        </UI>
+      </DispatchInfo>
+    </Extension>
+  </DispatchInfoList>
+</ExtensionManifest>
