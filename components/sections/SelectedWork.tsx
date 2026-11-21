@@ -10,7 +10,7 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 import { photos, type Photo } from "@/lib/mockData";
 
 /** Hand-picked hero frames — mixed ratios so the columns never align. */
-const SELECTED_IDS = ["p04", "p03", "p19", "p06", "p11", "p10", "p23", "p15"];
+const SELECTED_IDS = ["p04", "p37", "p19", "p39", "p03", "p42", "p06", "p40"];
 const selected = SELECTED_IDS.map((id) => photos.find((p) => p.id === id)).filter(
   (p): p is Photo => Boolean(p)
 );
