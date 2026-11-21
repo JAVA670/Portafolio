@@ -46,8 +46,8 @@ const p = (
   ratio,
 });
 
-/** Ordered to interleave verticals and horizontals for masonry rhythm. */
-export const photos: Photo[] = [
+/** First drop — ordered to interleave verticals and horizontals. */
+const firstDrop: Photo[] = [
   p("p01", "aero-01", 0.5627, "STROBE BAPTISM", "Strobe burst over the main floor"),
   p("p02", "solar-01", 1.5, "THE FLOOR BREATHES", "Wide shot of the festival crowd"),
   p("p03", "hocus-01", 0.5627, "GHOST IN THE SMOKE", "DJ silhouette in the smoke"),
@@ -86,6 +86,34 @@ export const photos: Photo[] = [
   p("p36", "aero-06", 0.5627, "CLOSING CREDITS", "Closing frame of the night"),
 ];
 
+/** Second drop (Nov 2026). */
+const secondDrop: Photo[] = [
+  p("p37", "tl-090", 0.6667, "DETONATION", "Pyrotechnics exploding above a giant goggled stage face"),
+  p("p38", "tl670-171", 1.5, "ARMS UP, NO MERCY", "DJ raising an arm over the decks under a steel truss"),
+  p("p39", "tl670-52", 0.6667, "SNOWSTORM AT 140", "DJ silhouetted against a white particle LED wall"),
+  p("p40", "tl-051", 0.5946, "FREEFALL IN AMBER", "Aerial performer suspended upside down in orange light beams"),
+  p("p41", "tl670-54", 1.5, "INFERNO STAGE", "Festival stage glowing orange through smoke"),
+  p("p42", "tl-065", 0.8747, "THE MACHINE WATCHES", "Giant mechanical face with glowing goggles over the stage"),
+  p("p43", "tl670-39", 0.6667, "BRAIDED VOLTAGE", "DJ with braids working the mixer in blue light"),
+  p("p44", "tl-055", 0.668, "RED HOOD PROTOCOL", "Hooded figure on a giant screen cut by red laser beams"),
+  p("p45", "tl670-47", 0.6667, "THE GATES OPEN", "Symmetrical view of a festival stage framed by giant inflatable hands"),
+  p("p46", "tl-085", 0.6667, "ALTAR OF TEAL", "Performer with a raised arm under a teal-lit stage dome"),
+  p("p47", "tl670-58", 0.6667, "SURGICAL MIX", "DJ focused on the mixer under red and blue light"),
+  p("p48", "tl-063", 0.6667, "STEEL HALO", "DJ booth on a monumental steel stage under white light"),
+  p("p49", "tl670-121", 0.5627, "COLD HANGAR PRESSURE", "Crowd under blue light in a warehouse hangar"),
+  p("p50", "tl-086", 0.6667, "LIGHT FROM ABOVE", "Lone performer under white beams on a domed stage"),
+  p("p51", "tl670-61", 0.6667, "THE PIT EXHALES", "Packed club crowd facing the DJ booth under purple light"),
+];
+
+/**
+ * The archive interleaves both drops (one new frame after every two from
+ * the first) so new work is spread through the grid, not piled at the end.
+ */
+export const photos: Photo[] = firstDrop.flatMap((photo, i) => {
+  const fresh = i % 2 === 1 ? secondDrop[(i - 1) / 2] : undefined;
+  return fresh ? [photo, fresh] : [photo];
+});
+
 const v = (
   id: string,
   slug: string,
@@ -114,6 +142,7 @@ export const videos: Video[] = [
   v("v06", "urban-fest-2025", 1.7778, "16:9", "URBAN FEST", "MEDELLÍN — AFTERMOVIE", "2025"),
   v("v07", "genesis-aftermovie", 1.7778, "16:9", "GENESIS", "MEDELLÍN — AFTERMOVIE", "2025"),
   v("v08", "maluna-fest", 1.7778, "16:9", "MALUNA FEST", "MEDELLÍN — AFTERMOVIE", "2025"),
+  v("v09", "psicoddelic", 1.5, "3:2", "PSICODDELIC", "VHS CUT — AFTERMOVIE", "2025"),
 ];
 
 export const credits = {
