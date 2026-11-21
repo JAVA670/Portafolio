@@ -1,48 +1,56 @@
 # THRULENSES670
 
-Immersive digital portfolio for hard techno concert photography & videography.
+Hard techno concert photography & film — portfolio site.
 Next.js (App Router, TypeScript) · Tailwind CSS v4 · Framer Motion · Lenis.
-
-## Run it
 
 ```bash
 npm install
-npm run dev        # http://localhost:3000
-npm run build      # production build
+npm run dev     # http://localhost:3000
+npm run build   # production build
 ```
 
-## Drop in your media
+## Design system
 
-The site reads everything from `lib/mockData.ts`, which points at:
+- **Type:** Anton (display, always solid white) · Archivo variable (labels at `wdth` 115, body at 100) · JetBrains Mono (metadata, 11px).
+- **Colour:** `#050507` canvas, white, one electric cobalt `#0038FF` accent. Tokens live in `app/globals.css`.
+- **Grid:** 12 columns, 12px gaps, 0px radius everywhere, 1px hairlines.
 
-| Type | Directory | Naming |
-| --- | --- | --- |
-| Photos | `public/assets/photography/` | `photo-01.jpg` … `photo-12.jpg` |
-| DJ sets (16:9) | `public/assets/videos/dj-sets/` | `set-01.mp4` + `set-01-poster.jpg` … |
-| Aftermovies (9:16) | `public/assets/videos/aftermovies/` | `aftermovie-01.mp4` + `aftermovie-01-poster.jpg` … |
+## Adding photos
 
-Two ways to go live with real media:
+1. Upload the files anywhere in the repo, e.g. `public/assets/photography/`.
+2. Import them (EXIF-rotate, 2000px long edge, mozjpeg, clean slug names):
+   ```bash
+   node scripts/import-media.mjs path/to/Thrulenses-123.jpg path/to/clip.mp4
+   ```
+   The command prints each file's slug and real aspect ratio.
+3. Add an entry to `photos` in `lib/mockData.ts` with its `chapter`
+   (`inferno` · `cold` · `daylight`), `caption`, `alt` and, if the crop needs it,
+   a `focus` (`"50% 0%"` keeps the top of the frame).
+4. Optionally place it in that chapter's `rows`. Photos you don't place still
+   appear at the end of their chapter automatically.
 
-1. **Overwrite** the placeholder files using the same names — no code changes.
-2. **Edit `lib/mockData.ts`** to add/remove entries, change filenames, captions,
-   events, locations and aspect ratios (`ratio` drives the masonry layout).
+Optional `artist`, `venue` and `date` fields show on hover and in the viewer
+only once filled in, so only add verified information.
 
-Placeholder frames were generated with `node scripts/generate-placeholders.mjs`
-(re-run it anytime to regenerate).
+## Swapping the hero camera
 
-For scroll performance, export videos as H.264 MP4, ~8–12 Mbps for 16:9 sets
-and ~5–8 Mbps for 9:16 reels. They autoplay muted and lazy-load only when
-scrolled into view.
+Drop a new render at `public/assets/chrome-camera-hero.png` (3/4 view) or
+`public/assets/chrome-camera-front.png` (front view, used in Booking). A
+transparent or black background both work. To convert a render to a clean
+alpha PNG first:
 
-## Where things live
+```bash
+node scripts/prepare-hero-render.mjs my-render.jpg public/assets/chrome-camera-hero.png
+```
 
-- `app/` — root layout (fonts, metadata, grain overlay) and the single page
-- `components/sections/` — Hero, Gallery (+ Lightbox), DJSets, Aftermovies, Contact
-- `components/fx/` — `BlurReveal` (blur→focus scroll reveal), section headers
-- `components/ui/` — `SmartImage` (graceful fallback), `AutoVideo` (in-view autoplay)
-- `components/providers/` — Lenis smooth scroll, EN/ES language context
-- `lib/mockData.ts` — media manifest, gear list, contact info
-- `lib/i18n.ts` — English/Spanish copy
+A looping video is also supported: set `heroRender.video` in `lib/mockData.ts`.
 
-Booking form submits via `mailto:` to the address in `lib/mockData.ts`
-(`contact.email`) — change it there.
+## Structure
+
+- `app/` — root layout (fonts, metadata), page composition, global CSS
+- `components/sections/` — Hero, Intro, Work, Index (archive), Films, Booking, Lightbox, VideoModal
+- `components/work/` — chapter blocks, photo cards, text panels
+- `components/hero/CameraRender.tsx` — the chrome camera slot
+- `components/fx/` — preloader, cursor, reveals, section heads
+- `lib/mockData.ts` — photos, chapters, films, index, contact
+- `lib/i18n.ts` — English / Spanish copy

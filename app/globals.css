@@ -1,50 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  /* THRULENSES670 — cyber-brutalist editorial / liquid chrome.
-     Obsidian canvas, electric cobalt, stark white, mercury silver. */
+  /* THRULENSES670 — cyber-brutalist editorial.
+     Obsidian canvas, stark white, one electric cobalt accent. */
   --color-void: #050507;
-  --color-iron: #0a0a0e;
-  --color-steel: #121319;
-  --color-smoke: #24262e;
-  --color-ash: #6b7080;
-  --color-bone: #c9ced8;
+  --color-ink: #0b0b0f;
+  --color-steel: #15161c;
+  --color-smoke: #2a2c33;
+  --color-mute: #8a8f98;
+  --color-dim: #5b6069;
   --color-strobe: #ffffff;
-
   --color-cobalt: #0038ff;
   --color-glow: #3b82f6;
   --color-ice: #a5d8ff;
-  --color-silver: #e5e7eb;
-  --color-graphite: #1f2937;
-  --color-hairline: rgba(255, 255, 255, 0.12);
+  --color-hairline: rgba(255, 255, 255, 0.08);
+  --color-divider: rgba(255, 255, 255, 0.16);
 
-  --font-display: var(--font-syne), "Arial Black", sans-serif;
-  --font-sans: var(--font-grotesk), "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-anton), "Arial Narrow", Impact, sans-serif;
+  --font-sans: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
   --font-mono: var(--font-jetbrains), "Courier New", monospace;
 
-  --radius-none: 0px;
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-swiss: cubic-bezier(0.77, 0, 0.175, 1);
 
-  --animate-marquee: marquee 38s linear infinite;
-  --animate-marquee-reverse: marquee-reverse 44s linear infinite;
   --animate-blink: blink 1s step-end infinite;
-
-  @keyframes marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
-  }
-
-  @keyframes marquee-reverse {
-    from {
-      transform: translateX(-50%);
-    }
-    to {
-      transform: translateX(0);
-    }
-  }
 
   @keyframes blink {
     0%,
@@ -65,19 +44,23 @@ body {
 html {
   color-scheme: dark;
   /* Anchor jumps land below the fixed header */
-  scroll-padding-top: 72px;
+  scroll-padding-top: 64px;
 }
 
 body {
   color: var(--color-strobe);
   font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.55;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 :focus-visible {
-  outline: 1px solid var(--color-ice);
-  outline-offset: 2px;
+  outline: 1px solid var(--color-cobalt);
+  outline-offset: 3px;
 }
 
 ::selection {
@@ -112,95 +95,82 @@ html.lenis body {
   background: var(--color-cobalt);
 }
 
-/* Film grain — fixed, never intercepts input */
+/* Static film grain at 4% — texture, not motion. */
 .grain::before {
   content: "";
   position: fixed;
-  inset: -100%;
+  inset: 0;
   z-index: 80;
   pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
-  opacity: 0.045;
-  animation: grain-shift 0.6s steps(4) infinite;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.04;
 }
 
-@keyframes grain-shift {
-  0% {
-    transform: translate(0, 0);
-  }
-  25% {
-    transform: translate(-2%, 3%);
+/* Idle zero-gravity drift for the chrome camera. */
+.camera-float {
+  animation: camera-float 7s ease-in-out infinite;
+}
+@keyframes camera-float {
+  0%,
+  100% {
+    transform: translate3d(0, -8px, 0);
   }
   50% {
-    transform: translate(3%, -2%);
+    transform: translate3d(0, 8px, 0);
   }
-  75% {
-    transform: translate(-3%, -3%);
-  }
-  100% {
-    transform: translate(2%, 2%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .camera-float {
+    animation: none;
   }
 }
 
-/* Layered so Tailwind utilities (hidden, md:*, etc.) can still override. */
+/* Layered so Tailwind utilities (hidden, md:*, …) can still override. */
 @layer components {
-  /* ── Typography primitives ───────────────────────────────────────── */
+  /* Condensed industrial display type — always solid white. */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 0.88;
+    letter-spacing: -0.01em;
+  }
 
-  /* Tiny wide-tracked technical metadata: 07.DEC.26 / FROM 00H — TILL LATE */
+  /* Expanded Archivo for labels and small headings. */
+  .wide {
+    font-variation-settings: "wdth" 115;
+  }
+
+  /* Technical metadata: 11px mono, wide-tracked, uppercase. */
   .meta {
     font-family: var(--font-mono);
-    font-size: 10px;
-    line-height: 1.5;
-    letter-spacing: 0.22em;
+    font-size: 11px;
+    line-height: 1.6;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--color-ash);
-  }
-  @media (min-width: 768px) {
-    .meta {
-      font-size: 11px;
-    }
+    color: var(--color-mute);
   }
 
-  /* Signature label block: black type on a stark white rectangle. */
+  /* Signature label block: black type in a stark white rectangle. */
   .label-block {
     display: inline-block;
     background: var(--color-strobe);
     color: #000;
-    padding: 2px 8px;
-    font-family: var(--font-display);
-    font-weight: 800;
+    padding: 4px 10px;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 12px;
+    font-variation-settings: "wdth" 115;
+    line-height: 1.25;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    line-height: 1.05;
   }
   .label-block--cobalt {
     background: var(--color-cobalt);
     color: var(--color-strobe);
   }
-  .label-block--ghost {
-    background: transparent;
-    color: var(--color-strobe);
-    box-shadow: inset 0 0 0 1px var(--color-strobe);
-  }
 
-  /* Metallic gradient-clipped type (one element per page: the 670). */
-  .text-chrome {
-    background: linear-gradient(
-      180deg,
-      #ffffff 0%,
-      #e5e7eb 22%,
-      #6b7280 46%,
-      #1f2937 52%,
-      #a5d8ff 74%,
-      #ffffff 100%
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-  }
-
-  /* Snap inversion link: white text → solid cobalt bar, 150ms linear. */
+  /* Instant inversion link: white text → solid cobalt bar. */
   .snap-link {
     padding: 2px 6px;
     margin: -2px -6px;
@@ -214,28 +184,27 @@ html.lenis body {
     color: var(--color-strobe);
   }
 
-  /* Cool photographic grade — light touch so phones never read as gray. */
-  .grade-cool {
-    filter: saturate(0.86) contrast(1.06) brightness(0.98);
-    transition: filter 180ms linear;
+  /* 12-column architectural hairlines (apply to an absolutely positioned
+     layer inset to the page margins). */
+  .grid-lines {
+    background-image: linear-gradient(to right, var(--color-hairline) 1px, transparent 1px);
+    background-size: calc((100% - 1px) / 12) 100%;
+    box-shadow: inset -1px 0 0 var(--color-hairline);
   }
-  @media (hover: hover) {
-    .group:hover .grade-cool {
-      filter: none;
+
+  /* Horizontal page margins shared by every section. */
+  .shell {
+    padding-inline: 20px;
+  }
+  @media (min-width: 768px) {
+    .shell {
+      padding-inline: 32px;
     }
   }
-
-  /* Hairline editorial grid backdrop */
-  .hairline-grid {
-    background-image:
-      linear-gradient(to right, var(--color-hairline) 1px, transparent 1px);
-    background-size: calc(100% / 12) 100%;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .grain::before {
-    animation: none;
+  @media (min-width: 1280px) {
+    .shell {
+      padding-inline: 40px;
+    }
   }
 }
 
