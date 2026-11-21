@@ -22,7 +22,7 @@ export function Work() {
   const sectionRef = useRef<HTMLElement>(null);
   const chapterRefs = useRef<Record<string, HTMLElement | null>>({});
   const [filter, setFilter] = useState<Filter>("all");
-  const [current, setCurrent] = useState<ChapterId>("inferno");
+  const [current, setCurrent] = useState<ChapterId>(chapters[0].id);
   const [active, setActive] = useState<number | null>(null);
 
   const visible = useMemo(
@@ -34,13 +34,18 @@ export function Work() {
     [visible]
   );
 
-  // Which chapter is crossing the middle of the screen.
+  // The last chapter whose top has passed the middle of the screen. Read
+  // from layout on every crossing, so jumps (anchors, filters) stay right.
   useEffect(() => {
     const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) setCurrent(entry.target.getAttribute("data-chapter") as ChapterId);
+      () => {
+        const middle = window.innerHeight / 2;
+        let next: ChapterId | null = null;
+        for (const chapter of visible) {
+          const node = chapterRefs.current[chapter.id];
+          if (node && node.getBoundingClientRect().top < middle) next = chapter.id;
         }
+        if (next) setCurrent(next);
       },
       { rootMargin: "-45% 0px -45% 0px" }
     );
@@ -110,6 +115,7 @@ export function Work() {
           </div>
           {currentChapter && (
             <p className="meta hidden shrink-0 lg:block" aria-live="polite">
+              <span className="mr-1.5 inline-block h-1.5 w-1.5 animate-blink rounded-full bg-signal align-middle" aria-hidden />
               {t.work.now}: <span className="text-strobe">{`${currentChapter.numeral} // ${t.work.chapters[currentChapter.id].title}`}</span>
             </p>
           )}

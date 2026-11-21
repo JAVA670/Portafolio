@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { CameraRender } from "@/components/hero/CameraRender";
+import { ChromeWordmark } from "@/components/hero/ChromeWordmark";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useSignal } from "@/lib/intro";
 import { heroRender } from "@/lib/mockData";
@@ -46,9 +47,9 @@ function Wipe({ children, delay, show }: { children: React.ReactNode; delay: num
 }
 
 /**
- * Centered hero: the name set edge to edge on one line, with the chrome
- * camera floating directly behind the letters and the role labels stacked
- * above.
+ * Centered hero: the liquid-chrome wordmark on one line, a little wider
+ * than the chrome camera floating directly behind it, with the role
+ * labels stacked above.
  */
 export function Hero() {
   const { t } = useLanguage();
@@ -58,7 +59,7 @@ export function Hero() {
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
-  const nameY = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]);
+  const nameY = useTransform(scrollYProgress, [0, 1], ["0%", "-90%"]);
 
   return (
     <section ref={ref} id="top" className="relative h-svh min-h-[640px] overflow-hidden">
@@ -69,7 +70,7 @@ export function Hero() {
 
       <motion.div
         style={reduceMotion ? undefined : { opacity: fade }}
-        className="shell relative z-10 flex h-full flex-col items-center justify-center pb-16 pt-16 text-center"
+        className="shell relative z-10 flex h-full flex-col items-center justify-between pb-24 pt-28 text-center md:justify-center md:pb-16 md:pt-16"
       >
         {/* Role stack */}
         <div className="relative z-10 flex flex-col items-center gap-1">
@@ -85,8 +86,8 @@ export function Hero() {
         </div>
 
         {/* Name with the camera behind it */}
-        <div className="relative mt-10 w-full md:mt-6">
-          <div className="pointer-events-none absolute left-1/2 top-1/2 z-0 w-[118vw] max-w-[1080px] -translate-x-1/2 -translate-y-1/2 md:w-[68vw]">
+        <div className="relative w-full md:mt-6">
+          <div className="pointer-events-none absolute left-1/2 top-1/2 z-0 w-[136vw] max-w-[1080px] -translate-x-1/2 -translate-y-1/2 md:w-[68vw]">
             <CameraRender
               src={heroRender.src}
               width={heroRender.width}
@@ -100,23 +101,24 @@ export function Hero() {
 
           <motion.div
             style={reduceMotion ? undefined : { y: nameY }}
-            className="relative z-10 [container-type:inline-size]"
+            className="relative z-10 mx-auto w-[90vw] max-w-[1240px] will-change-transform md:w-[76vw]"
           >
-            <h1 className="display overflow-hidden whitespace-nowrap py-[0.04em] text-[calc(100cqw/5.86)] leading-[0.86] [text-shadow:0_6px_48px_rgba(0,0,0,0.45)]">
+            <h1>
+              <span className="sr-only">THRULENSES670</span>
               <motion.span
                 className="block"
-                initial={reduceMotion ? false : { y: "105%" }}
-                animate={show ? { y: "0%" } : undefined}
-                transition={{ duration: 1.1, ease: EASE_SWISS, delay: 0.05 }}
+                initial={reduceMotion ? false : { clipPath: "inset(-60% 100% -60% -8%)" }}
+                animate={show ? { clipPath: "inset(-60% -8% -60% -8%)" } : undefined}
+                transition={{ duration: 1.2, ease: EASE_SWISS, delay: 0.05 }}
               >
-                THRULENSES670
+                <ChromeWordmark />
               </motion.span>
             </h1>
           </motion.div>
         </div>
 
         <motion.p
-          className="relative z-10 mt-8 max-w-[44ch] bg-void/70 px-3 py-2 text-[14px] leading-[1.5] text-strobe/80 backdrop-blur-sm md:mt-10 md:text-[15px]"
+          className="relative z-10 max-w-[44ch] bg-void/70 px-3 py-2 text-[14px] leading-[1.5] text-strobe/80 backdrop-blur-sm md:mt-16 md:text-[15px]"
           initial={reduceMotion ? false : { opacity: 0 }}
           animate={show ? { opacity: 1 } : undefined}
           transition={{ duration: 0.3, ease: "linear", delay: 0.75 }}
@@ -136,6 +138,7 @@ export function Hero() {
           <p className="meta lg:col-span-5">{t.hero.base}</p>
           <p className="meta hidden lg:col-span-3 lg:block">{t.hero.rig}</p>
           <p className="meta text-right lg:col-span-3 lg:text-left">
+            <span className="mr-1.5 inline-block h-1.5 w-1.5 animate-blink rounded-full bg-signal align-middle" aria-hidden />
             {t.hero.localTime} <LiveClock />
           </p>
           <p className="meta hidden text-right lg:col-span-1 lg:block">

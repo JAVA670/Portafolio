@@ -66,7 +66,7 @@ export const photos: Photo[] = [
 
   // ── II // INFERNO — fire, pyro, red strobes, amber and magenta smoke ──
   p("p16", "diablo-06", 1.4568, "inferno", "THE EVIL UNDER FIRE", "Performer in a horned goat mask beside a burst of stage fire"),
-  p("p40", "tl-051", 0.5946, "inferno", "FREEFALL IN AMBER", "Aerial performer hanging upside down in orange light beams"),
+  p("p40", "tl-051", 0.5946, "edc", "FREEFALL IN AMBER", "Aerial performer hanging upside down in orange light beams"),
   p("p37", "tl-090", 0.6667, "edc", "DETONATION", "Pyrotechnics exploding above a giant goggled stage face"),
   p("p45", "tl670-47", 0.6667, "inferno", "THE GATES OPEN", "Symmetrical stage framed by giant orange inflatable hands"),
   p("p41", "tl670-54", 1.5, "inferno", "INFERNO STAGE", "Festival stage glowing orange through smoke, framed by an inflatable arch"),
@@ -74,7 +74,6 @@ export const photos: Photo[] = [
   p("p09", "maluna-01", 0.5627, "inferno", "THE FAN OF FIRE", "Woman in profile beside a glowing red LED fan"),
   p("p35", "diablo-07", 0.5627, "inferno", "CLOSE ENOUGH TO HEAR IT", "Close profile of a curly-haired DJ working the mixer in warm light"),
   p("p19", "diablo-02", 0.9806, "inferno", "LATEX COMMUNION", "Plastic-wrapped figure behind a chain-link fence, framed by orange neon"),
-  p("p23", "diablo-05", 0.9227, "inferno", "WRAPPED AND WAITING", "Plastic-wrapped performer pressed against a chain-link fence under orange neon"),
   p("p29", "solar-05", 0.7728, "inferno", "RING OF STEEL", "Dancer in black latex with a metal ring harness, head thrown back under red light"),
   p("p04", "diablo-03", 1.5, "inferno", "INVERTED STAR", "Packed dancefloor beneath a red neon inverted star and crosses"),
   p("p20", "hocus-03", 0.5627, "inferno", "DEVIL IN NEON", "Dancer with red devil horns and sunglasses framed by red neon"),
@@ -95,9 +94,9 @@ export const photos: Photo[] = [
   p("p14", "aero-09", 1.5, "inferno", "MAGENTA SURGE", "Performer silhouetted in magenta and red stage beams"),
   p("p17", "aero-10", 0.6667, "inferno", "PINK SMOKE SERMON", "Hooded DJ at the controls in thick magenta smoke"),
 
-  p("p60", "holypriest-177", 0.6667, "inferno", "PRIEST IN THE RED", "Masked DJ behind the decks under a red-lit truss"),
-  p("p61", "holypriest-178", 0.6667, "inferno", "RED MASS", "Masked DJ framed by red light bars and steel truss"),
-  p("p62", "holypriest-179", 0.6667, "cold", "GREEN SERMON", "Masked DJ raising both hands over the decks in green haze"),
+  p("p60", "holypriest-177", 0.6667, "edc", "PRIEST IN THE RED", "Masked DJ behind the decks under a red-lit truss"),
+  p("p61", "holypriest-178", 0.6667, "edc", "RED MASS", "Masked DJ framed by red light bars and steel truss"),
+  p("p62", "holypriest-179", 0.6667, "edc", "GREEN SERMON", "Masked DJ raising both hands over the decks in green haze"),
 
   // ── III // COLD CIRCUIT — lasers, LED walls, blue, cyan, teal and green ──
   p("p06", "aero-07", 1.5, "cold", "OPEN-AIR, AFTER DARK", "View from behind a DJ toward a packed open-air crowd at night"),
@@ -109,8 +108,8 @@ export const photos: Photo[] = [
   p("p15", "urban-02", 0.6667, "cold", "CROSSFIRE", "Blue laser beams crossing above a dark crowd"),
   p("p49", "tl670-121", 0.5627, "cold", "COLD HANGAR PRESSURE", "Crowd under blue and green light in a warehouse hangar"),
   p("p53", "tl-100", 0.6667, "cold", "HANGING IN THE BLUE", "Aerial performer suspended in front of a giant blue LED screen"),
-  p("p46", "tl-085", 0.6667, "cold", "ALTAR OF TEAL", "Performer with a raised arm under a teal-lit stage dome"),
-  p("p50", "tl-086", 0.6667, "cold", "LIGHT FROM ABOVE", "Lone performer under white beams on a domed stage"),
+  p("p46", "tl-085", 0.6667, "edc", "ALTAR OF TEAL", "Performer with a raised arm under a teal-lit stage dome"),
+  p("p50", "tl-086", 0.6667, "edc", "LIGHT FROM ABOVE", "Lone performer under white beams on a domed stage"),
   p("p12", "diablo-08", 1.3427, "cold", "NEON SIGNATURE", "Shirtless tattooed DJ looking up, a red neon tube cutting across blue haze", "50% 20%"),
   p("p52", "tl-098", 0.6667, "edc", "CYAN ARCHITECTURE", "Towering stage structure wrapped in cyan LED panels at night"),
   p("p22", "genesis-02", 0.6667, "cold", "THE MASK IN BLUE", "Dancer in a painted mask reaching up through blue light"),
@@ -129,9 +128,23 @@ export const photos: Photo[] = [
   p("p54", "tl-110", 0.6667, "edc", "DAYLIGHT SORCERY", "Costumed festival friends laughing in daylight, one in a starry witch hat", "50% 0%"),
 ];
 
-// Artist credit taken from the user's own file names ("hOLYpRIEST, Thrulenses-177").
+/**
+ * Verified credits only: Holy Priest from the user's file names, I Hate
+ * Models (FR.048–049) named by the user, ALOK where the ALOK banner is
+ * visible in the frame.
+ */
+const ARTIST_CREDITS: Record<string, string> = {
+  p60: "HOLY PRIEST",
+  p61: "HOLY PRIEST",
+  p62: "HOLY PRIEST",
+  p46: "I HATE MODELS",
+  p50: "I HATE MODELS",
+  p56: "ALOK",
+  p42: "ALOK",
+  p48: "ALOK",
+};
 for (const photo of photos) {
-  if (photo.src.includes("/holypriest-")) photo.artist = "HOLYPRIEST";
+  photo.artist = ARTIST_CREDITS[photo.id] ?? photo.artist;
 }
 
 export const photoById = new Map(photos.map((photo) => [photo.id, photo]));
@@ -143,7 +156,9 @@ export const chapters: Chapter[] = [
     swatches: ["#ff2d3d", "#c9924f", "#3f8ff5"],
     rows: [
       { kind: "opener", id: "p56" },
-      { kind: "trio", ids: ["p57", "p58", "p59"] },
+      { kind: "trio", ids: ["p60", "p61", "p62"] },
+      { kind: "trio", ids: ["p46", "p50", "p59"] },
+      { kind: "trio", ids: ["p57", "p58", "p40"] },
       { kind: "trio", ids: ["p55", "p54", "p37"] },
       { kind: "trio", ids: ["p42", "p48", "p52"] },
     ],
@@ -154,18 +169,17 @@ export const chapters: Chapter[] = [
     swatches: ["#ff5a14", "#e3122d", "#c2187a"],
     rows: [
       { kind: "opener", id: "p16" },
-      { kind: "trio", ids: ["p40", "p60", "p45"] },
-      { kind: "wide", id: "p41", side: "left" },
       { kind: "trio", ids: ["p07", "p09", "p35"] },
-      { kind: "trio", ids: ["p19", "p23", "p29"] },
+      { kind: "wide", id: "p41", side: "left" },
+      { kind: "trio", ids: ["p45", "p44", "p17"] },
       { kind: "wide", id: "p04", side: "right" },
       { kind: "trio", ids: ["p20", "p24", "p28"] },
       { kind: "wide", id: "p08", side: "left" },
-      { kind: "trio", ids: ["p44", "p61", "p17"] },
-      { kind: "wide", id: "p21", side: "right" },
       { kind: "trio", ids: ["p27", "p30", "p33"] },
-      { kind: "wide", id: "p38", side: "left" },
+      { kind: "wide", id: "p21", side: "right" },
       { kind: "trio", ids: ["p11", "p18", "p47"] },
+      { kind: "wide", id: "p38", side: "left" },
+      { kind: "duo", ids: ["p19", "p29"] },
       { kind: "wide", id: "p14", side: "right" },
     ],
   },
@@ -178,9 +192,8 @@ export const chapters: Chapter[] = [
       { kind: "trio", ids: ["p39", "p36", "p43"] },
       { kind: "wide", id: "p10", side: "left" },
       { kind: "trio", ids: ["p32", "p15", "p49"] },
-      { kind: "trio", ids: ["p53", "p46", "p50"] },
+      { kind: "trio", ids: ["p53", "p22", "p25"] },
       { kind: "wide", id: "p12", side: "right" },
-      { kind: "trio", ids: ["p62", "p22", "p25"] },
       { kind: "trio", ids: ["p01", "p13", "p34"] },
       { kind: "wide", id: "p02", side: "left" },
       { kind: "trio", ids: ["p26", "p05", "p31"] },
@@ -188,6 +201,7 @@ export const chapters: Chapter[] = [
     ],
   },
 ];
+
 
 /** Photo ids in display order for a chapter (rows first, then any unplaced). */
 export function chapterPhotoIds(chapterId: ChapterId): string[] {
@@ -215,8 +229,13 @@ export const frameNumber = new Map(
 
 export type Video = {
   id: string;
+  /** Full-length cut with sound — loads only when the theater opens. */
   src: string;
   poster: string;
+  /** Short silent loop (scripts/make-previews.mjs) autoplayed while scrolling. */
+  preview: string;
+  /** First frame of the preview, so poster → video swaps seamlessly. */
+  still: string;
   title: string;
   /** Verified context only (from the user or their own file names). */
   meta?: string;
@@ -241,6 +260,8 @@ const v = (
   id,
   src: `${VIDEO_DIR}/${slug}.mp4`,
   poster: `${VIDEO_DIR}/${slug}-poster.jpg`,
+  preview: `${VIDEO_DIR}/${slug}-preview.mp4`,
+  still: `${VIDEO_DIR}/${slug}-preview.jpg`,
   title,
   meta,
   year,
@@ -264,7 +285,16 @@ export const videos: Video[] = [
 // ── Index ───────────────────────────────────────────────────────────────
 
 /** Artists the user has confirmed shooting. */
-export const artists = ["999999999", "AnD", "HENRIQUE CAMACHO", "MIJA", "SHIMZA"];
+export const artists = [
+  "I HATE MODELS",
+  "HOLY PRIEST",
+  "ALOK",
+  "999999999",
+  "AnD",
+  "HENRIQUE CAMACHO",
+  "MIJA",
+  "SHIMZA",
+];
 
 /** Stages: city/country only where verified, otherwise left blank. */
 export const stages: { name: string; city?: string; country?: string }[] = [
@@ -311,11 +341,4 @@ export const heroRender: {
   front: "/assets/chrome-camera-front.png",
   width: 2000,
   height: 1116,
-};
-
-export const stats = {
-  frames: photos.length,
-  films: videos.length,
-  stages: stages.length,
-  countries: new Set(stages.map((s) => s.country).filter(Boolean)).size,
 };

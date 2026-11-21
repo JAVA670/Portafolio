@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useReducedMotion } from "framer-motion";
 
 type AutoVideoProps = {
   src: string;
@@ -11,16 +12,18 @@ type AutoVideoProps = {
 /**
  * Scroll-aware HTML5 video. Stays a poster frame until it enters the
  * viewport, then lazily attaches the source and autoplays muted + looped.
- * Pauses again off-screen so multiple vaults never fight for decode time.
+ * Pauses again off-screen so multiple clips never fight for decode time.
+ * With reduced motion it stays on the poster frame.
  */
 export function AutoVideo({ src, poster, className }: AutoVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [inView, setInView] = useState(false);
   const [activated, setActivated] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     const node = videoRef.current;
-    if (!node) return;
+    if (!node || reduceMotion) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -31,7 +34,7 @@ export function AutoVideo({ src, poster, className }: AutoVideoProps) {
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, []);
+  }, [reduceMotion]);
 
   useEffect(() => {
     const node = videoRef.current;
