@@ -19,8 +19,8 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
-        <Intro />
         <Work />
+        <Intro />
         <Index />
         <Films />
         <Booking />

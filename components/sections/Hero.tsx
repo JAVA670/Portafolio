@@ -30,23 +30,6 @@ function LiveClock() {
   return <span className="tabular-nums text-strobe">{now}</span>;
 }
 
-/** One line of the headline rising out of its mask. */
-function Line({ children, delay, show }: { children: string; delay: number; show: boolean }) {
-  const reduceMotion = useReducedMotion();
-  return (
-    <span className="block overflow-hidden pb-[0.04em]">
-      <motion.span
-        className="block"
-        initial={reduceMotion ? false : { y: "105%" }}
-        animate={show ? { y: "0%" } : undefined}
-        transition={{ duration: 1.1, ease: EASE_SWISS, delay }}
-      >
-        {children}
-      </motion.span>
-    </span>
-  );
-}
-
 /** Label block that wipes on left → right, mechanical and linear. */
 function Wipe({ children, delay, show }: { children: React.ReactNode; delay: number; show: boolean }) {
   const reduceMotion = useReducedMotion();
@@ -62,6 +45,11 @@ function Wipe({ children, delay, show }: { children: React.ReactNode; delay: num
   );
 }
 
+/**
+ * Centered hero: the name set edge to edge on one line, with the chrome
+ * camera floating directly behind the letters and the role labels stacked
+ * above.
+ */
 export function Hero() {
   const { t } = useLanguage();
   const reduceMotion = useReducedMotion();
@@ -69,21 +57,8 @@ export function Hero() {
   const ref = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "-22%"]);
-  const fade = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
-
-  const render = (
-    <CameraRender
-      src={heroRender.src}
-      width={heroRender.width}
-      height={heroRender.height}
-      video={heroRender.video}
-      alt="Liquid-chrome mirrorless camera wrapped in spiked metal tendrils"
-      priority
-      progress={scrollYProgress}
-      caption={t.hero.fig}
-    />
-  );
+  const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const nameY = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]);
 
   return (
     <section ref={ref} id="top" className="relative h-svh min-h-[640px] overflow-hidden">
@@ -92,17 +67,12 @@ export function Hero() {
         <div className="grid-lines h-full w-full" />
       </div>
 
-      {/* Desktop render — right 45%, bleeding off the edge */}
-      <div className="pointer-events-none absolute right-[-5vw] top-1/2 hidden w-[63vw] max-w-[1240px] -translate-y-[52%] lg:block">
-        {render}
-      </div>
-
       <motion.div
-        style={reduceMotion ? undefined : { y: textY, opacity: fade }}
-        className="shell relative z-10 flex h-full flex-col pb-16 pt-[84px] lg:pb-[72px] lg:pt-[96px]"
+        style={reduceMotion ? undefined : { opacity: fade }}
+        className="shell relative z-10 flex h-full flex-col items-center justify-center pb-16 pt-16 text-center"
       >
         {/* Role stack */}
-        <div className="flex flex-col items-start gap-1">
+        <div className="relative z-10 flex flex-col items-center gap-1">
           <Wipe delay={0.25} show={show}>
             <span className="label-block">{t.hero.labelA}</span>
           </Wipe>
@@ -112,34 +82,47 @@ export function Hero() {
           <Wipe delay={0.45} show={show}>
             <span className="label-block label-block--cobalt">{t.hero.bar}</span>
           </Wipe>
-          <motion.p
-            className="mt-5 max-w-[30ch] text-[15px] leading-[1.5] text-mute md:text-base"
-            initial={reduceMotion ? false : { opacity: 0 }}
-            animate={show ? { opacity: 1 } : undefined}
-            transition={{ duration: 0.3, ease: "linear", delay: 0.75 }}
-          >
-            {t.hero.statement}
-          </motion.p>
         </div>
 
-        {/* Mobile render */}
-        <div className="relative -mx-[8vw] my-auto py-4 lg:hidden">{render}</div>
+        {/* Name with the camera behind it */}
+        <div className="relative mt-10 w-full md:mt-6">
+          <div className="pointer-events-none absolute left-1/2 top-1/2 z-0 w-[118vw] max-w-[1080px] -translate-x-1/2 -translate-y-1/2 md:w-[68vw]">
+            <CameraRender
+              src={heroRender.src}
+              width={heroRender.width}
+              height={heroRender.height}
+              video={heroRender.video}
+              alt="Liquid-chrome mirrorless camera wrapped in spiked metal tendrils"
+              priority
+              progress={scrollYProgress}
+            />
+          </div>
 
-        {/* Headline — bottom-anchored on the grid */}
-        <h1
-          className="display text-[clamp(84px,25vw,150px)] lg:mt-auto lg:text-[clamp(110px,min(15vw,22vh),260px)]"
-          aria-label="THRU LENSES 670"
+          <motion.div
+            style={reduceMotion ? undefined : { y: nameY }}
+            className="relative z-10 [container-type:inline-size]"
+          >
+            <h1 className="display overflow-hidden whitespace-nowrap py-[0.04em] text-[calc(100cqw/5.86)] leading-[0.86] [text-shadow:0_6px_48px_rgba(0,0,0,0.45)]">
+              <motion.span
+                className="block"
+                initial={reduceMotion ? false : { y: "105%" }}
+                animate={show ? { y: "0%" } : undefined}
+                transition={{ duration: 1.1, ease: EASE_SWISS, delay: 0.05 }}
+              >
+                THRULENSES670
+              </motion.span>
+            </h1>
+          </motion.div>
+        </div>
+
+        <motion.p
+          className="relative z-10 mt-8 max-w-[44ch] bg-void/70 px-3 py-2 text-[14px] leading-[1.5] text-strobe/80 backdrop-blur-sm md:mt-10 md:text-[15px]"
+          initial={reduceMotion ? false : { opacity: 0 }}
+          animate={show ? { opacity: 1 } : undefined}
+          transition={{ duration: 0.3, ease: "linear", delay: 0.75 }}
         >
-          <Line delay={0} show={show}>
-            THRU
-          </Line>
-          <Line delay={0.08} show={show}>
-            LENSES
-          </Line>
-          <Line delay={0.16} show={show}>
-            670
-          </Line>
-        </h1>
+          {t.hero.statement}
+        </motion.p>
       </motion.div>
 
       {/* Meta rail */}

@@ -29,13 +29,14 @@ const mono = JetBrains_Mono({
 });
 
 const description =
-  "Hard techno concert photography and film. Shot from the barrier, the booth and the smoke. Based in the USA — available worldwide.";
+  "Concert and festival photography and film. Shot from the barrier, the booth and the crowd. Based in the USA — available worldwide.";
 
 export const metadata: Metadata = {
-  title: "THRULENSES670 — Hard Techno Photography & Film",
+  title: "THRULENSES670 — Concert Photography & Film",
   description,
   keywords: [
-    "hard techno",
+    "festival photography",
+    "EDC",
     "concert photography",
     "festival photographer",
     "videography",
@@ -46,13 +47,13 @@ export const metadata: Metadata = {
     title: "THRULENSES670",
     description,
     type: "website",
-    images: [{ url: "/assets/photography/diablo-06.jpg", width: 2000, height: 1373 }],
+    images: [{ url: "/assets/photography/edc-109.jpg", width: 2000, height: 1333 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "THRULENSES670",
     description,
-    images: ["/assets/photography/diablo-06.jpg"],
+    images: ["/assets/photography/edc-109.jpg"],
   },
 };
 
