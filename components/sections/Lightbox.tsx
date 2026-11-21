@@ -44,6 +44,9 @@ export function Lightbox({ photos, index, onClose, onNavigate }: LightboxProps) 
     };
   }, [open, onClose, step, lenis]);
 
+  const btn =
+    "border border-hairline px-4 py-1.5 font-mono text-[10px] tracking-[0.25em] text-strobe transition-colors duration-150 ease-linear hover:border-cobalt hover:bg-cobalt";
+
   return (
     <AnimatePresence>
       {photo && (
@@ -51,34 +54,27 @@ export function Lightbox({ photos, index, onClose, onNavigate }: LightboxProps) 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.25 }}
-          className="fixed inset-0 z-[90] flex flex-col bg-void/[0.97]"
+          transition={{ duration: 0.18, ease: "linear" }}
+          className="fixed inset-0 z-[90] flex flex-col bg-void/[0.98]"
           role="dialog"
           aria-modal="true"
           aria-label={photo.alt}
         >
-          {/* Top bar */}
-          <div className="flex items-center justify-between border-b border-smoke px-4 py-3 sm:px-8">
-            <p className="tech-label">
-              {String((index ?? 0) + 1).padStart(2, "0")} /{" "}
-              {String(photos.length).padStart(2, "0")}
-            </p>
-            <button
-              type="button"
-              onClick={onClose}
-              className="border border-smoke px-4 py-1.5 text-[10px] tracking-[0.25em] transition-colors hover:bg-blood hover:text-void"
-            >
-              {t.gallery.close} [ESC]
+          <div className="flex items-center justify-between border-b border-hairline px-4 py-3 sm:px-8">
+            <span className="label-block text-[11px] tabular-nums">
+              {String((index ?? 0) + 1).padStart(2, "0")} / {String(photos.length).padStart(2, "0")}
+            </span>
+            <button type="button" onClick={onClose} className={btn}>
+              {t.archive.close} [ESC]
             </button>
           </div>
 
-          {/* Frame */}
           <div className="relative flex-1" onClick={onClose}>
             <motion.div
               key={photo.id}
-              initial={{ opacity: 0, filter: "blur(16px)", scale: 0.98 }}
-              animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
-              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0, scale: 0.985 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.2, ease: "linear" }}
               className="absolute inset-4 sm:inset-10"
               onClick={(e) => e.stopPropagation()}
             >
@@ -93,24 +89,15 @@ export function Lightbox({ photos, index, onClose, onNavigate }: LightboxProps) 
             </motion.div>
           </div>
 
-          {/* Bottom bar */}
-          <div className="flex items-center justify-between border-t border-smoke px-4 py-3 sm:px-8">
-            <button
-              type="button"
-              onClick={() => step(-1)}
-              className="border border-smoke px-4 py-1.5 text-[10px] tracking-[0.25em] transition-colors hover:bg-blood hover:text-void"
-            >
-              ← {t.gallery.prev}
+          <div className="flex items-center justify-between gap-4 border-t border-hairline px-4 py-3 sm:px-8">
+            <button type="button" onClick={() => step(-1)} className={btn}>
+              ← {t.archive.prev}
             </button>
-            <p className="hidden text-center text-[10px] font-bold tracking-[0.25em] text-laser sm:block">
+            <span className="label-block hidden text-[11px] tracking-[0.18em] sm:inline-block">
               {photo.caption}
-            </p>
-            <button
-              type="button"
-              onClick={() => step(1)}
-              className="border border-smoke px-4 py-1.5 text-[10px] tracking-[0.25em] transition-colors hover:bg-blood hover:text-void"
-            >
-              {t.gallery.next} →
+            </span>
+            <button type="button" onClick={() => step(1)} className={btn}>
+              {t.archive.next} →
             </button>
           </div>
         </motion.div>

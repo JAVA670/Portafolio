@@ -1,17 +1,23 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, JetBrains_Mono } from "next/font/google";
+import { JetBrains_Mono, Space_Grotesk, Syne } from "next/font/google";
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import "./globals.css";
 
-const display = Archivo({
-  variable: "--font-display",
+const syne = Syne({
+  variable: "--font-syne",
   subsets: ["latin"],
-  weight: ["500", "700", "900"],
+  weight: ["600", "700", "800"],
+});
+
+const grotesk = Space_Grotesk({
+  variable: "--font-grotesk",
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
 });
 
 const mono = JetBrains_Mono({
-  variable: "--font-mono",
+  variable: "--font-jetbrains",
   subsets: ["latin"],
   weight: ["400", "700"],
 });
@@ -45,7 +51,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  themeColor: "#050507",
 };
 
 export default function RootLayout({
@@ -54,7 +60,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${display.variable} ${mono.variable} antialiased`}>
+    <html lang="en" className={`${syne.variable} ${grotesk.variable} ${mono.variable} antialiased`}>
       <body className="grain">
         <LanguageProvider>
           <SmoothScroll>{children}</SmoothScroll>

@@ -42,14 +42,14 @@ export function Cursor() {
       <motion.div
         animate={
           label
-            ? { width: 72, height: 72, backgroundColor: "rgba(232,0,45,0.92)" }
-            : { width: 14, height: 14, backgroundColor: "rgba(255,255,255,0)" }
+            ? { width: 64, height: 22, backgroundColor: "rgba(0,56,255,1)" }
+            : { width: 12, height: 12, backgroundColor: "rgba(255,255,255,0)" }
         }
-        transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-        className="flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-strobe mix-blend-difference"
+        transition={{ duration: 0.15, ease: "linear" }}
+        className="flex -translate-x-1/2 -translate-y-1/2 items-center justify-center border border-strobe"
       >
         {label && (
-          <span className="text-[9px] font-bold tracking-[0.25em] text-strobe">
+          <span className="font-mono text-[9px] font-bold tracking-[0.25em] text-strobe">
             {label}
           </span>
         )}

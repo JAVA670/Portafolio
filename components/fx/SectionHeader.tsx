@@ -1,44 +1,38 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { BlurReveal } from "@/components/fx/BlurReveal";
 import { TextReveal } from "@/components/fx/TextReveal";
+import { BlurReveal } from "@/components/fx/BlurReveal";
+import { LabelBlock } from "@/components/ui/LabelBlock";
 
 type SectionHeaderProps = {
   label: string;
   title: string;
-  sub: string;
+  sub?: string;
+  /** Right-aligned metadata, e.g. a frame count. */
+  aside?: string;
 };
 
-export function SectionHeader({ label, title, sub }: SectionHeaderProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const reduceMotion = useReducedMotion();
-
-  // Title shears sideways as it crosses the viewport — cheap parallax drama.
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const x = useTransform(scrollYProgress, [0, 1], ["4%", "-4%"]);
-
+/**
+ * Editorial section opener on the 12-column hairline grid: white label
+ * block + metadata on the rule, massive tight display title, short sub.
+ */
+export function SectionHeader({ label, title, sub, aside }: SectionHeaderProps) {
   return (
-    <div ref={ref} className="overflow-hidden border-b border-crimson px-4 pb-8 pt-24 sm:px-8 md:pt-32">
-      <BlurReveal>
-        <p className="tech-label-red mb-4 animate-flicker motion-reduce:animate-none">
-          ▮ {label}
-        </p>
-        <motion.h2
-          style={reduceMotion ? undefined : { x }}
-          className="font-display text-5xl font-bold uppercase leading-[0.9] tracking-tight sm:text-7xl md:text-8xl"
-        >
-          <TextReveal text={title} stagger={0.03} />
-          <span className="text-blood glow-red">.</span>
-        </motion.h2>
-        <p className="mt-5 max-w-md border-l-2 border-blood pl-3 text-xs leading-relaxed text-bone sm:text-sm">
-          {sub}
-        </p>
-      </BlurReveal>
+    <div className="px-4 pb-10 pt-24 sm:px-8 md:pb-14 md:pt-36">
+      <div className="flex items-center justify-between border-t border-hairline pt-3">
+        <LabelBlock className="text-[11px] tracking-[0.16em]">{label}</LabelBlock>
+        {aside && <span className="meta">{aside}</span>}
+      </div>
+      <div className="mt-8 grid gap-6 md:grid-cols-12 md:items-end">
+        <h2 className="font-display text-[8.6vw] font-extrabold uppercase leading-[0.86] tracking-[-0.05em] md:col-span-9 md:text-[6.4vw]">
+          <TextReveal text={title} stagger={0.022} />
+        </h2>
+        {sub && (
+          <BlurReveal className="md:col-span-3" distance={12}>
+            <p className="max-w-xs text-[13px] leading-relaxed text-bone md:text-sm">{sub}</p>
+          </BlurReveal>
+        )}
+      </div>
     </div>
   );
 }
