@@ -14,9 +14,9 @@ export const dictionary = {
     hero: {
       labelA: "CONCERT PHOTOGRAPHY",
       labelB: "VIDEOGRAPHY",
-      bar: "HARD TECHNO — WORLDWIDE",
+      bar: "LIVE MUSIC — WORLDWIDE",
       statement:
-        "Shot from inside the crowd. Strobes, smoke and steel — frozen at 140 BPM.",
+        "Shot from inside the crowd — festivals, clubs and stages, frozen at full volume.",
       base: "BASED IN USA — AVAILABLE WORLDWIDE",
       rig: "SHOT ON SONY A7 V",
       localTime: "LOCAL",
@@ -25,7 +25,7 @@ export const dictionary = {
     },
     intro: {
       label: "00 — MANIFESTO",
-      text: "Photography and film for the hard techno underground — made from the barrier, the booth and the smoke, wherever the floor is loudest.",
+      text: "Concert photography and film — made from the barrier, the booth and the crowd, from warehouse nights to the biggest festival stages.",
       frames: "FRAMES",
       films: "FILMS",
       stages: "STAGES",
@@ -34,13 +34,18 @@ export const dictionary = {
     work: {
       label: "01 — WORK",
       title: "THE WORK",
-      sub: "Grouped by the light they were shot in. Never mixed.",
+      sub: "EDC first — then every other night, grouped by the light it was shot in.",
       all: "ALL SERIES",
       now: "NOW",
       frames: "FRAMES",
       chapter: "CHAPTER",
       view: "VIEW",
       chapters: {
+        edc: {
+          title: "EDC",
+          sub: "Electric Daisy Carnival — the biggest stages, day and night.",
+          outro: "The festival at full scale.",
+        },
         inferno: {
           title: "INFERNO",
           sub: "Fire, pyro, red strobes and amber smoke.",
@@ -50,11 +55,6 @@ export const dictionary = {
           title: "COLD CIRCUIT",
           sub: "Lasers, LED walls and blue haze — the cold side of the night.",
           outro: "Cold light. Hot rooms.",
-        },
-        daylight: {
-          title: "DAYLIGHT",
-          sub: "Open-air sets under a real sky.",
-          outro: "Same pressure, different sky.",
         },
       },
     },
@@ -120,9 +120,9 @@ export const dictionary = {
     hero: {
       labelA: "FOTOGRAFÍA DE CONCIERTOS",
       labelB: "VIDEOGRAFÍA",
-      bar: "HARD TECHNO — MUNDIAL",
+      bar: "MÚSICA EN VIVO — MUNDIAL",
       statement:
-        "Disparado desde adentro de la multitud. Strobes, humo y acero — congelados a 140 BPM.",
+        "Disparado desde adentro de la multitud — festivales, clubes y escenarios, congelados a todo volumen.",
       base: "EN ESTADOS UNIDOS — DISPONIBLE A NIVEL MUNDIAL",
       rig: "DISPARADO CON SONY A7 V",
       localTime: "LOCAL",
@@ -131,7 +131,7 @@ export const dictionary = {
     },
     intro: {
       label: "00 — MANIFIESTO",
-      text: "Fotografía y cine para el underground del hard techno — hechos desde la valla, la cabina y el humo, donde la pista suena más fuerte.",
+      text: "Fotografía y cine de conciertos — hechos desde la valla, la cabina y la multitud, de noches de warehouse a los escenarios más grandes.",
       frames: "FRAMES",
       films: "FILMS",
       stages: "ESCENARIOS",
@@ -140,13 +140,18 @@ export const dictionary = {
     work: {
       label: "01 — OBRA",
       title: "LA OBRA",
-      sub: "Agrupada por la luz en que fue disparada. Nunca mezclada.",
+      sub: "EDC primero — luego cada noche, agrupada por la luz en que fue disparada.",
       all: "TODAS LAS SERIES",
       now: "AHORA",
       frames: "FRAMES",
       chapter: "CAPÍTULO",
       view: "VER",
       chapters: {
+        edc: {
+          title: "EDC",
+          sub: "Electric Daisy Carnival — los escenarios más grandes, de día y de noche.",
+          outro: "El festival a escala completa.",
+        },
         inferno: {
           title: "INFERNO",
           sub: "Fuego, pirotecnia, strobes rojos y humo ámbar.",
@@ -156,11 +161,6 @@ export const dictionary = {
           title: "CIRCUITO FRÍO",
           sub: "Láseres, pantallas LED y neblina azul — el lado frío de la noche.",
           outro: "Luz fría. Salas calientes.",
-        },
-        daylight: {
-          title: "LUZ DE DÍA",
-          sub: "Sets al aire libre bajo un cielo real.",
-          outro: "La misma presión, otro cielo.",
         },
       },
     },

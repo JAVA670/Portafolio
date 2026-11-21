@@ -79,7 +79,7 @@ export function Preloader() {
         >
           <div className="shell flex items-center justify-between pt-5">
             <span className="label-block">THRULENSES670</span>
-            <span className="meta hidden sm:block">HARD TECHNO — PHOTO / FILM</span>
+            <span className="meta hidden sm:block">CONCERT PHOTOGRAPHY / FILM</span>
           </div>
 
           <div className="shell pb-6">

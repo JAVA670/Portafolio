@@ -31,6 +31,12 @@ function slugFor(file) {
   if (m670) return `tl670-${m670[1]}`;
   const mTl = base.match(/^thrulenses-(\d+)$/i);
   if (mTl) return `tl-${mTl[1]}`;
+  // "Thrulenses EDC (109)" → edc-109
+  const mEvent = base.match(/^thrulenses\s+([a-z0-9]+)\s*\((\d+)\)$/i);
+  if (mEvent) return `${mEvent[1].toLowerCase()}-${mEvent[2]}`;
+  // "hOLYpRIEST, Thrulenses-177" → holypriest-177 (artist credit first)
+  const mArtist = base.match(/^([a-z0-9 ]+),\s*thrulenses\d*-(\d+)$/i);
+  if (mArtist) return `${mArtist[1].toLowerCase().replace(/[^a-z0-9]+/g, "")}-${mArtist[2]}`;
   return base
     .toLowerCase()
     .replace(/\(\d+\)/g, "")

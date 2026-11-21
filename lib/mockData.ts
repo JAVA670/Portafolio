@@ -10,7 +10,7 @@
  * and each chapter is art-directed row by row (see `chapters`).
  */
 
-export type ChapterId = "inferno" | "cold" | "daylight";
+export type ChapterId = "edc" | "inferno" | "cold";
 
 export type Photo = {
   id: string;
@@ -58,10 +58,16 @@ const p = (
 ): Photo => ({ id, src: `${DIR}/${slug}.jpg`, ratio, chapter, caption, alt, focus });
 
 export const photos: Photo[] = [
-  // ── I // INFERNO — fire, pyro, red strobes, amber and magenta smoke ──
+  // ── I // EDC — festival stages, giant sculpture, day and night ──
+  p("p56", "edc-109", 1.5, "edc", "THE OWL OPENS ITS EYES", "Giant goggled owl-face stage glowing red, lasers fanning across the crowd"),
+  p("p57", "edc-30", 0.6667, "edc", "FACE OF THE FESTIVAL", "Giant sculpted face looming over the stage canopy and the crowd below"),
+  p("p58", "edc-39", 0.6667, "edc", "RED ARCHITECTURE", "Stage structure lit red from below, crowd hands raised in the foreground"),
+  p("p59", "edc-89", 0.6667, "edc", "SMALL HUMAN, GIANT STAGE", "Red-haired performer on stage beneath a towering sculpted face"),
+
+  // ── II // INFERNO — fire, pyro, red strobes, amber and magenta smoke ──
   p("p16", "diablo-06", 1.4568, "inferno", "THE EVIL UNDER FIRE", "Performer in a horned goat mask beside a burst of stage fire"),
   p("p40", "tl-051", 0.5946, "inferno", "FREEFALL IN AMBER", "Aerial performer hanging upside down in orange light beams"),
-  p("p37", "tl-090", 0.6667, "inferno", "DETONATION", "Pyrotechnics exploding above a giant goggled stage face"),
+  p("p37", "tl-090", 0.6667, "edc", "DETONATION", "Pyrotechnics exploding above a giant goggled stage face"),
   p("p45", "tl670-47", 0.6667, "inferno", "THE GATES OPEN", "Symmetrical stage framed by giant orange inflatable hands"),
   p("p41", "tl670-54", 1.5, "inferno", "INFERNO STAGE", "Festival stage glowing orange through smoke, framed by an inflatable arch"),
   p("p07", "genesis-01", 0.6667, "inferno", "ORANGE ROOM TRANCE", "DJ in headphones and sunglasses inside a saturated orange room", "50% 0%"),
@@ -76,8 +82,8 @@ export const photos: Photo[] = [
   p("p28", "diablo-01", 0.5627, "inferno", "THE HORNED CONGREGATION", "Horned costumed figure towering over a shirtless dancer in red light", "50% 0%"),
   p("p08", "diablo-04", 1.705, "inferno", "SANCTUM OF NEON", "Wide view of a stage flanked by red neon crosses and a horned emblem"),
   p("p44", "tl-055", 0.668, "inferno", "RED HOOD PROTOCOL", "Hooded figure on a giant screen cut by red laser beams", "50% 0%"),
-  p("p42", "tl-065", 0.8747, "inferno", "THE MACHINE WATCHES", "Giant mechanical face with glowing goggles looming over the stage"),
-  p("p48", "tl-063", 0.6667, "inferno", "STEEL HALO", "DJ on a monumental stage under a white spotlight and red rig"),
+  p("p42", "tl-065", 0.8747, "edc", "THE MACHINE WATCHES", "Giant mechanical face with glowing goggles looming over the stage"),
+  p("p48", "tl-063", 0.6667, "edc", "STEEL HALO", "DJ on a monumental stage under a white spotlight and red rig"),
   p("p21", "aero-11", 1.5, "inferno", "UNDER THE RED DOME", "MC crouched on stage beneath a red-lit geodesic dome, teal haze in front"),
   p("p27", "aero-02", 0.5627, "inferno", "ONE HAND FOR THE DROP", "DJ raising one arm above the decks in red light, crowd filming behind"),
   p("p30", "aero-03", 0.5627, "inferno", "BALACLAVA, RED NOISE", "Masked DJ in a black balaclava leaning over the mixer, red bokeh behind"),
@@ -89,7 +95,11 @@ export const photos: Photo[] = [
   p("p14", "aero-09", 1.5, "inferno", "MAGENTA SURGE", "Performer silhouetted in magenta and red stage beams"),
   p("p17", "aero-10", 0.6667, "inferno", "PINK SMOKE SERMON", "Hooded DJ at the controls in thick magenta smoke"),
 
-  // ── II // COLD CIRCUIT — lasers, LED walls, blue, cyan, teal and green ──
+  p("p60", "holypriest-177", 0.6667, "inferno", "PRIEST IN THE RED", "Masked DJ behind the decks under a red-lit truss"),
+  p("p61", "holypriest-178", 0.6667, "inferno", "RED MASS", "Masked DJ framed by red light bars and steel truss"),
+  p("p62", "holypriest-179", 0.6667, "cold", "GREEN SERMON", "Masked DJ raising both hands over the decks in green haze"),
+
+  // ── III // COLD CIRCUIT — lasers, LED walls, blue, cyan, teal and green ──
   p("p06", "aero-07", 1.5, "cold", "OPEN-AIR, AFTER DARK", "View from behind a DJ toward a packed open-air crowd at night"),
   p("p39", "tl670-52", 0.6667, "cold", "SNOWSTORM AT 140", "DJ silhouetted against a white particle LED wall"),
   p("p36", "aero-06", 0.5627, "cold", "BALACLAVA DATASTREAM", "Masked DJ at a laptop in front of a blue LED wall"),
@@ -102,7 +112,7 @@ export const photos: Photo[] = [
   p("p46", "tl-085", 0.6667, "cold", "ALTAR OF TEAL", "Performer with a raised arm under a teal-lit stage dome"),
   p("p50", "tl-086", 0.6667, "cold", "LIGHT FROM ABOVE", "Lone performer under white beams on a domed stage"),
   p("p12", "diablo-08", 1.3427, "cold", "NEON SIGNATURE", "Shirtless tattooed DJ looking up, a red neon tube cutting across blue haze", "50% 20%"),
-  p("p52", "tl-098", 0.6667, "cold", "CYAN ARCHITECTURE", "Towering stage structure wrapped in cyan LED panels at night"),
+  p("p52", "tl-098", 0.6667, "edc", "CYAN ARCHITECTURE", "Towering stage structure wrapped in cyan LED panels at night"),
   p("p22", "genesis-02", 0.6667, "cold", "THE MASK IN BLUE", "Dancer in a painted mask reaching up through blue light"),
   p("p25", "hocus-04", 0.5627, "cold", "STUDDED SILENCE", "Close portrait of a dancer in a studded black balaclava"),
   p("p01", "aero-01", 0.5627, "cold", "PRESSED TO THE BARRIER", "Crowd pressed against the front barrier, hands up under cyan light"),
@@ -115,39 +125,53 @@ export const photos: Photo[] = [
   p("p03", "hocus-01", 0.5627, "cold", "GHOST IN THE SMOKE", "DJ bent over the decks in teal haze, a warm spotlight behind"),
   p("p51", "tl670-61", 0.6667, "cold", "THE PIT EXHALES", "Packed club crowd facing the DJ booth under purple and blue light"),
 
-  // ── III // DAYLIGHT — open-air, real sky ──
-  p("p55", "tl-137", 0.6667, "daylight", "SUN ON THE MACHINE", "Giant bronze goggled face stage under a clear blue afternoon sky"),
-  p("p54", "tl-110", 0.6667, "daylight", "DAYLIGHT SORCERY", "Costumed festival friends laughing in daylight, one in a starry witch hat", "50% 0%"),
+  p("p55", "tl-137", 0.6667, "edc", "SUN ON THE MACHINE", "Giant bronze goggled face stage under a clear blue afternoon sky"),
+  p("p54", "tl-110", 0.6667, "edc", "DAYLIGHT SORCERY", "Costumed festival friends laughing in daylight, one in a starry witch hat", "50% 0%"),
 ];
+
+// Artist credit taken from the user's own file names ("hOLYpRIEST, Thrulenses-177").
+for (const photo of photos) {
+  if (photo.src.includes("/holypriest-")) photo.artist = "HOLYPRIEST";
+}
 
 export const photoById = new Map(photos.map((photo) => [photo.id, photo]));
 
 export const chapters: Chapter[] = [
   {
-    id: "inferno",
+    id: "edc",
     numeral: "I",
+    swatches: ["#ff2d3d", "#c9924f", "#3f8ff5"],
+    rows: [
+      { kind: "opener", id: "p56" },
+      { kind: "trio", ids: ["p57", "p58", "p59"] },
+      { kind: "trio", ids: ["p55", "p54", "p37"] },
+      { kind: "trio", ids: ["p42", "p48", "p52"] },
+    ],
+  },
+  {
+    id: "inferno",
+    numeral: "II",
     swatches: ["#ff5a14", "#e3122d", "#c2187a"],
     rows: [
       { kind: "opener", id: "p16" },
-      { kind: "trio", ids: ["p40", "p37", "p45"] },
+      { kind: "trio", ids: ["p40", "p60", "p45"] },
       { kind: "wide", id: "p41", side: "left" },
       { kind: "trio", ids: ["p07", "p09", "p35"] },
       { kind: "trio", ids: ["p19", "p23", "p29"] },
       { kind: "wide", id: "p04", side: "right" },
       { kind: "trio", ids: ["p20", "p24", "p28"] },
       { kind: "wide", id: "p08", side: "left" },
-      { kind: "trio", ids: ["p44", "p42", "p48"] },
+      { kind: "trio", ids: ["p44", "p61", "p17"] },
       { kind: "wide", id: "p21", side: "right" },
       { kind: "trio", ids: ["p27", "p30", "p33"] },
       { kind: "wide", id: "p38", side: "left" },
       { kind: "trio", ids: ["p11", "p18", "p47"] },
       { kind: "wide", id: "p14", side: "right" },
-      { kind: "solo", id: "p17" },
     ],
   },
   {
     id: "cold",
-    numeral: "II",
+    numeral: "III",
     swatches: ["#21d4fd", "#1f5bff", "#19c37d"],
     rows: [
       { kind: "opener", id: "p06" },
@@ -156,18 +180,12 @@ export const chapters: Chapter[] = [
       { kind: "trio", ids: ["p32", "p15", "p49"] },
       { kind: "trio", ids: ["p53", "p46", "p50"] },
       { kind: "wide", id: "p12", side: "right" },
-      { kind: "trio", ids: ["p52", "p22", "p25"] },
+      { kind: "trio", ids: ["p62", "p22", "p25"] },
       { kind: "trio", ids: ["p01", "p13", "p34"] },
       { kind: "wide", id: "p02", side: "left" },
       { kind: "trio", ids: ["p26", "p05", "p31"] },
       { kind: "duo", ids: ["p03", "p51"] },
     ],
-  },
-  {
-    id: "daylight",
-    numeral: "III",
-    swatches: ["#3f8ff5", "#c9924f", "#f2c6d8"],
-    rows: [{ kind: "duo", ids: ["p55", "p54"] }],
   },
 ];
 
@@ -232,6 +250,7 @@ const v = (
 
 export const videos: Video[] = [
   v("v01", "thrulenses-reel", 1.7778, "16:9", "THRULENSES670", "FEATURED CUT"),
+  v("v10", "halloween-2026", 1.7778, "16:9", "HALLOWEEN", undefined, "2026"),
   v("v03", "aerotechno-fest", 1.5, "3:2", "AEROTECHNO FESTIVAL", "MEDELLÍN"),
   v("v06", "urban-fest-2025", 1.7778, "16:9", "URBAN FEST", "MEDELLÍN", "2025"),
   v("v04", "fiesta-del-diablo", 1.7778, "16:9", "FIESTA DEL DIABLO"),
@@ -249,6 +268,7 @@ export const artists = ["999999999", "AnD", "HENRIQUE CAMACHO", "MIJA", "SHIMZA"
 
 /** Stages: city/country only where verified, otherwise left blank. */
 export const stages: { name: string; city?: string; country?: string }[] = [
+  { name: "EDC" },
   { name: "HOCUS POCUS", city: "MIAMI", country: "US" },
   { name: "AEROTECHNO FESTIVAL", city: "MEDELLÍN", country: "CO" },
   { name: "LA SOLAR", city: "MEDELLÍN", country: "CO" },
