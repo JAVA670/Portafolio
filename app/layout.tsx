@@ -1,52 +1,58 @@
 import type { Metadata, Viewport } from "next";
-import { JetBrains_Mono, Space_Grotesk, Syne } from "next/font/google";
+import { Anton, Archivo, JetBrains_Mono } from "next/font/google";
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import "./globals.css";
 
-const syne = Syne({
-  variable: "--font-syne",
+/** Condensed industrial display face — headlines only. */
+const anton = Anton({
+  variable: "--font-anton",
   subsets: ["latin"],
-  weight: ["600", "700", "800"],
+  weight: "400",
+  display: "swap",
 });
 
-const grotesk = Space_Grotesk({
-  variable: "--font-grotesk",
+/** Variable grotesk: expanded (wdth 115) for labels, normal for body. */
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
+  axes: ["wdth"],
+  display: "swap",
 });
 
+/** Technical metadata, navigation and specs. */
 const mono = JetBrains_Mono({
   variable: "--font-jetbrains",
   subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: ["400", "500"],
+  display: "swap",
 });
 
+const description =
+  "Hard techno concert photography and film. Shot from the barrier, the booth and the smoke. Based in the USA — available worldwide.";
+
 export const metadata: Metadata = {
-  title: "THRULENSES670 — Hard Techno Concert Photography & Videography",
-  description:
-    "Concert photography and videography for hard techno events. DJ sets, aftermovies, and raw warehouse coverage. Based in USA — available worldwide.",
+  title: "THRULENSES670 — Hard Techno Photography & Film",
+  description,
   keywords: [
     "hard techno",
     "concert photography",
+    "festival photographer",
     "videography",
     "aftermovie",
-    "DJ set",
-    "rave",
+    "DJ photography",
   ],
   openGraph: {
     title: "THRULENSES670",
-    description:
-      "Hard techno concert photography & videography. Shot from inside the crowd.",
+    description,
     type: "website",
-    images: [{ url: "/assets/photography/diablo-03.jpg", width: 2000, height: 1333 }],
+    images: [{ url: "/assets/photography/diablo-06.jpg", width: 2000, height: 1373 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "THRULENSES670",
-    description:
-      "Hard techno concert photography & videography. Shot from inside the crowd.",
-    images: ["/assets/photography/diablo-03.jpg"],
+    description,
+    images: ["/assets/photography/diablo-06.jpg"],
   },
 };
 
@@ -60,7 +66,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${syne.variable} ${grotesk.variable} ${mono.variable} antialiased`}>
+    <html lang="en" className={`${anton.variable} ${archivo.variable} ${mono.variable}`}>
       <body className="grain">
         <LanguageProvider>
           <SmoothScroll>{children}</SmoothScroll>
