@@ -1,85 +1,110 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { BlurReveal } from "@/components/fx/BlurReveal";
 import { SectionHeader } from "@/components/fx/SectionHeader";
 import { AutoVideo } from "@/components/ui/AutoVideo";
+import { LabelBlock } from "@/components/ui/LabelBlock";
 import { VideoModal } from "@/components/sections/VideoModal";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { videos, type Video } from "@/lib/mockData";
 
+const [featured, ...rest] = videos;
+
 /**
- * Single vault for all motion work. Cards preview muted in the scroll;
- * clicking one opens the full-screen theater with sound + controls.
+ * Films. A sticky cinematic stage: the showreel starts as a framed window
+ * and opens to full bleed as you scroll, title blocks riding over it. Then
+ * the rest of the cuts sit in a hairline grid. Cards preview muted; a click
+ * opens the full-screen theater with sound.
  */
 export function Videos() {
   const { t } = useLanguage();
+  const reduceMotion = useReducedMotion();
   const [active, setActive] = useState<Video | null>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({ target: stageRef, offset: ["start start", "end end"] });
+  const inset = useTransform(scrollYProgress, [0, 0.6], [14, 0]);
+  const clipPath = useTransform(inset, (v) => `inset(${v}% ${v * 1.4}% ${v}% ${v * 1.4}%)`);
+  const scale = useTransform(scrollYProgress, [0, 0.6], [1.12, 1]);
+
+  const open = (video: Video) => setActive(video);
 
   return (
-    <section id="videos" className="bg-iron">
-      <SectionHeader
-        label={t.videos.label}
-        title={t.videos.title}
-        sub={t.videos.sub}
-      />
+    <section id="films" className="bg-void">
+      <SectionHeader label={t.films.label} title={t.films.title} sub={t.films.sub} />
 
-      <div className="columns-1 gap-4 px-4 py-6 sm:px-8 md:columns-2 md:pb-16">
-        {videos.map((video, i) => (
+      {/* Sticky stage — desktop only; mobile gets a plain featured card */}
+      <div ref={stageRef} className="relative hidden md:block" style={{ height: "220vh" }}>
+        <div className="sticky top-0 h-screen overflow-hidden">
+          <motion.button
+            type="button"
+            data-cursor="PLAY"
+            onClick={() => open(featured)}
+            style={reduceMotion ? undefined : { clipPath }}
+            className="absolute inset-0 block w-full"
+            aria-label={`${t.films.watch} ${featured.title}`}
+          >
+            <motion.div style={reduceMotion ? undefined : { scale }} className="absolute inset-0">
+              <AutoVideo src={featured.src} poster={featured.poster} className="h-full w-full object-cover" />
+            </motion.div>
+            <div className="absolute inset-0 bg-void/20" />
+          </motion.button>
+
+          <div className="pointer-events-none absolute inset-x-8 bottom-8 flex items-end justify-between">
+            <div className="flex flex-col items-start gap-1.5">
+              <LabelBlock variant="cobalt" className="text-[11px] tracking-[0.2em]">
+                {t.films.featured}
+              </LabelBlock>
+              <LabelBlock className="text-[5vw] leading-[0.95] tracking-[0.01em]">{featured.title}</LabelBlock>
+              <LabelBlock className="ml-8 text-sm tracking-[0.18em]">{featured.event}</LabelBlock>
+            </div>
+            <span className="label-block text-[11px] tracking-[0.2em]">▶ {t.films.watch}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid gap-px border-y border-hairline bg-hairline md:grid-cols-2">
+        {[...(featured ? [featured] : []), ...rest].map((video, i) => (
           <BlurReveal
             key={video.id}
-            className="mb-4 break-inside-avoid"
-            delay={(i % 2) * 0.08}
+            className={`bg-void ${i === 0 ? "md:hidden" : ""}`}
+            delay={(i % 2) * 0.05}
+            distance={16}
           >
-            <motion.article
+            <button
+              type="button"
               data-cursor="PLAY"
-              role="button"
-              tabIndex={0}
-              aria-label={`Play ${video.title}`}
-              onClick={() => setActive(video)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  setActive(video);
-                }
-              }}
-              whileHover={{ y: -8 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="latex-sheen group flex cursor-pointer flex-col border border-steel bg-iron transition-[border-color,box-shadow] duration-300 hover:border-blood hover:box-glow-red"
+              onClick={() => open(video)}
+              className="group block w-full text-left"
+              aria-label={`${t.films.watch} ${video.title}`}
             >
-              <div
-                className="relative overflow-hidden bg-void"
-                style={{ aspectRatio: video.ratio }}
-              >
+              <div className="relative overflow-hidden bg-iron" style={{ aspectRatio: video.ratio }}>
                 <AutoVideo
                   src={video.src}
                   poster={video.poster}
-                  className="h-full w-full object-cover opacity-80 transition-opacity duration-500 group-hover:opacity-100"
+                  className="grade-cool h-full w-full object-cover"
                 />
-                <span className="tech-label-red absolute left-3 top-3 bg-void/70 px-1.5 py-0.5">
+                <span className="absolute left-0 top-0 bg-void/80 px-1.5 py-0.5 font-mono text-[10px] tracking-[0.2em] text-bone">
                   REC ● {video.label}
                 </span>
-                {/* Play affordance — visible without hover, esp. on touch */}
-                <span className="absolute bottom-3 right-3 flex h-10 w-10 items-center justify-center border border-strobe/60 bg-void/60 text-strobe transition-colors duration-300 group-hover:border-blood group-hover:bg-blood group-hover:text-void">
+                <span className="absolute bottom-0 right-0 flex h-10 w-10 items-center justify-center bg-strobe text-sm text-void transition-colors duration-150 ease-linear group-hover:bg-cobalt group-hover:text-strobe">
                   ▶
                 </span>
               </div>
-              <div className="flex items-baseline justify-between gap-3 border-t border-crimson p-3 sm:p-4">
+              <div className="flex items-baseline justify-between gap-3 px-4 py-3">
                 <div>
-                  <p className="font-display text-lg font-bold leading-snug tracking-[0.1em] sm:text-xl">
+                  <p className="font-display text-lg font-extrabold uppercase tracking-[-0.01em] transition-colors duration-150 ease-linear group-hover:bg-strobe group-hover:text-void sm:text-xl">
                     {video.title}
-                    <span className="text-blood">.</span>
                   </p>
-                  <p className="tech-label mt-1">
+                  <p className="meta mt-1">
                     {video.event} / {video.year}
                   </p>
                 </div>
-                <span className="tech-label-red shrink-0">
-                  {t.videos.watch} ▶
-                </span>
+                <span className="meta shrink-0">{String(i + 1).padStart(2, "0")}</span>
               </div>
-            </motion.article>
+            </button>
           </BlurReveal>
         ))}
       </div>

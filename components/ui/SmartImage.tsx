@@ -14,7 +14,7 @@ export function SmartImage({ alt, ...props }: ImageProps) {
   if (failed) {
     return (
       <div className="flex h-full w-full items-center justify-center bg-iron">
-        <span className="tech-label">NO SIGNAL — {String(props.src)}</span>
+        <span className="meta">NO SIGNAL — {String(props.src)}</span>
       </div>
     );
   }

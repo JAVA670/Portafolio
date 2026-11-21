@@ -4,10 +4,10 @@ import { useState } from "react";
 import { BlurReveal } from "@/components/fx/BlurReveal";
 import { SectionHeader } from "@/components/fx/SectionHeader";
 import { useLanguage } from "@/components/providers/LanguageProvider";
-import { contact, credits, gear } from "@/lib/mockData";
+import { contact, credits } from "@/lib/mockData";
 
 const inputClass =
-  "w-full border border-smoke bg-void px-3 py-2.5 text-xs tracking-[0.1em] text-strobe placeholder:text-ash caret-blood focus:border-blood focus:outline-none";
+  "w-full border-0 border-b border-hairline bg-transparent px-0 py-2.5 font-mono text-sm tracking-[0.06em] text-strobe caret-cobalt [color-scheme:dark] transition-colors duration-150 ease-linear focus:border-cobalt focus:outline-none";
 
 export function Contact() {
   const { t } = useLanguage();
@@ -52,176 +52,115 @@ export function Contact() {
     `${t.contact.typeBoth} ${t.contact.typeDrone}`,
   ];
 
+  const linkClass =
+    "snap-link w-fit break-all font-display text-lg font-extrabold uppercase tracking-[-0.01em] lg:text-xl";
+
   return (
-    <section id="booking" className="bg-iron">
-      <SectionHeader
-        label={t.contact.label}
-        title={t.contact.title}
-        sub={t.contact.sub}
-      />
+    <section id="booking" className="bg-void">
+      <SectionHeader label={t.contact.label} title={t.contact.title} sub={t.contact.sub} />
 
-      <div className="grid md:grid-cols-2">
-        {/* Gear manifest */}
-        <BlurReveal className="border-b border-smoke md:border-b-0 md:border-r">
-          <div className="p-5 sm:p-8">
-            <p className="tech-label-red mb-6">{`> ${t.contact.gearTitle}`}</p>
-            <ul className="flex flex-col">
-              {gear.map((g) => (
-                <li
-                  key={g.item}
-                  className="flex items-baseline justify-between gap-4 border-b border-steel py-3"
-                >
-                  <span className="text-xs font-bold tracking-[0.12em]">
-                    {g.item}
-                  </span>
-                  <span className="tech-label shrink-0">{g.role}</span>
-                </li>
-              ))}
-            </ul>
-
-            {/* Credits — artists and festivals actually shot */}
-            <div className="mt-10">
-              <p className="tech-label-red mb-4">{`> ${t.contact.creditsTitle}`}</p>
-              <div className="flex flex-wrap gap-2">
-                {credits.artists.map((artist) => (
-                  <span
-                    key={artist}
-                    className="border border-crimson px-2.5 py-1 text-[10px] font-bold tracking-[0.2em] transition-colors hover:bg-blood hover:text-void"
-                  >
-                    {artist}
-                  </span>
-                ))}
-                <span className="px-2.5 py-1 text-[10px] tracking-[0.2em] text-ash">
-                  + LOCAL DJS
-                </span>
-              </div>
-              <p className="tech-label-red mb-4 mt-6">{`> ${t.contact.festivalsTitle}`}</p>
-              <ul className="flex flex-col gap-2">
-                {credits.festivals.map((festival) => (
-                  <li
-                    key={festival}
-                    className="text-[11px] font-bold tracking-[0.15em] text-bone"
-                  >
-                    ▸ {festival}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="mt-10 flex flex-col gap-2">
-              <p className="tech-label-red">{`> ${t.contact.directEmail}`}</p>
-              <a
-                href={`mailto:${contact.email}`}
-                className="w-fit text-sm font-bold tracking-[0.1em] underline decoration-smoke underline-offset-4 hover:bg-blood hover:text-void"
-              >
+      <div className="grid border-t border-hairline md:grid-cols-12">
+        {/* Direct lines */}
+        <BlurReveal className="border-b border-hairline px-4 py-10 sm:px-8 md:col-span-5 md:border-b-0 md:border-r md:py-14">
+          <div className="flex flex-col gap-8">
+            <div>
+              <p className="meta mb-2">{`/ ${t.contact.directEmail}`}</p>
+              <a href={`mailto:${contact.email}`} className={linkClass}>
                 {contact.email}
               </a>
-              <p className="tech-label-red mt-4">{`> ${t.contact.phoneLabel}`}</p>
-              <a
-                href={contact.phoneHref}
-                className="w-fit text-sm font-bold tracking-[0.1em] underline decoration-smoke underline-offset-4 hover:bg-blood hover:text-void"
-              >
+            </div>
+            <div>
+              <p className="meta mb-2">{`/ ${t.contact.phoneLabel}`}</p>
+              <a href={contact.phoneHref} className={linkClass}>
                 {contact.phone}
               </a>
-              <p className="tech-label-red mt-4">{`> ${t.contact.instagram}`}</p>
+            </div>
+            <div>
+              <p className="meta mb-2">{`/ ${t.contact.instagram}`}</p>
               <a
                 href={contact.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-fit text-sm font-bold tracking-[0.1em] underline decoration-smoke underline-offset-4 hover:bg-blood hover:text-void"
+                className={linkClass}
               >
                 @{contact.instagram}
               </a>
-              <p className="tech-label-red mt-4 animate-blink">
-                ● {t.contact.basedIn}
-              </p>
+            </div>
+            <div className="flex flex-col items-start gap-1.5 pt-4">
+              <span className="label-block label-block--cobalt text-[11px] tracking-[0.2em]">
+                {t.contact.basedIn}
+              </span>
+              <span className="meta mt-2">
+                {credits.festivals.length} {t.lineup.festivals} / {credits.artists.length}+ ARTISTS
+              </span>
             </div>
           </div>
         </BlurReveal>
 
-        {/* Media pass request — terminal form */}
-        <BlurReveal delay={0.1}>
-          <form onSubmit={submit} className="flex flex-col gap-4 p-5 sm:p-8">
-            <p className="tech-label-red mb-2">{`> ${t.contact.formTitle}`}</p>
+        {/* Media pass request */}
+        <BlurReveal delay={0.06} className="md:col-span-7">
+          <form onSubmit={submit} className="flex flex-col gap-5 px-4 py-10 sm:px-8 md:py-14">
+            <span className="label-block w-fit text-[11px] tracking-[0.18em]">{t.contact.formTitle}</span>
 
-            <label className="flex flex-col gap-1.5">
-              <span className="tech-label">{t.contact.name}</span>
-              <input
-                required
-                value={form.name}
-                onChange={update("name")}
-                className={inputClass}
-                placeholder="_"
-              />
-            </label>
-
-            <label className="flex flex-col gap-1.5">
-              <span className="tech-label">{t.contact.email}</span>
-              <input
-                required
-                type="email"
-                value={form.email}
-                onChange={update("email")}
-                className={inputClass}
-                placeholder="_"
-              />
-            </label>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="grid gap-5 sm:grid-cols-2">
               <label className="flex flex-col gap-1.5">
-                <span className="tech-label">{t.contact.eventField}</span>
+                <span className="meta">{t.contact.name}</span>
+                <input required value={form.name} onChange={update("name")} className={inputClass} />
+              </label>
+              <label className="flex flex-col gap-1.5">
+                <span className="meta">{t.contact.email}</span>
                 <input
                   required
-                  value={form.event}
-                  onChange={update("event")}
+                  type="email"
+                  value={form.email}
+                  onChange={update("email")}
                   className={inputClass}
-                  placeholder="_"
                 />
               </label>
               <label className="flex flex-col gap-1.5">
-                <span className="tech-label">{t.contact.dateField}</span>
-                <input
-                  type="date"
-                  value={form.date}
-                  onChange={update("date")}
-                  className={inputClass}
-                />
+                <span className="meta">{t.contact.eventField}</span>
+                <input required value={form.event} onChange={update("event")} className={inputClass} />
+              </label>
+              <label className="flex flex-col gap-1.5">
+                <span className="meta">{t.contact.dateField}</span>
+                <input type="date" value={form.date} onChange={update("date")} className={inputClass} />
               </label>
             </div>
 
-            <label className="flex flex-col gap-1.5">
-              <span className="tech-label">{t.contact.typeField}</span>
-              <select
-                value={form.type}
-                onChange={update("type")}
-                className={inputClass}
-              >
+            <fieldset className="flex flex-col gap-2">
+              <legend className="meta mb-2">{t.contact.typeField}</legend>
+              <div className="flex flex-wrap gap-2">
                 {types.map((type) => (
-                  <option key={type} value={type} className="bg-void">
+                  <button
+                    key={type}
+                    type="button"
+                    aria-pressed={form.type === type}
+                    onClick={() => setForm((prev) => ({ ...prev, type }))}
+                    className={`border px-3 py-1.5 font-mono text-[10px] tracking-[0.2em] transition-colors duration-150 ease-linear ${
+                      form.type === type
+                        ? "border-strobe bg-strobe text-void"
+                        : "border-hairline text-bone hover:border-cobalt hover:bg-cobalt hover:text-strobe"
+                    }`}
+                  >
                     {type}
-                  </option>
+                  </button>
                 ))}
-              </select>
-            </label>
+              </div>
+            </fieldset>
 
             <label className="flex flex-col gap-1.5">
-              <span className="tech-label">{t.contact.message}</span>
-              <textarea
-                rows={5}
-                value={form.message}
-                onChange={update("message")}
-                className={inputClass}
-                placeholder="_"
-              />
+              <span className="meta">{t.contact.message}</span>
+              <textarea rows={5} value={form.message} onChange={update("message")} className={inputClass} />
             </label>
 
             <button
               type="submit"
-              className="mt-2 border border-blood bg-blood px-6 py-3 text-xs font-bold tracking-[0.3em] text-void transition-all hover:bg-void hover:text-laser hover:box-glow-red"
+              className="mt-2 flex items-center justify-between border border-strobe bg-strobe px-5 py-4 font-display text-sm font-extrabold uppercase tracking-[0.18em] text-void transition-colors duration-150 ease-linear hover:border-cobalt hover:bg-cobalt hover:text-strobe"
             >
-              {t.contact.send} →
+              {t.contact.send}
+              <span aria-hidden>→</span>
             </button>
-            <p className="tech-label">{t.contact.sendHint}</p>
+            <p className="meta">{t.contact.sendHint}</p>
           </form>
         </BlurReveal>
       </div>

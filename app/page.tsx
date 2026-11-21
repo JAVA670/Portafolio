@@ -2,12 +2,13 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Preloader } from "@/components/fx/Preloader";
 import { Cursor } from "@/components/fx/Cursor";
-import { ChapterRail } from "@/components/fx/ChapterRail";
 import { ScrollProgress } from "@/components/fx/ScrollProgress";
-import { MarqueeDivider } from "@/components/fx/MarqueeDivider";
-import { CameraJourney } from "@/components/sections/CameraJourney";
+import { Hero } from "@/components/sections/Hero";
+import { Lineup } from "@/components/sections/Lineup";
+import { SelectedWork } from "@/components/sections/SelectedWork";
 import { Gallery } from "@/components/sections/Gallery";
 import { Videos } from "@/components/sections/Videos";
+import { Specs } from "@/components/sections/Specs";
 import { Contact } from "@/components/sections/Contact";
 
 export default function Home() {
@@ -15,14 +16,14 @@ export default function Home() {
     <main>
       <Preloader />
       <Cursor />
-      <ChapterRail />
       <ScrollProgress />
       <Header />
-      <CameraJourney />
+      <Hero />
+      <Lineup />
+      <SelectedWork />
       <Gallery />
-      <MarqueeDivider hot text="999999999 / / AND / / HENRIQUE CAMACHO / / MIJA / / SHIMZA / / + LOCAL HEROES / /" />
       <Videos />
-      <MarqueeDivider reverse text="HOCUS POCUS MIAMI / / AEROTECHNO FESTIVAL MEDELLÍN / / LA SOLAR MEDELLÍN / /" />
+      <Specs />
       <Contact />
       <Footer />
     </main>
