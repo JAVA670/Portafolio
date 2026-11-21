@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Anton, Archivo, JetBrains_Mono } from "next/font/google";
+import { Anton, Archivo, JetBrains_Mono, Unbounded } from "next/font/google";
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import "./globals.css";
@@ -10,6 +10,14 @@ const anton = Anton({
   subsets: ["latin"],
   weight: "400",
   display: "swap",
+});
+
+/** Wide, rounded face for the liquid-chrome hero wordmark only. */
+const unbounded = Unbounded({
+  variable: "--font-unbounded",
+  subsets: ["latin"],
+  weight: "900",
+  display: "block",
 });
 
 /** Variable grotesk: expanded (wdth 115) for labels, normal for body. */
@@ -67,7 +75,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${anton.variable} ${archivo.variable} ${mono.variable}`}>
+    <html lang="en" className={`${anton.variable} ${unbounded.variable} ${archivo.variable} ${mono.variable}`}>
       <body className="grain">
         <LanguageProvider>
           <SmoothScroll>{children}</SmoothScroll>

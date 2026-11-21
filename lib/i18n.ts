@@ -26,10 +26,6 @@ export const dictionary = {
     intro: {
       label: "00 — MANIFESTO",
       text: "Concert photography and film — made from the barrier, the booth and the crowd, from warehouse nights to the biggest festival stages.",
-      frames: "FRAMES",
-      films: "FILMS",
-      stages: "STAGES",
-      countries: "COUNTRIES",
     },
     work: {
       label: "01 — WORK",
@@ -75,6 +71,10 @@ export const dictionary = {
       featured: "FEATURED",
       play: "PLAY",
       nowPlaying: "NOW PLAYING",
+      sound: "PLAY WITH SOUND",
+      more: "MORE CUTS ON INSTAGRAM",
+      moreText: "New reels, recaps and aftermovies drop there first.",
+      follow: "FOLLOW",
     },
     booking: {
       label: "04 — BOOKING",
@@ -132,10 +132,6 @@ export const dictionary = {
     intro: {
       label: "00 — MANIFIESTO",
       text: "Fotografía y cine de conciertos — hechos desde la valla, la cabina y la multitud, de noches de warehouse a los escenarios más grandes.",
-      frames: "FRAMES",
-      films: "FILMS",
-      stages: "ESCENARIOS",
-      countries: "PAÍSES",
     },
     work: {
       label: "01 — OBRA",
@@ -181,6 +177,10 @@ export const dictionary = {
       featured: "DESTACADO",
       play: "PLAY",
       nowPlaying: "REPRODUCIENDO",
+      sound: "VER CON SONIDO",
+      more: "MÁS CORTES EN INSTAGRAM",
+      moreText: "Los reels, recaps y aftermovies nuevos salen ahí primero.",
+      follow: "SEGUIR",
     },
     booking: {
       label: "04 — BOOKING",

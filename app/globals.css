@@ -2,7 +2,8 @@
 
 @theme {
   /* THRULENSES670 — cyber-brutalist editorial.
-     Obsidian canvas, stark white, one electric cobalt accent. */
+     Obsidian canvas, stark white, electric cobalt — and signal red,
+     used sparingly: record lights, live states, hover heat. */
   --color-void: #050507;
   --color-ink: #0b0b0f;
   --color-steel: #15161c;
@@ -13,6 +14,8 @@
   --color-cobalt: #0038ff;
   --color-glow: #3b82f6;
   --color-ice: #a5d8ff;
+  --color-signal: #ff2d3d;
+  --color-ember: #b3001b;
   --color-hairline: rgba(255, 255, 255, 0.08);
   --color-divider: rgba(255, 255, 255, 0.16);
 
@@ -64,7 +67,7 @@ body {
 }
 
 ::selection {
-  background: var(--color-cobalt);
+  background: var(--color-signal);
   color: var(--color-strobe);
 }
 
@@ -110,6 +113,26 @@ html.lenis body {
 .camera-float {
   animation: camera-float 7s ease-in-out infinite;
 }
+/* Hero wordmark: a highlight band sweeps across the chrome now and then. */
+@keyframes chrome-sweep {
+  0% {
+    transform: translateX(0);
+  }
+  32%,
+  100% {
+    transform: translateX(var(--sweep));
+  }
+}
+.chrome-sweep {
+  animation: chrome-sweep 7s cubic-bezier(0.77, 0, 0.175, 1) 1.6s infinite both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .chrome-sweep {
+    animation: none;
+    visibility: hidden;
+  }
+}
+
 @keyframes camera-float {
   0%,
   100% {
@@ -167,6 +190,10 @@ html.lenis body {
   }
   .label-block--cobalt {
     background: var(--color-cobalt);
+    color: var(--color-strobe);
+  }
+  .label-block--signal {
+    background: var(--color-signal);
     color: var(--color-strobe);
   }
 

@@ -19,7 +19,8 @@ type SectionHeadProps = {
 export function SectionHead({ label, title, sub, aside }: SectionHeadProps) {
   return (
     <div className="shell pt-24 md:pt-32">
-      <div className="flex items-center justify-between gap-4 border-t border-hairline pt-4">
+      <div className="relative flex items-center justify-between gap-4 border-t border-hairline pt-4">
+        <span className="absolute -top-px left-0 h-px w-16 bg-signal" aria-hidden />
         <span className="label-block">{label}</span>
         {aside && <span className="meta text-right">{aside}</span>}
       </div>

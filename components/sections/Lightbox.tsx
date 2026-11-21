@@ -16,7 +16,7 @@ type LightboxProps = {
 };
 
 const btn =
-  "border border-hairline px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.15em] text-strobe transition-colors duration-150 ease-linear hover:border-cobalt hover:bg-cobalt";
+  "border border-hairline px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.15em] text-strobe transition-colors duration-150 ease-linear hover:border-signal hover:bg-signal";
 
 /** Full-resolution frame that fades in over the cached card-size layer. */
 function FullRes({ src, alt }: { src: string; alt: string }) {

@@ -163,7 +163,7 @@ export function Booking() {
 
             <button
               type="submit"
-              className="col-span-2 mt-2 flex items-center justify-between bg-strobe px-5 py-5 text-void transition-colors duration-150 ease-linear hover:bg-cobalt hover:text-strobe"
+              className="col-span-2 mt-2 flex items-center justify-between bg-strobe px-5 py-5 text-void transition-colors duration-150 ease-linear hover:bg-signal hover:text-strobe"
             >
               <span className="wide text-[13px] font-bold uppercase tracking-[0.14em]">{t.booking.send}</span>
               <span aria-hidden className="font-mono">→</span>
