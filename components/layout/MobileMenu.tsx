@@ -6,6 +6,8 @@ import { useLenis } from "lenis/react";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { LangToggle, NAV_LINKS } from "@/components/layout/nav";
 import { contact } from "@/lib/mockData";
+import { ChromeWordmark } from "@/components/hero/ChromeWordmark";
+import { ChromeDivider } from "@/components/chrome/Ornaments";
 
 const EASE = [0.77, 0, 0.175, 1] as const;
 
@@ -40,7 +42,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
           transition={{ duration: 0.6, ease: EASE }}
         >
           <div className="shell flex h-16 items-center justify-between border-b border-hairline">
-            <span className="label-block">THRULENSES670</span>
+            <ChromeWordmark glint={false} className="w-[128px]" sizes="160px" />
             <button
               type="button"
               onClick={onClose}
@@ -51,6 +53,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
           </div>
 
           <nav className="shell flex flex-1 flex-col justify-center" aria-label="Mobile">
+            <ChromeDivider className="mb-6 w-full opacity-90" />
             {NAV_LINKS.map((link, i) => (
               <span key={link.key} className="block overflow-hidden border-b border-hairline">
                 <motion.a

@@ -9,6 +9,8 @@ import { Work } from "@/components/sections/Work";
 import { Index } from "@/components/sections/Index";
 import { Films } from "@/components/sections/Films";
 import { Booking } from "@/components/sections/Booking";
+import { Ticker } from "@/components/sections/Ticker";
+import { artists, stages } from "@/lib/mockData";
 
 export default function Home() {
   return (
@@ -20,9 +22,11 @@ export default function Home() {
       <main>
         <Hero />
         <Work />
+        <Ticker items={artists} />
         <Intro />
         <Index />
         <Films />
+        <Ticker items={stages.map((stage) => stage.name)} reverse duration={80} />
         <Booking />
       </main>
       <Footer />

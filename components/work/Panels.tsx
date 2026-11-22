@@ -1,6 +1,8 @@
 "use client";
 
 import type { Photo } from "@/lib/mockData";
+import { Sigil } from "@/components/chrome/Sigil";
+import { ThornCorners } from "@/components/chrome/ThornCorners";
 
 /**
  * Editorial text panel paired with a 16:9 frame in "wide" rows. It stretches
@@ -24,14 +26,15 @@ export function InfoPanel({
     <button
       type="button"
       onClick={onOpen}
-      className="group flex h-full w-full flex-col justify-between gap-6 border border-hairline p-5 text-left transition-colors duration-150 ease-linear hover:border-divider md:p-6"
+      className="cut-lg group relative flex h-full w-full flex-col justify-between gap-6 bg-ink p-5 text-left transition-colors duration-150 ease-linear hover:bg-steel md:p-6"
     >
+      <ThornCorners />
       <div className="flex items-start justify-between gap-4">
         <span className="meta">{chapterLabel}</span>
         <span className="meta">16:9</span>
       </div>
       <div>
-        <span className="display block text-[clamp(56px,6.4vw,104px)] text-strobe">{frame}</span>
+        <span className="display chrome-text block text-[clamp(56px,6.4vw,104px)]">{frame}</span>
         <span className="wide mt-4 block text-[15px] font-bold uppercase leading-tight tracking-[0.12em] text-strobe md:text-[17px]">
           {photo.caption}
         </span>
@@ -39,7 +42,7 @@ export function InfoPanel({
         {details.length > 0 && <span className="meta mt-3 block text-strobe">{details.join(" — ")}</span>}
       </div>
       <span className="meta flex items-center gap-2 text-strobe">
-        <span className="bg-strobe px-2 py-1 text-void transition-colors duration-150 ease-linear group-hover:bg-cobalt group-hover:text-strobe">
+        <span className="cut-sm bg-strobe px-2.5 py-1 text-void transition-colors duration-150 ease-linear group-hover:bg-signal group-hover:text-strobe">
           {viewLabel} ↗
         </span>
       </span>
@@ -64,9 +67,10 @@ export function OutroPanel({
   swatches: string[];
 }) {
   return (
-    <div className="flex h-full flex-col justify-between gap-8 border border-hairline p-5 md:p-6">
+    <div className="cut-lg relative flex h-full flex-col justify-between gap-8 bg-ink p-5 md:p-6">
       <div className="flex items-center justify-between gap-4">
-        <span className="meta">
+        <span className="meta flex items-center gap-2">
+          <Sigil className="h-2.5 w-2.5 text-signal" />
           {`${numeral} // ${title}`}
         </span>
         <span className="flex gap-1" aria-hidden>

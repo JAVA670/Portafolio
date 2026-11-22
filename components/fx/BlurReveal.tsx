@@ -12,8 +12,9 @@ type BlurRevealProps = {
 };
 
 /**
- * Core "Rave Scroll" primitive: elements emerge from the dark out of focus,
- * then snap sharp as they enter the viewport.
+ * Core scroll-in primitive: elements rise out of the dark and land hard as
+ * they enter the viewport. (No blur — the brief is razor-sharp; the name
+ * stays for the existing call sites.)
  */
 export function BlurReveal({
   children,
@@ -30,12 +31,12 @@ export function BlurReveal({
       initial={
         reduceMotion
           ? { opacity: 0 }
-          : { opacity: 0, y: distance, filter: "blur(8px)" }
+          : { opacity: 0, y: distance }
       }
       whileInView={
         reduceMotion
           ? { opacity: 1 }
-          : { opacity: 1, y: 0, filter: "blur(0px)" }
+          : { opacity: 1, y: 0 }
       }
       viewport={{ once, margin: "-12% 0px" }}
       transition={{ duration: 0.5, delay, ease: [0.25, 0, 0, 1] }}

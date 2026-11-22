@@ -98,6 +98,33 @@ html.lenis body {
   background: var(--color-cobalt);
 }
 
+/* Hard-banded mirror chrome for display type: white sky, a black
+   horizon cut, cobalt ground with a thin red reflection. Stops jump —
+   nothing blends softly. Apply per glyph (TextReveal charClassName) so
+   every line carries the full band. */
+@utility chrome-text {
+  background-image: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #eef3ff 30%,
+    #a9b6cc 45%,
+    #5e6b85 50%,
+    #04060d 50%,
+    #04060d 55%,
+    #0f1f57 55%,
+    #2f5dff 68%,
+    #ff2d3d 68%,
+    #ff2d3d 71%,
+    #8db8ff 71%,
+    #e8f1ff 88%,
+    #ffffff 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
 /* Static film grain at 4% — texture, not motion. */
 .grain::before {
   content: "";
@@ -113,23 +140,63 @@ html.lenis body {
 .camera-float {
   animation: camera-float 7s ease-in-out infinite;
 }
-/* Hero wordmark: a highlight band sweeps across the chrome now and then. */
-@keyframes chrome-sweep {
+/* Chrome wordmark: a hard white glint crosses the letters now and then.
+   The glint layer is masked by the wordmark's own alpha (--mask). */
+@keyframes chrome-glint {
   0% {
-    transform: translateX(0);
+    transform: translateX(-120%) skewX(-24deg);
   }
-  32%,
+  26%,
   100% {
-    transform: translateX(var(--sweep));
+    transform: translateX(220%) skewX(-24deg);
   }
 }
-.chrome-sweep {
-  animation: chrome-sweep 7s cubic-bezier(0.77, 0, 0.175, 1) 1.6s infinite both;
+.chrome-glint {
+  -webkit-mask: var(--mask) center / 100% 100% no-repeat;
+  mask: var(--mask) center / 100% 100% no-repeat;
+}
+.chrome-glint::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 9%;
+  background: linear-gradient(90deg, transparent 0 35%, rgba(255, 255, 255, 0.42) 35% 65%, transparent 65%);
+  animation: chrome-glint 8s cubic-bezier(0.77, 0, 0.175, 1) 1.8s infinite both;
+  mix-blend-mode: screen;
 }
 @media (prefers-reduced-motion: reduce) {
-  .chrome-sweep {
+  .chrome-glint {
+    display: none;
+  }
+}
+
+/* Slow ritual spin for the chrome sigil. */
+@keyframes sigil-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.sigil-spin {
+  animation: sigil-spin 14s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sigil-spin {
     animation: none;
-    visibility: hidden;
+  }
+}
+
+/* Poster ticker: hard, constant crawl. */
+@keyframes ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.ticker-track {
+  animation: ticker var(--ticker-duration, 60s) linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track {
+    animation: none;
   }
 }
 
@@ -174,12 +241,14 @@ html.lenis body {
     color: var(--color-mute);
   }
 
-  /* Signature label block: black type in a stark white rectangle. */
+  /* Signature label block: black type in a stark white slab, two
+     opposite corners razor-cut at 45°. */
   .label-block {
     display: inline-block;
     background: var(--color-strobe);
     color: #000;
-    padding: 4px 10px;
+    padding: 4px 11px;
+    clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
     font-family: var(--font-sans);
     font-weight: 700;
     font-size: 12px;
@@ -195,6 +264,20 @@ html.lenis body {
   .label-block--signal {
     background: var(--color-signal);
     color: var(--color-strobe);
+  }
+
+  /* Razor chamfers — no radius anywhere. Two opposite corners cut. */
+  .cut {
+    --cut: 12px;
+    clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+  }
+  .cut-sm {
+    --cut: 6px;
+    clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+  }
+  .cut-lg {
+    --cut: 22px;
+    clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
   }
 
   /* Instant inversion link: white text → solid cobalt bar. */
