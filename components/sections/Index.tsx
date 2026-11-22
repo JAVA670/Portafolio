@@ -4,14 +4,20 @@ import { SectionHead } from "@/components/fx/SectionHead";
 import { BlurReveal } from "@/components/fx/BlurReveal";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { artists, gear, stages } from "@/lib/mockData";
+import { Sigil } from "@/components/chrome/Sigil";
+import { ThornRule } from "@/components/chrome/ThornRule";
 
 function ColumnHead({ letter, title, count }: { letter: string; title: string; count: number }) {
   return (
-    <div className="flex items-center justify-between border-b border-divider pb-3">
-      <span className="meta text-strobe">
-        {letter} — {title}
-      </span>
-      <span className="meta">{String(count).padStart(2, "0")}</span>
+    <div>
+      <div className="flex items-center justify-between pb-2">
+        <span className="meta flex items-center gap-2 text-strobe">
+          <Sigil className="h-2.5 w-2.5 text-signal" />
+          {letter} — {title}
+        </span>
+        <span className="meta">{String(count).padStart(2, "0")}</span>
+      </div>
+      <ThornRule />
     </div>
   );
 }
@@ -35,9 +41,12 @@ export function Index() {
           <ColumnHead letter="A" title={t.archive.artists} count={artists.length} />
           <ul>
             {artists.map((name, i) => (
-              <li key={name} className={`group flex items-baseline gap-4 border-b border-hairline px-1 py-2 ${rowHover}`}>
-                <span className="meta w-10 shrink-0 group-hover:text-void">A.{String(i + 1).padStart(2, "0")}</span>
-                <span className="display text-[clamp(40px,4.6vw,76px)] normal-case">{name}</span>
+              <li key={name} className="group flex items-baseline gap-4 border-b border-hairline px-1 py-2">
+                <span className="meta flex w-14 shrink-0 items-center gap-1.5">
+                  <Sigil className="h-2.5 w-2.5 text-signal opacity-0 transition-opacity duration-150 ease-linear group-hover:opacity-100" />
+                  A.{String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="display text-[clamp(40px,4.6vw,76px)] normal-case group-hover:chrome-text">{name}</span>
               </li>
             ))}
             <li className="px-1 py-3">

@@ -6,6 +6,9 @@ import { TextReveal } from "@/components/fx/TextReveal";
 import { BlurReveal } from "@/components/fx/BlurReveal";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { contact, heroRender } from "@/lib/mockData";
+import { ChromeCorners, ChromeDivider } from "@/components/chrome/Ornaments";
+import { Sigil } from "@/components/chrome/Sigil";
+import { ThornRule } from "@/components/chrome/ThornRule";
 
 const field =
   "w-full border-0 border-b border-divider bg-transparent px-0 py-3 font-sans text-[16px] text-strobe caret-cobalt outline-none [color-scheme:dark] transition-colors duration-150 ease-linear placeholder:text-dim focus:border-cobalt";
@@ -54,9 +57,14 @@ export function Booking() {
 
   return (
     <section id="booking" className="relative overflow-hidden">
-      <div className="shell pt-28 md:pt-40">
-        <div className="flex items-center justify-between gap-4 border-t border-hairline pt-4">
-          <span className="label-block">{t.booking.label}</span>
+      <div className="shell pt-20 md:pt-28">
+        <ChromeDivider className="mx-auto mb-10 w-[min(88%,820px)] md:mb-14" />
+        <ThornRule />
+        <div className="flex items-center justify-between gap-4 pt-4">
+          <span className="label-block">
+            <Sigil className="mr-2 h-2.5 w-2.5 -translate-y-px text-signal" />
+            {t.booking.label}
+          </span>
           <span className="meta hidden text-right sm:block">{t.booking.available}</span>
         </div>
 
@@ -64,10 +72,10 @@ export function Booking() {
           <div className="col-span-12 lg:col-span-7">
             <h2 className="display text-[clamp(76px,12vw,210px)]">
               <span className="block">
-                <TextReveal text={t.booking.title.split(" ").slice(0, 1).join(" ")} stagger={0.03} />
+                <TextReveal text={t.booking.title.split(" ").slice(0, 1).join(" ")} stagger={0.03} charClassName="chrome-text" />
               </span>
               <span className="block">
-                <TextReveal text={t.booking.title.split(" ").slice(1).join(" ")} stagger={0.03} delay={0.1} />
+                <TextReveal text={t.booking.title.split(" ").slice(1).join(" ")} stagger={0.03} delay={0.1} charClassName="chrome-text" />
               </span>
             </h2>
             <p className="mt-6 max-w-[38ch] text-[15px] leading-[1.5] text-mute md:text-base">{t.booking.sub}</p>
@@ -104,7 +112,9 @@ export function Booking() {
         </div>
 
         {/* Media pass request */}
-        <BlurReveal className="mt-24 grid grid-cols-12 gap-x-3 gap-y-8 border-t border-divider pt-8 md:mt-32" distance={14}>
+        <BlurReveal className="relative mt-24 md:mt-32" distance={14}>
+          <ChromeCorners corners={["tl", "br"]} />
+          <div className="cut-lg grid grid-cols-12 gap-x-3 gap-y-8 bg-ink px-5 py-8 md:px-10 md:py-12">
           <div className="col-span-12 lg:col-span-4">
             <span className="label-block">{t.booking.formTitle}</span>
             <p className="meta mt-4 max-w-[32ch]">{t.booking.hint}</p>
@@ -144,10 +154,8 @@ export function Booking() {
                     type="button"
                     aria-pressed={coverage === key}
                     onClick={() => setCoverage(key)}
-                    className={`border px-3 py-2 font-mono text-[11px] uppercase tracking-[0.15em] transition-colors duration-150 ease-linear ${
-                      coverage === key
-                        ? "border-strobe bg-strobe text-void"
-                        : "border-divider text-strobe hover:border-cobalt hover:bg-cobalt"
+                    className={`cut-sm px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.15em] transition-colors duration-150 ease-linear ${
+                      coverage === key ? "bg-strobe text-void" : "bg-smoke text-strobe hover:bg-signal"
                     }`}
                   >
                     {coverageLabel(key)}
@@ -163,12 +171,13 @@ export function Booking() {
 
             <button
               type="submit"
-              className="col-span-2 mt-2 flex items-center justify-between bg-strobe px-5 py-5 text-void transition-colors duration-150 ease-linear hover:bg-signal hover:text-strobe"
+              className="cut col-span-2 mt-2 flex items-center justify-between bg-strobe px-5 py-5 text-void transition-colors duration-150 ease-linear hover:bg-signal hover:text-strobe"
             >
               <span className="wide text-[13px] font-bold uppercase tracking-[0.14em]">{t.booking.send}</span>
               <span aria-hidden className="font-mono">→</span>
             </button>
           </form>
+          </div>
         </BlurReveal>
       </div>
     </section>

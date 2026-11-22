@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { MobileMenu } from "@/components/layout/MobileMenu";
 import { LangToggle, NAV_LINKS } from "@/components/layout/nav";
+import { ChromeWordmark } from "@/components/hero/ChromeWordmark";
+import { ThornRule } from "@/components/chrome/ThornRule";
 
 export function Header() {
   const { t } = useLanguage();
@@ -23,13 +25,18 @@ export function Header() {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-200 ease-linear ${
-          scrolled ? "border-hairline bg-void/85 backdrop-blur-md" : "border-transparent"
+        className={`fixed inset-x-0 top-0 z-50 transition-colors duration-200 ease-linear ${
+          scrolled ? "bg-void/95" : "bg-transparent"
         }`}
       >
+        <ThornRule
+          className={`pointer-events-none absolute inset-x-0 -bottom-[7px] transition-opacity duration-200 ease-linear ${
+            scrolled ? "opacity-100" : "opacity-0"
+          }`}
+        />
         <div className="shell grid h-16 grid-cols-12 items-center gap-x-3">
-          <a href="#top" className="col-span-6 lg:col-span-3" aria-label="THRULENSES670 — home">
-            <span className="label-block">THRULENSES670</span>
+          <a href="#top" className="col-span-6 w-fit lg:col-span-3" aria-label="THRULENSES670 — home">
+            <ChromeWordmark glint={false} className="w-[128px] md:w-[148px]" sizes="160px" />
           </a>
 
           <nav className="col-span-6 hidden items-center gap-8 lg:flex" aria-label="Primary">
@@ -48,7 +55,7 @@ export function Header() {
             <LangToggle className="hidden lg:flex" />
             <a
               href="#booking"
-              className="label-block label-block--cobalt hidden transition-colors duration-150 ease-linear hover:bg-strobe hover:text-void lg:inline-block"
+              className="label-block label-block--cobalt hidden transition-colors duration-150 ease-linear hover:bg-signal lg:inline-block"
             >
               {t.nav.book}
             </a>

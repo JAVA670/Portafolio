@@ -9,6 +9,7 @@ import {
   type MotionValue,
 } from "framer-motion";
 import { useLanguage } from "@/components/providers/LanguageProvider";
+import { Sigil } from "@/components/chrome/Sigil";
 
 /** A word whose opacity is tied to the paragraph's scroll progress. */
 function Word({
@@ -39,10 +40,10 @@ export function Intro() {
   const words = t.intro.text.split(" ");
 
   return (
-    <section className="shell relative py-24 md:py-36" aria-label={t.intro.label}>
-      <div className="grid grid-cols-12 gap-x-3 gap-y-8 border-t border-hairline pt-10 md:pt-14">
+    <section className="shell relative pb-24 pt-6 md:pb-36 md:pt-10" aria-label={t.intro.label}>
+      <div className="grid grid-cols-12 gap-x-3 gap-y-8">
         <p className="meta col-span-12 md:col-span-3">
-          <span className="mr-2 inline-block h-1.5 w-1.5 translate-y-[-1px] bg-signal" aria-hidden />
+          <Sigil className="mr-2 h-2.5 w-2.5 -translate-y-px text-signal" />
           {t.intro.label}
         </p>
         <p

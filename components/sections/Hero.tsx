@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { CameraRender } from "@/components/hero/CameraRender";
 import { ChromeWordmark } from "@/components/hero/ChromeWordmark";
+import { Registration } from "@/components/chrome/Registration";
+import { Sigil } from "@/components/chrome/Sigil";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useSignal } from "@/lib/intro";
 import { heroRender } from "@/lib/mockData";
@@ -47,9 +49,9 @@ function Wipe({ children, delay, show }: { children: React.ReactNode; delay: num
 }
 
 /**
- * Centered hero: the liquid-chrome wordmark on one line, a little wider
- * than the chrome camera floating directly behind it, with the role
- * labels stacked above.
+ * Centered hero: the cyber-sigil chrome wordmark set in front of the
+ * chrome camera, role labels stacked above, print registration marks on
+ * the frame.
  */
 export function Hero() {
   const { t } = useLanguage();
@@ -63,9 +65,14 @@ export function Hero() {
 
   return (
     <section ref={ref} id="top" className="relative h-svh min-h-[640px] overflow-hidden">
-      {/* 12-column architectural hairlines */}
+      {/* 12-column architectural hairlines + trim marks */}
       <div className="shell pointer-events-none absolute inset-0" aria-hidden>
         <div className="grid-lines h-full w-full" />
+      </div>
+      <div className="shell pointer-events-none absolute inset-x-0 bottom-14 top-20" aria-hidden>
+        <div className="relative h-full w-full">
+          <Registration />
+        </div>
       </div>
 
       <motion.div
@@ -81,7 +88,11 @@ export function Hero() {
             <span className="label-block">{t.hero.labelB}</span>
           </Wipe>
           <Wipe delay={0.45} show={show}>
-            <span className="label-block label-block--cobalt">{t.hero.bar}</span>
+            <span className="label-block label-block--cobalt">
+              <Sigil className="mr-2 h-2.5 w-2.5 -translate-y-px text-strobe" />
+              {t.hero.bar}
+              <Sigil className="ml-2 h-2.5 w-2.5 -translate-y-px text-strobe" />
+            </span>
           </Wipe>
         </div>
 
@@ -101,7 +112,7 @@ export function Hero() {
 
           <motion.div
             style={reduceMotion ? undefined : { y: nameY }}
-            className="relative z-10 mx-auto w-[90vw] max-w-[1240px] will-change-transform md:w-[76vw]"
+            className="relative z-10 mx-auto w-[96vw] max-w-[1040px] will-change-transform md:w-[62vw]"
           >
             <h1>
               <span className="sr-only">THRULENSES670</span>
@@ -111,14 +122,14 @@ export function Hero() {
                 animate={show ? { clipPath: "inset(-60% -8% -60% -8%)" } : undefined}
                 transition={{ duration: 1.2, ease: EASE_SWISS, delay: 0.05 }}
               >
-                <ChromeWordmark />
+                <ChromeWordmark priority sizes="(min-width: 1680px) 1040px, (min-width: 768px) 62vw, 96vw" />
               </motion.span>
             </h1>
           </motion.div>
         </div>
 
         <motion.p
-          className="relative z-10 max-w-[44ch] bg-void/70 px-3 py-2 text-[14px] leading-[1.5] text-strobe/80 backdrop-blur-sm md:mt-16 md:text-[15px]"
+          className="cut-sm relative z-10 max-w-[44ch] bg-void/90 px-3.5 py-2 text-[14px] leading-[1.5] text-strobe/85 md:mt-12 md:text-[15px]"
           initial={reduceMotion ? false : { opacity: 0 }}
           animate={show ? { opacity: 1 } : undefined}
           transition={{ duration: 0.3, ease: "linear", delay: 0.75 }}
@@ -138,7 +149,7 @@ export function Hero() {
           <p className="meta lg:col-span-5">{t.hero.base}</p>
           <p className="meta hidden lg:col-span-3 lg:block">{t.hero.rig}</p>
           <p className="meta text-right lg:col-span-3 lg:text-left">
-            <span className="mr-1.5 inline-block h-1.5 w-1.5 animate-blink rounded-full bg-signal align-middle" aria-hidden />
+            <Sigil className="mr-1.5 h-2.5 w-2.5 -translate-y-px animate-blink text-signal" />
             {t.hero.localTime} <LiveClock />
           </p>
           <p className="meta hidden text-right lg:col-span-1 lg:block">

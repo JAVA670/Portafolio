@@ -3,17 +3,22 @@
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { LangToggle, NAV_LINKS } from "@/components/layout/nav";
 import { contact } from "@/lib/mockData";
+import { ChromeWordmark } from "@/components/hero/ChromeWordmark";
+import { ThornRule } from "@/components/chrome/ThornRule";
 
 /**
- * Footer: four-column index on the grid, then the wordmark set edge to edge
- * with a container-query font size — exact fit, no overflow, any viewport.
+ * Footer: four-column index on the grid, then the tall cyber-sigil chrome
+ * wordmark set edge to edge as the closing poster.
  */
 export function Footer() {
   const { t } = useLanguage();
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative mt-24 border-t border-hairline md:mt-32">
+    <footer className="relative mt-24 md:mt-32">
+      <div className="shell">
+        <ThornRule />
+      </div>
       <div className="shell grid grid-cols-2 gap-x-3 gap-y-10 py-14 md:grid-cols-12 md:py-20">
         <div className="col-span-2 flex flex-col gap-2 md:col-span-4">
           <span className="meta mb-2 text-dim">{t.footer.contact}</span>
@@ -49,18 +54,13 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Width ratio of "THRULENSES670" in Anton at -0.01em tracking is
-          5.839em, so 100cqw / 5.86 fills the margins exactly at any width. */}
       <div className="shell" aria-hidden>
-        <div className="[container-type:inline-size]">
-          <p className="display select-none whitespace-nowrap pb-2 text-[calc(100cqw/5.86)] leading-[0.8]">
-            THRULENSES670
-          </p>
-        </div>
+        <ChromeWordmark variant="tall" className="w-full" sizes="(min-width: 1440px) 1360px, 100vw" />
       </div>
 
       <div className="shell">
-        <div className="flex flex-col gap-2 border-t border-hairline py-5 sm:flex-row sm:items-center sm:justify-between">
+        <ThornRule />
+        <div className="flex flex-col gap-2 py-5 sm:flex-row sm:items-center sm:justify-between">
           <p className="meta">
             © {year} — {t.footer.rights}
           </p>

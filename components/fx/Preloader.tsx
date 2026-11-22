@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useLenis } from "lenis/react";
 import { emit, useSignal } from "@/lib/intro";
+import { ChromeWordmark } from "@/components/hero/ChromeWordmark";
+import { ChromeSigil } from "@/components/chrome/Ornaments";
 
 const MIN_MS = 900;
 const MAX_MS = 2200;
@@ -78,8 +80,13 @@ export function Preloader() {
           aria-hidden
         >
           <div className="shell flex items-center justify-between pt-5">
-            <span className="label-block">THRULENSES670</span>
-            <span className="meta hidden sm:block">CONCERT PHOTOGRAPHY / FILM</span>
+            <span className="label-block">CONCERT PHOTOGRAPHY / FILM</span>
+            <span className="meta hidden sm:block">BOOT // ARCHIVE</span>
+          </div>
+
+          <div className="shell flex flex-col items-center gap-6">
+            <ChromeSigil className="sigil-spin w-14 md:w-20" sizes="80px" />
+            <ChromeWordmark glint={false} priority className="w-[88vw] max-w-[860px]" sizes="(min-width: 980px) 860px, 88vw" />
           </div>
 
           <div className="shell pb-6">
@@ -90,7 +97,7 @@ export function Preloader() {
               </span>
             </div>
             <div className="mt-4 h-px w-full bg-hairline">
-              <div className="h-full bg-cobalt" style={{ width: `${count}%` }} />
+              <div className="h-full bg-signal" style={{ width: `${count}%` }} />
             </div>
           </div>
         </motion.div>

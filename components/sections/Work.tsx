@@ -6,6 +6,7 @@ import { useLenis } from "lenis/react";
 import { SectionHead } from "@/components/fx/SectionHead";
 import { ChapterBlock } from "@/components/work/ChapterBlock";
 import { Lightbox } from "@/components/sections/Lightbox";
+import { Sigil } from "@/components/chrome/Sigil";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { chapterPhotoIds, chapters, photoById, photos, type ChapterId } from "@/lib/mockData";
 
@@ -34,23 +35,32 @@ export function Work() {
     [visible]
   );
 
-  // The last chapter whose top has passed the middle of the screen. Read
-  // from layout on every crossing, so jumps (anchors, filters) stay right.
+  // The last chapter whose top has passed the middle of the screen, read
+  // from layout once per frame while scrolling — so jumps (anchors,
+  // filters, back-to-top) always report the right chapter.
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      () => {
-        const middle = window.innerHeight / 2;
-        let next: ChapterId | null = null;
-        for (const chapter of visible) {
-          const node = chapterRefs.current[chapter.id];
-          if (node && node.getBoundingClientRect().top < middle) next = chapter.id;
-        }
-        if (next) setCurrent(next);
-      },
-      { rootMargin: "-45% 0px -45% 0px" }
-    );
-    Object.values(chapterRefs.current).forEach((node) => node && observer.observe(node));
-    return () => observer.disconnect();
+    let raf = 0;
+    const measure = () => {
+      raf = 0;
+      const middle = window.innerHeight / 2;
+      let next: ChapterId | null = null;
+      for (const chapter of visible) {
+        const node = chapterRefs.current[chapter.id];
+        if (node && node.getBoundingClientRect().top < middle) next = chapter.id;
+      }
+      if (next) setCurrent(next);
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(measure);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, [visible]);
 
   const choose = (next: Filter) => {
@@ -87,13 +97,13 @@ export function Work() {
       {/* Sticky chapter filter */}
       <div
         data-filterbar
-        className="sticky top-16 z-30 mt-12 border-y border-hairline bg-void/90 backdrop-blur-md md:mt-16"
+        className="sticky top-16 z-30 mt-12 border-y border-hairline bg-void md:mt-16"
       >
         <div className="shell flex items-center justify-between gap-6">
           <div
             role="tablist"
             aria-label={t.work.title}
-            className="-mx-1 flex gap-1 overflow-x-auto py-2.5 [mask-image:linear-gradient(to_right,#000_82%,transparent)] [scrollbar-width:none] md:[mask-image:none] [&::-webkit-scrollbar]:hidden"
+            className="-mx-1 flex gap-1 overflow-x-auto py-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {tabs.map((tab) => {
               const selected = filter === tab.id;
@@ -104,7 +114,7 @@ export function Work() {
                   role="tab"
                   aria-selected={selected}
                   onClick={() => choose(tab.id)}
-                  className={`shrink-0 whitespace-nowrap px-2.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.15em] transition-colors duration-150 ease-linear ${
+                  className={`cut-sm shrink-0 whitespace-nowrap px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.15em] transition-colors duration-150 ease-linear ${
                     selected ? "bg-cobalt text-strobe" : "text-strobe hover:bg-strobe hover:text-void"
                   }`}
                 >
@@ -115,7 +125,7 @@ export function Work() {
           </div>
           {currentChapter && (
             <p className="meta hidden shrink-0 lg:block" aria-live="polite">
-              <span className="mr-1.5 inline-block h-1.5 w-1.5 animate-blink rounded-full bg-signal align-middle" aria-hidden />
+              <Sigil className="mr-1.5 h-2.5 w-2.5 -translate-y-px animate-blink text-signal" />
               {t.work.now}: <span className="text-strobe">{`${currentChapter.numeral} // ${t.work.chapters[currentChapter.id].title}`}</span>
             </p>
           )}
@@ -130,10 +140,11 @@ export function Work() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.18, ease: "linear" }}
         >
-          {visible.map((chapter) => (
+          {visible.map((chapter, i) => (
             <ChapterBlock
               key={chapter.id}
               chapter={chapter}
+              first={i === 0}
               ref={(node) => {
                 chapterRefs.current[chapter.id] = node;
               }}
