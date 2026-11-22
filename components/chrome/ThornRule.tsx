@@ -1,7 +1,7 @@
 /**
  * Hairline rule whose ends grow into needle points with a curved thorn
  * barb — the camera's spikes reduced to a 1px editorial line.
- * `accent` colours the barbs (default signal red); the line is a hairline.
+ * `accent` colours the barbs (default silver); the line is a hairline.
  */
 function Thorn({ flip = false, accent }: { flip?: boolean; accent: string }) {
   return (
@@ -22,7 +22,7 @@ function Thorn({ flip = false, accent }: { flip?: boolean; accent: string }) {
 
 export function ThornRule({
   className = "",
-  accent = "text-signal",
+  accent = "text-chrome",
 }: {
   className?: string;
   accent?: string;

@@ -11,7 +11,7 @@ import { Sigil } from "@/components/chrome/Sigil";
 import { ThornRule } from "@/components/chrome/ThornRule";
 
 const field =
-  "w-full border-0 border-b border-divider bg-transparent px-0 py-3 font-sans text-[16px] text-strobe caret-cobalt outline-none [color-scheme:dark] transition-colors duration-150 ease-linear placeholder:text-dim focus:border-cobalt";
+  "w-full border-0 border-b border-divider bg-transparent px-0 py-3 font-sans text-[16px] text-strobe caret-strobe outline-none [color-scheme:dark] transition-colors duration-150 ease-linear placeholder:text-dim focus:border-strobe";
 
 type CoverageKey = "typePhoto" | "typeVideo" | "typeBoth" | "typeDrone";
 const COVERAGE: CoverageKey[] = ["typePhoto", "typeVideo", "typeBoth", "typeDrone"];
@@ -62,7 +62,7 @@ export function Booking() {
         <ThornRule />
         <div className="flex items-center justify-between gap-4 pt-4">
           <span className="label-block">
-            <Sigil className="mr-2 h-2.5 w-2.5 -translate-y-px text-signal" />
+            <Sigil className="mr-2 h-2.5 w-2.5 -translate-y-px text-void" />
             {t.booking.label}
           </span>
           <span className="meta hidden text-right sm:block">{t.booking.available}</span>
@@ -96,7 +96,7 @@ export function Booking() {
                 </div>
               ))}
             </dl>
-            <span className="label-block label-block--cobalt mt-6 sm:hidden">{t.booking.available}</span>
+            <span className="label-block label-block--chrome mt-6 sm:hidden">{t.booking.available}</span>
           </div>
 
           <div className="col-span-12 lg:col-span-5">
@@ -155,7 +155,7 @@ export function Booking() {
                     aria-pressed={coverage === key}
                     onClick={() => setCoverage(key)}
                     className={`cut-sm px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.15em] transition-colors duration-150 ease-linear ${
-                      coverage === key ? "bg-strobe text-void" : "bg-smoke text-strobe hover:bg-signal"
+                      coverage === key ? "bg-strobe text-void" : "bg-smoke text-strobe hover:bg-strobe hover:text-void"
                     }`}
                   >
                     {coverageLabel(key)}
@@ -171,7 +171,7 @@ export function Booking() {
 
             <button
               type="submit"
-              className="cut col-span-2 mt-2 flex items-center justify-between bg-strobe px-5 py-5 text-void transition-colors duration-150 ease-linear hover:bg-signal hover:text-strobe"
+              className="cut col-span-2 mt-2 flex items-center justify-between bg-strobe px-5 py-5 text-void transition-colors duration-150 ease-linear hover:chrome-plate hover:text-void"
             >
               <span className="wide text-[13px] font-bold uppercase tracking-[0.14em]">{t.booking.send}</span>
               <span aria-hidden className="font-mono">→</span>

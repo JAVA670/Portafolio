@@ -79,17 +79,24 @@ async function importVideo(file) {
   execFileSync(ffmpegPath, [
     "-y", "-v", "error",
     "-ss", "2", "-i", out,
-    "-frames:v", "1", "-vf", "scale='min(1280,iw)':-2", "-q:v", "4",
+    // Square pixels first: phone exports are often anamorphic (e.g. a
+    // 9:16 vertical clip stored as 1080x720 with a 3:8 pixel aspect).
+    "-frames:v", "1",
+    "-vf", "scale='trunc(if(lt(sar,1),iw,iw*sar)/2)*2':'trunc(if(lt(sar,1),ih/sar,ih)/2)*2',setsar=1,scale='min(1280,iw)':-2",
+    "-q:v", "4",
     poster,
   ]);
-  const [w, h] = execFileSync(ffprobe.path, [
+  const [rawW, rawH, sar] = execFileSync(ffprobe.path, [
     "-v", "error", "-select_streams", "v:0",
-    "-show_entries", "stream=width,height", "-of", "csv=p=0", out,
+    "-show_entries", "stream=width,height,sample_aspect_ratio", "-of", "csv=p=0", out,
   ])
     .toString()
     .trim()
-    .split(",")
-    .map(Number);
+    .split(",");
+  const [sn, sd] = (sar && sar !== "N/A" && sar !== "0:1" ? sar : "1:1").split(":").map(Number);
+  // Display size (what viewers see), not the stored pixel grid.
+  const w = Math.round((Number(rawW) * sn) / sd);
+  const h = Number(rawH);
   const { size } = await stat(out);
   return {
     kind: "video",

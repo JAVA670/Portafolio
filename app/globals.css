@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  /* THRULENSES670 — cyber-brutalist editorial.
-     Obsidian canvas, stark white, electric cobalt — and signal red,
-     used sparingly: record lights, live states, hover heat. */
+  /* THRULENSES670 — cyber-brutalist editorial, liquid-chrome dark mode.
+     Strictly monochrome: obsidian, white and polished silver. The only
+     colour on the page is the camera render and the work itself. */
   --color-void: #050507;
   --color-ink: #0b0b0f;
   --color-steel: #15161c;
@@ -11,11 +11,8 @@
   --color-mute: #8a8f98;
   --color-dim: #5b6069;
   --color-strobe: #ffffff;
-  --color-cobalt: #0038ff;
-  --color-glow: #3b82f6;
-  --color-ice: #a5d8ff;
-  --color-signal: #ff2d3d;
-  --color-ember: #b3001b;
+  --color-chrome: #c9cdd3;
+  --color-gunmetal: #3a3d44;
   --color-hairline: rgba(255, 255, 255, 0.08);
   --color-divider: rgba(255, 255, 255, 0.16);
 
@@ -62,13 +59,13 @@ body {
 }
 
 :focus-visible {
-  outline: 1px solid var(--color-cobalt);
+  outline: 1px solid var(--color-strobe);
   outline-offset: 3px;
 }
 
 ::selection {
-  background: var(--color-signal);
-  color: var(--color-strobe);
+  background: var(--color-strobe);
+  color: var(--color-void);
 }
 
 html.lenis,
@@ -95,34 +92,37 @@ html.lenis body {
   background: var(--color-smoke);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-cobalt);
+  background: var(--color-mute);
 }
 
-/* Hard-banded mirror chrome for display type: white sky, a black
-   horizon cut, cobalt ground with a thin red reflection. Stops jump —
+/* Hard-banded silver chrome for display type: white sky, a black
+   horizon cut, gunmetal ground rising back to white. Stops jump —
    nothing blends softly. Apply per glyph (TextReveal charClassName) so
    every line carries the full band. */
 @utility chrome-text {
   background-image: linear-gradient(
     180deg,
     #ffffff 0%,
-    #eef3ff 30%,
-    #a9b6cc 45%,
-    #5e6b85 50%,
-    #04060d 50%,
-    #04060d 55%,
-    #0f1f57 55%,
-    #2f5dff 68%,
-    #ff2d3d 68%,
-    #ff2d3d 71%,
-    #8db8ff 71%,
-    #e8f1ff 88%,
+    #f1f2f4 28%,
+    #b8bdc5 44%,
+    #6d727b 50%,
+    #0a0b0e 50%,
+    #0a0b0e 55%,
+    #3b3f46 55%,
+    #9ea3ab 72%,
+    #e6e8eb 88%,
     #ffffff 100%
   );
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+}
+
+/* Hover state for white buttons: the slab turns to polished metal. */
+@utility chrome-plate {
+  background-image: linear-gradient(180deg, #ffffff 0%, #e6e8eb 46%, #a3a8b0 50%, #c9cdd3 50%, #f3f4f6 100%);
+  color: #000;
 }
 
 /* Static film grain at 4% — texture, not motion. */
@@ -257,13 +257,10 @@ html.lenis body {
     letter-spacing: 0.12em;
     text-transform: uppercase;
   }
-  .label-block--cobalt {
-    background: var(--color-cobalt);
-    color: var(--color-strobe);
-  }
-  .label-block--signal {
-    background: var(--color-signal);
-    color: var(--color-strobe);
+  /* Polished metal plate: hard-banded silver, black type. */
+  .label-block--chrome {
+    background: linear-gradient(180deg, #ffffff 0%, #e6e8eb 46%, #a3a8b0 50%, #c9cdd3 50%, #f3f4f6 100%);
+    color: #000;
   }
 
   /* Razor chamfers — no radius anywhere. Two opposite corners cut. */
@@ -280,7 +277,7 @@ html.lenis body {
     clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
   }
 
-  /* Instant inversion link: white text → solid cobalt bar. */
+  /* Instant inversion link: white text → solid white bar, black text. */
   .snap-link {
     padding: 2px 6px;
     margin: -2px -6px;
@@ -290,8 +287,8 @@ html.lenis body {
   }
   .snap-link:hover,
   .snap-link:focus-visible {
-    background: var(--color-cobalt);
-    color: var(--color-strobe);
+    background: var(--color-strobe);
+    color: var(--color-void);
   }
 
   /* 12-column architectural hairlines (apply to an absolutely positioned

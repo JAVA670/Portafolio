@@ -1,24 +1,32 @@
 /**
  * Liquid-chrome ornaments generated in the hero camera's style (thorns,
- * biomech tendrils, mirror chrome) and cut out on transparency with
- * scripts/prepare-ornaments.mjs. Dimensions are the processed files'.
+ * biomech tendrils, mirror chrome), then cut out on transparency and
+ * turned to neutral silver with scripts/prepare-ornaments.mjs
+ * (`--mono --mix 0.35 --gamma 1.35`). Only the camera keeps its colour.
+ * Dimensions are the processed files'. Change a file → change its name,
+ * so image caches can't serve the old one.
  */
 export const chrome = {
   /** Primary logotype — wide, most legible. */
-  wordmark: { src: "/assets/chrome/wordmark.png", mask: "/assets/chrome/wordmark-mask.png", width: 2400, height: 589 },
+  wordmark: {
+    src: "/assets/chrome/wordmark-silver.png",
+    mask: "/assets/chrome/wordmark-silver-mask.png",
+    width: 2400,
+    height: 589,
+  },
   /** Taller lattice cut of the logotype — poster moments (footer). */
   wordmarkTall: {
-    src: "/assets/chrome/wordmark-tall.png",
-    mask: "/assets/chrome/wordmark-tall-mask.png",
+    src: "/assets/chrome/wordmark-tall-silver.png",
+    mask: "/assets/chrome/wordmark-tall-silver-mask.png",
     width: 2400,
-    height: 949,
+    height: 946,
   },
   /** Symmetric thorn tendril — section and chapter breaks. */
-  divider: { src: "/assets/chrome/divider.png", width: 2400, height: 461 },
+  divider: { src: "/assets/chrome/divider-silver.png", width: 2400, height: 459 },
   /** Top-left thorn bracket — mirror it for the other corners. */
-  corner: { src: "/assets/chrome/corner.png", width: 900, height: 900 },
+  corner: { src: "/assets/chrome/corner-silver.png", width: 900, height: 900 },
   /** Four-point thorn star. */
-  sigil: { src: "/assets/chrome/sigil.png", width: 512, height: 528 },
+  sigil: { src: "/assets/chrome/sigil-silver.png", width: 512, height: 529 },
 } as const;
 
 export type ChromeAsset = (typeof chrome)[keyof typeof chrome];

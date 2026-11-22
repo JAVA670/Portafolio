@@ -16,7 +16,7 @@ type LightboxProps = {
 };
 
 const btn =
-  "cut-sm bg-smoke px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.15em] text-strobe transition-colors duration-150 ease-linear hover:bg-signal";
+  "cut-sm bg-smoke px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.15em] text-strobe transition-colors duration-150 ease-linear hover:bg-strobe hover:text-void";
 
 /** Full-resolution frame that fades in over the cached card-size layer. */
 function FullRes({ src, alt }: { src: string; alt: string }) {

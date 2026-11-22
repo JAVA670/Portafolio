@@ -88,10 +88,10 @@ export function Hero() {
             <span className="label-block">{t.hero.labelB}</span>
           </Wipe>
           <Wipe delay={0.45} show={show}>
-            <span className="label-block label-block--cobalt">
-              <Sigil className="mr-2 h-2.5 w-2.5 -translate-y-px text-strobe" />
+            <span className="label-block label-block--chrome">
+              <Sigil className="mr-2 h-2.5 w-2.5 -translate-y-px text-void" />
               {t.hero.bar}
-              <Sigil className="ml-2 h-2.5 w-2.5 -translate-y-px text-strobe" />
+              <Sigil className="ml-2 h-2.5 w-2.5 -translate-y-px text-void" />
             </span>
           </Wipe>
         </div>
@@ -149,7 +149,7 @@ export function Hero() {
           <p className="meta lg:col-span-5">{t.hero.base}</p>
           <p className="meta hidden lg:col-span-3 lg:block">{t.hero.rig}</p>
           <p className="meta text-right lg:col-span-3 lg:text-left">
-            <Sigil className="mr-1.5 h-2.5 w-2.5 -translate-y-px animate-blink text-signal" />
+            <Sigil className="mr-1.5 h-2.5 w-2.5 -translate-y-px animate-blink text-chrome" />
             {t.hero.localTime} <LiveClock />
           </p>
           <p className="meta hidden text-right lg:col-span-1 lg:block">

@@ -42,7 +42,7 @@ export function InfoPanel({
         {details.length > 0 && <span className="meta mt-3 block text-strobe">{details.join(" — ")}</span>}
       </div>
       <span className="meta flex items-center gap-2 text-strobe">
-        <span className="cut-sm bg-strobe px-2.5 py-1 text-void transition-colors duration-150 ease-linear group-hover:bg-signal group-hover:text-strobe">
+        <span className="cut-sm bg-strobe px-2.5 py-1 text-void transition-colors duration-150 ease-linear group-hover:chrome-plate group-hover:text-void">
           {viewLabel} ↗
         </span>
       </span>
@@ -57,32 +57,26 @@ export function OutroPanel({
   text,
   count,
   framesLabel,
-  swatches,
 }: {
   numeral: string;
   title: string;
   text: string;
   count: number;
   framesLabel: string;
-  swatches: string[];
 }) {
   return (
     <div className="cut-lg relative flex h-full flex-col justify-between gap-8 bg-ink p-5 md:p-6">
       <div className="flex items-center justify-between gap-4">
         <span className="meta flex items-center gap-2">
-          <Sigil className="h-2.5 w-2.5 text-signal" />
+          <Sigil className="h-2.5 w-2.5 text-chrome" />
           {`${numeral} // ${title}`}
         </span>
-        <span className="flex gap-1" aria-hidden>
-          {swatches.map((color) => (
-            <span key={color} className="h-2.5 w-2.5" style={{ background: color }} />
-          ))}
+        <span className="meta">
+          {String(count).padStart(3, "0")} {framesLabel}
         </span>
       </div>
       <p className="text-[clamp(22px,2.2vw,34px)] leading-[1.12] tracking-[-0.01em] text-strobe">{text}</p>
-      <span className="meta">
-        {String(count).padStart(3, "0")} {framesLabel}
-      </span>
+      <span className="display chrome-text text-[clamp(48px,5vw,88px)]">{numeral}</span>
     </div>
   );
 }
