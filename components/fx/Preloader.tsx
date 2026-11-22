@@ -97,7 +97,7 @@ export function Preloader() {
               </span>
             </div>
             <div className="mt-4 h-px w-full bg-hairline">
-              <div className="h-full bg-signal" style={{ width: `${count}%` }} />
+              <div className="h-full bg-strobe" style={{ width: `${count}%` }} />
             </div>
           </div>
         </motion.div>

@@ -73,7 +73,7 @@ export function PhotoCard({
         </span>
 
         {/* Hover data bar (md+) */}
-        <span className="pointer-events-none absolute inset-x-0 bottom-0 hidden translate-y-full overflow-hidden border-t-2 border-signal bg-void px-3 py-2.5 transition-transform duration-200 ease-linear group-hover:translate-y-0 group-focus-visible:translate-y-0 md:block">
+        <span className="pointer-events-none absolute inset-x-0 bottom-0 hidden translate-y-full overflow-hidden border-t-2 border-strobe bg-void px-3 py-2.5 transition-transform duration-200 ease-linear group-hover:translate-y-0 group-focus-visible:translate-y-0 md:block">
           <span className="meta block text-mute">
             FR.{frame} — {chapterLabel}
           </span>

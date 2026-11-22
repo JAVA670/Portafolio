@@ -26,7 +26,7 @@ export function SectionHead({ label, title, sub, aside }: SectionHeadProps) {
       <ThornRule />
       <div className="flex items-center justify-between gap-4 pt-4">
         <span className="label-block">
-          <Sigil className="mr-2 h-2.5 w-2.5 -translate-y-px text-signal" />
+          <Sigil className="mr-2 h-2.5 w-2.5 -translate-y-px text-void" />
           {label}
         </span>
         {aside && <span className="meta text-right">{aside}</span>}

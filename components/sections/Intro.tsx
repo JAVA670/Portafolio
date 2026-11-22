@@ -43,7 +43,7 @@ export function Intro() {
     <section className="shell relative pb-24 pt-6 md:pb-36 md:pt-10" aria-label={t.intro.label}>
       <div className="grid grid-cols-12 gap-x-3 gap-y-8">
         <p className="meta col-span-12 md:col-span-3">
-          <Sigil className="mr-2 h-2.5 w-2.5 -translate-y-px text-signal" />
+          <Sigil className="mr-2 h-2.5 w-2.5 -translate-y-px text-chrome" />
           {t.intro.label}
         </p>
         <p

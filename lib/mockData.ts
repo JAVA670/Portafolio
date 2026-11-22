@@ -240,7 +240,8 @@ export type Video = {
   /** Verified context only (from the user or their own file names). */
   meta?: string;
   year?: string;
-  /** Aspect ratio (w / h) of the source file. */
+  /** Display aspect ratio (w / h) — phone exports are often 9:16 stored
+   *  anamorphically; scripts/make-previews.mjs prints the true value. */
   ratio: number;
   /** Format badge, e.g. "16:9". */
   label: string;
@@ -271,15 +272,15 @@ const v = (
 
 export const videos: Video[] = [
   v("v01", "thrulenses-reel", 1.7778, "16:9", "THRULENSES670", "FEATURED CUT"),
-  v("v10", "halloween-2026", 1.7778, "16:9", "HALLOWEEN", undefined, "2026"),
-  v("v03", "aerotechno-fest", 1.5, "3:2", "AEROTECHNO FESTIVAL", "MEDELLÍN"),
+  v("v10", "halloween-2026", 0.5625, "9:16", "HALLOWEEN", undefined, "2026"),
+  v("v03", "aerotechno-fest", 0.5625, "9:16", "AEROTECHNO FESTIVAL", "MEDELLÍN"),
   v("v06", "urban-fest-2025", 1.7778, "16:9", "URBAN FEST", "MEDELLÍN", "2025"),
   v("v04", "fiesta-del-diablo", 1.7778, "16:9", "FIESTA DEL DIABLO"),
   v("v07", "genesis-aftermovie", 1.7778, "16:9", "GENESIS", "AFTERMOVIE"),
-  v("v05", "mija", 1.5, "3:2", "MIJA"),
-  v("v08", "maluna-fest", 1.7778, "16:9", "MALUNA FEST"),
-  v("v09", "psicoddelic", 1.5, "3:2", "PSICODDELIC", "VHS CUT"),
-  v("v02", "lilith", 1, "1:1", "LILITH"),
+  v("v05", "mija", 0.5794, "9:16", "MIJA"),
+  v("v08", "maluna-fest", 0.5627, "9:16", "MALUNA FEST"),
+  v("v09", "psicoddelic", 0.5625, "9:16", "PSICODDELIC", "VHS CUT"),
+  v("v02", "lilith", 0.5625, "9:16", "LILITH"),
 ];
 
 // ── Index ───────────────────────────────────────────────────────────────

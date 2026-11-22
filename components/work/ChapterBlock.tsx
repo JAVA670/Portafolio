@@ -59,7 +59,6 @@ export const ChapterBlock = forwardRef<HTMLElement, ChapterBlockProps>(function 
       text={copy.outro}
       count={count}
       framesLabel={t.work.frames}
-      swatches={chapter.swatches}
     />
   );
 
@@ -139,11 +138,6 @@ export const ChapterBlock = forwardRef<HTMLElement, ChapterBlockProps>(function 
           <p className="meta col-span-6 text-right md:col-span-3 md:text-left">
             {String(count).padStart(3, "0")} {t.work.frames}
           </p>
-          <div className="hidden justify-end gap-1 md:col-span-6 md:flex" aria-hidden>
-            {chapter.swatches.map((color) => (
-              <span key={color} className="h-3 w-3" style={{ background: color }} />
-            ))}
-          </div>
         </div>
         <div className="mt-6 grid grid-cols-12 items-end gap-x-3 gap-y-4 md:mt-8">
           <h3 className="display col-span-12 text-[clamp(64px,9vw,148px)] md:col-span-8">

@@ -19,7 +19,7 @@ export function LangToggle({ className = "" }: { className?: string }) {
       onClick={() => setLang(value)}
       aria-pressed={lang === value}
       className={`px-1.5 py-0.5 font-mono text-[11px] tracking-[0.15em] transition-colors duration-150 ease-linear ${
-        lang === value ? "bg-strobe text-void" : "text-mute hover:bg-cobalt hover:text-strobe"
+        lang === value ? "bg-strobe text-void" : "text-mute hover:bg-strobe hover:text-void"
       }`}
     >
       {value.toUpperCase()}

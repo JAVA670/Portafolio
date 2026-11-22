@@ -49,7 +49,7 @@ export function Cursor() {
     >
       {label ? (
         <div className="cut-sm flex h-[26px] -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 bg-strobe px-2.5">
-          <Sigil className="h-2.5 w-2.5 text-signal" />
+          <Sigil className="h-2.5 w-2.5 text-void" />
           <span className="font-mono text-[10px] font-medium tracking-[0.18em] text-void">{label}</span>
         </div>
       ) : (

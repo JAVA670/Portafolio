@@ -115,17 +115,17 @@ export function Work() {
                   aria-selected={selected}
                   onClick={() => choose(tab.id)}
                   className={`cut-sm shrink-0 whitespace-nowrap px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.15em] transition-colors duration-150 ease-linear ${
-                    selected ? "bg-cobalt text-strobe" : "text-strobe hover:bg-strobe hover:text-void"
+                    selected ? "chrome-plate text-void" : "text-strobe hover:bg-strobe hover:text-void"
                   }`}
                 >
-                  [ {tab.label} <span className={selected ? "text-strobe/70" : "text-dim"}>— {String(tab.count).padStart(2, "0")}</span> ]
+                  [ {tab.label} <span className={selected ? "text-void/60" : "text-dim"}>— {String(tab.count).padStart(2, "0")}</span> ]
                 </button>
               );
             })}
           </div>
           {currentChapter && (
             <p className="meta hidden shrink-0 lg:block" aria-live="polite">
-              <Sigil className="mr-1.5 h-2.5 w-2.5 -translate-y-px animate-blink text-signal" />
+              <Sigil className="mr-1.5 h-2.5 w-2.5 -translate-y-px animate-blink text-chrome" />
               {t.work.now}: <span className="text-strobe">{`${currentChapter.numeral} // ${t.work.chapters[currentChapter.id].title}`}</span>
             </p>
           )}

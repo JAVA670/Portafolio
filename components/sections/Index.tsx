@@ -12,7 +12,7 @@ function ColumnHead({ letter, title, count }: { letter: string; title: string; c
     <div>
       <div className="flex items-center justify-between pb-2">
         <span className="meta flex items-center gap-2 text-strobe">
-          <Sigil className="h-2.5 w-2.5 text-signal" />
+          <Sigil className="h-2.5 w-2.5 text-chrome" />
           {letter} — {title}
         </span>
         <span className="meta">{String(count).padStart(2, "0")}</span>
@@ -43,7 +43,7 @@ export function Index() {
             {artists.map((name, i) => (
               <li key={name} className="group flex items-baseline gap-4 border-b border-hairline px-1 py-2">
                 <span className="meta flex w-14 shrink-0 items-center gap-1.5">
-                  <Sigil className="h-2.5 w-2.5 text-signal opacity-0 transition-opacity duration-150 ease-linear group-hover:opacity-100" />
+                  <Sigil className="h-2.5 w-2.5 text-chrome opacity-0 transition-opacity duration-150 ease-linear group-hover:opacity-100" />
                   A.{String(i + 1).padStart(2, "0")}
                 </span>
                 <span className="display text-[clamp(40px,4.6vw,76px)] normal-case group-hover:chrome-text">{name}</span>

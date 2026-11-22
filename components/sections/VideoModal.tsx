@@ -46,13 +46,13 @@ export function VideoModal({ video, onClose }: VideoModalProps) {
         >
           <div className="shell flex h-16 shrink-0 items-center justify-between gap-4 border-b border-hairline">
             <span className="meta truncate">
-              <Sigil className="mr-2 h-2.5 w-2.5 -translate-y-px animate-blink text-signal" />
+              <Sigil className="mr-2 h-2.5 w-2.5 -translate-y-px animate-blink text-chrome" />
               <span className="text-strobe">{t.films.nowPlaying}</span> — {video.title}
             </span>
             <button
               type="button"
               onClick={onClose}
-              className="cut-sm shrink-0 bg-smoke px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.15em] text-strobe transition-colors duration-150 ease-linear hover:bg-signal"
+              className="cut-sm shrink-0 bg-smoke px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.15em] text-strobe transition-colors duration-150 ease-linear hover:bg-strobe hover:text-void"
             >
               {t.viewer.close} <span className="hidden sm:inline">[ESC]</span>
             </button>

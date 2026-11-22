@@ -55,7 +55,7 @@ export function Header() {
             <LangToggle className="hidden lg:flex" />
             <a
               href="#booking"
-              className="label-block label-block--cobalt hidden transition-colors duration-150 ease-linear hover:bg-signal lg:inline-block"
+              className="label-block label-block--chrome hidden transition-colors duration-150 ease-linear hover:bg-none hover:bg-strobe lg:inline-block"
             >
               {t.nav.book}
             </a>
