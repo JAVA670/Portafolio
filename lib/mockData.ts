@@ -277,7 +277,7 @@ export const videos: Video[] = [
   v("v06", "urban-fest-2025", 1.7778, "16:9", "URBAN FEST", "MEDELLÍN", "2025"),
   v("v04", "fiesta-del-diablo", 1.7778, "16:9", "FIESTA DEL DIABLO"),
   v("v07", "genesis-aftermovie", 1.7778, "16:9", "GENESIS", "AFTERMOVIE"),
-  v("v05", "mija", 0.5794, "9:16", "MIJA"),
+  v("v05", "mija", 0.5797, "9:16", "MIJA"),
   v("v08", "maluna-fest", 0.5627, "9:16", "MALUNA FEST"),
   v("v09", "psicoddelic", 0.5625, "9:16", "PSICODDELIC", "VHS CUT"),
   v("v02", "lilith", 0.5625, "9:16", "LILITH"),
