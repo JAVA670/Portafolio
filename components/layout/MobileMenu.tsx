@@ -82,6 +82,9 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
               <a href={contact.instagramUrl} target="_blank" rel="noopener noreferrer" className="meta text-strobe">
                 IG @{contact.instagram}
               </a>
+              <a href={contact.studioUrl} target="_blank" rel="noopener noreferrer" className="meta text-strobe">
+                THRULENSES STUDIO ↗
+              </a>
             </div>
             <LangToggle />
           </div>

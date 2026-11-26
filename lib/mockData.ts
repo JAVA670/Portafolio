@@ -324,6 +324,8 @@ export const contact = {
   phoneHref: "tel:+12397771732",
   instagram: "thrulenses670",
   instagramUrl: "https://www.instagram.com/thrulenses670/",
+  /** Thrulenses Studio — the events / portraits / celebrations site. */
+  studioUrl: process.env.NEXT_PUBLIC_STUDIO_URL ?? "https://studio-thrulenses670-s-projects.vercel.app",
 };
 
 /**
