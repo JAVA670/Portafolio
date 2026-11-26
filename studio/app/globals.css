@@ -1,0 +1,179 @@
+@import "tailwindcss";
+
+@theme {
+  /* Thrulenses Studio — clean editorial monochrome. Bone pages, ink type,
+     night-black cinematic sections, polished silver accents. All colour
+     comes from the photographs. */
+  --color-bone: #f3f1ec;
+  --color-paper: #faf9f6;
+  --color-ink: #0b0b0c;
+  --color-graphite: #2b2b2e;
+  --color-stone: #6e6b65;
+  --color-ash: #a6a29b;
+  --color-line: rgba(11, 11, 12, 0.12);
+  --color-night: #0a0a0b;
+  --color-night-2: #141416;
+  --color-silver: #c9cdd3;
+  --color-fog: rgba(255, 255, 255, 0.14);
+
+  --font-serif: var(--font-instrument), "Times New Roman", Georgia, serif;
+  --font-sans: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-jetbrains), "Courier New", monospace;
+
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-cine: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+html,
+body {
+  background: var(--color-bone);
+}
+
+html {
+  color-scheme: light;
+  scroll-padding-top: 72px;
+}
+
+body {
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 3px;
+}
+
+::selection {
+  background: var(--color-ink);
+  color: var(--color-bone);
+}
+
+/* 3D entrances can briefly project past the edges — clip, never scroll.
+   (clip, unlike hidden, keeps position: sticky working inside.) */
+main,
+footer {
+  overflow-x: clip;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Hero light-table: columns of frames drift slowly in opposite directions. */
+@keyframes drift-up {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -50%, 0);
+  }
+}
+.drift {
+  animation: drift-up var(--drift, 60s) linear infinite;
+}
+.drift--reverse {
+  animation-direction: reverse;
+}
+
+/* Kinetic band. */
+@keyframes marquee {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+.marquee {
+  animation: marquee var(--marquee, 40s) linear infinite;
+}
+
+/* Chrome glint across the logo, masked to the letters (--mask). */
+@keyframes glint {
+  0% {
+    transform: translateX(-140%) skewX(-22deg);
+  }
+  28%,
+  100% {
+    transform: translateX(260%) skewX(-22deg);
+  }
+}
+.glint {
+  -webkit-mask: var(--mask) center / 100% 100% no-repeat;
+  mask: var(--mask) center / 100% 100% no-repeat;
+}
+.glint::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 10%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  animation: glint 7s var(--ease-cine) 2s infinite both;
+  mix-blend-mode: screen;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drift,
+  .marquee {
+    animation: none;
+  }
+  .glint {
+    display: none;
+  }
+}
+
+@layer components {
+  .shell {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  @media (min-width: 768px) {
+    .shell {
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+  }
+  @media (min-width: 1440px) {
+    .shell {
+      padding-left: 64px;
+      padding-right: 64px;
+    }
+  }
+
+  /* Small tracked uppercase label. */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.6;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  /* Display serif. */
+  .serif {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+  }
+
+  /* Underline link that wipes in on hover. */
+  .wipe-link {
+    background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+    transition: background-size 400ms var(--ease-expo);
+  }
+  .wipe-link:hover,
+  .wipe-link:focus-visible {
+    background-size: 100% 1px;
+  }
+}
