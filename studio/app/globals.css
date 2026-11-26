@@ -2,7 +2,7 @@
 
 @theme {
   /* Thrulenses Studio — clean editorial monochrome. Bone pages, ink type,
-     night-black cinematic sections, polished silver accents. All colour
+     night-black cinematic sections, silver-grey accents. All colour
      comes from the photographs. */
   --color-bone: #f3f1ec;
   --color-paper: #faf9f6;
@@ -17,6 +17,7 @@
   --color-fog: rgba(255, 255, 255, 0.14);
 
   --font-serif: var(--font-instrument), "Times New Roman", Georgia, serif;
+  --font-logo: var(--font-jost), "Futura", "Century Gothic", "Helvetica Neue", Arial, sans-serif;
   --font-sans: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
   --font-mono: var(--font-jetbrains), "Courier New", monospace;
 
@@ -99,28 +100,23 @@ html.lenis body {
   animation: marquee var(--marquee, 40s) linear infinite;
 }
 
-/* Chrome glint across the logo, masked to the letters (--mask). */
-@keyframes glint {
-  0% {
-    transform: translateX(-140%) skewX(-22deg);
+/* Lens mark: the rings draw themselves in. */
+@keyframes lens-draw {
+  from {
+    stroke-dashoffset: 1.02;
   }
-  28%,
-  100% {
-    transform: translateX(260%) skewX(-22deg);
+  to {
+    stroke-dashoffset: 0;
   }
 }
-.glint {
-  -webkit-mask: var(--mask) center / 100% 100% no-repeat;
-  mask: var(--mask) center / 100% 100% no-repeat;
+.lens-draw {
+  /* Slightly over 1 so the finished ring closes without a seam. */
+  stroke-dasharray: 1.02;
+  stroke-dashoffset: 1.02;
+  animation: lens-draw 1.6s var(--ease-cine) 0.15s forwards;
 }
-.glint::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 10%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
-  animation: glint 7s var(--ease-cine) 2s infinite both;
-  mix-blend-mode: screen;
+.lens-draw--late {
+  animation-delay: 0.6s;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -128,8 +124,9 @@ html.lenis body {
   .marquee {
     animation: none;
   }
-  .glint {
-    display: none;
+  .lens-draw {
+    animation: none;
+    stroke-dashoffset: 0;
   }
 }
 

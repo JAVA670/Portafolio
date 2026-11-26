@@ -104,6 +104,8 @@ export const dictionary = {
     },
     session: {
       back: "All work",
+      film: "Film",
+      play: "Play",
       photos: "photos",
       soon: "The full gallery is being edited — check back soon.",
       next: "Next session",
@@ -224,6 +226,8 @@ export const dictionary = {
     },
     session: {
       back: "Todo el trabajo",
+      film: "Película",
+      play: "Ver",
       photos: "fotos",
       soon: "La galería completa se está editando — vuelve pronto.",
       next: "Siguiente sesión",

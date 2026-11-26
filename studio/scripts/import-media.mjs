@@ -5,9 +5,10 @@
  *
  * Photos: photos/<shoot>/<anything>.(jpg|jpeg|png|webp|tif|tiff)
  *   → public/media/<shoot>/<shoot>-NN.jpg — EXIF orientation applied, all
- *     metadata stripped (no GPS leaves the studio), 2400px on the long
- *     edge, mozjpeg q82. Numbering continues after files already there.
- *     Loose photos directly in photos/ go to the "misc" shoot.
+ *     metadata stripped (no GPS leaves the studio), 2800px on the long
+ *     edge, mozjpeg q88 (client work — crisp on large screens). Numbering continues after files already there.
+ *     Loose photos directly in photos/ are grouped by their file name
+ *     without the counter and digits: "Birthday 15th (3).jpg" → birthday.
  *
  * Videos: videos/<name>.(mp4|mov|m4v)
  *   → public/media/videos/<slug>.mp4            full cut, H.264, web-optimised
@@ -57,8 +58,8 @@ async function importShoot(shoot, files) {
     const out = path.join(outDir, name);
     const info = await sharp(file)
       .rotate()
-      .resize({ width: 2400, height: 2400, fit: "inside", withoutEnlargement: true })
-      .jpeg({ quality: 82, mozjpeg: true })
+      .resize({ width: 2800, height: 2800, fit: "inside", withoutEnlargement: true })
+      .jpeg({ quality: 88, mozjpeg: true })
       .toFile(out);
     await rm(file);
     manifest.push({
@@ -74,18 +75,28 @@ async function importShoot(shoot, files) {
   }
 }
 
+/** "Birthday 15th (3).jpg" → "birthday"; "IMG_0042.jpg" → "img" → "misc". */
+const shootFromFileName = (name) => {
+  const words = slugify(name)
+    .split("-")
+    .filter((w) => w && !/\d/.test(w));
+  const slug = words.join("-");
+  return !slug || slug === "img" || slug === "dsc" || slug === "photo" ? "misc" : slug;
+};
+
 if (existsSync(PHOTO_IN)) {
-  const loose = [];
+  const loose = new Map();
   for (const entry of await readdir(PHOTO_IN, { withFileTypes: true })) {
     const full = path.join(PHOTO_IN, entry.name);
     if (entry.isDirectory()) {
       const files = (await readdir(full)).filter((f) => PHOTO_EXT.test(f)).map((f) => path.join(full, f));
       if (files.length) await importShoot(slugify(entry.name), files);
     } else if (PHOTO_EXT.test(entry.name)) {
-      loose.push(full);
+      const shoot = shootFromFileName(entry.name);
+      loose.set(shoot, [...(loose.get(shoot) ?? []), full]);
     }
   }
-  if (loose.length) await importShoot("misc", loose);
+  for (const [shoot, files] of loose) await importShoot(shoot, files);
 }
 
 // ── Videos ─────────────────────────────────────────────────────────────

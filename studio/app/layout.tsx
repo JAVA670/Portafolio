@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, Instrument_Serif, JetBrains_Mono } from "next/font/google";
+import { Archivo, Instrument_Serif, JetBrains_Mono, Jost } from "next/font/google";
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import "./globals.css";
@@ -10,6 +10,14 @@ const instrument = Instrument_Serif({
   subsets: ["latin"],
   weight: "400",
   style: ["normal", "italic"],
+  display: "swap",
+});
+
+/** Geometric sans for the THRULENSES | STUDIO logo only. */
+const jost = Jost({
+  variable: "--font-jost",
+  subsets: ["latin"],
+  weight: ["300", "400", "600"],
   display: "swap",
 });
 
@@ -60,7 +68,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${instrument.variable} ${archivo.variable} ${mono.variable}`}>
+    <html lang="en" className={`${instrument.variable} ${jost.variable} ${archivo.variable} ${mono.variable}`}>
       <body>
         <LanguageProvider>
           <SmoothScroll>{children}</SmoothScroll>

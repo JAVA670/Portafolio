@@ -14,7 +14,7 @@ const HEADER = 72;
 
 /**
  * Fixed header that changes tone with what's under it: transparent with the
- * chrome logo over night sections ([data-tone="dark"]), bone with the ink
+ * white logo over night sections ([data-tone="dark"]), bone with the ink
  * logo everywhere else.
  */
 export function Header() {
@@ -64,15 +64,8 @@ export function Header() {
         className={`fixed inset-x-0 top-0 z-50 border-b border-transparent transition-colors duration-300 ${bg} ${text}`}
       >
         <div className="shell flex h-[72px] items-center justify-between gap-6">
-          <Link href="/" aria-label={`${site.name} — home`} className="relative block w-[118px] md:w-[136px]">
-            <span className={`block transition-opacity duration-300 ${dark ? "opacity-100" : "opacity-0"}`}>
-              <Logo tone="chrome" sizes="140px" studioClassName="text-[8px] md:text-[9px]" />
-            </span>
-            <span
-              className={`absolute inset-0 block transition-opacity duration-300 ${dark ? "opacity-0" : "opacity-100"}`}
-            >
-              <Logo tone="ink" sizes="140px" studioClassName="text-[8px] md:text-[9px]" />
-            </span>
+          <Link href="/" aria-label={`${site.name} — home`} className="block">
+            <Logo className="text-[11px] md:text-[12.5px]" />
           </Link>
 
           <nav className="hidden items-center gap-9 lg:flex" aria-label="Primary">
@@ -119,9 +112,7 @@ export function Header() {
             aria-modal="true"
           >
             <div className="shell flex h-[72px] items-center justify-between">
-              <span className="block w-[118px]">
-                <Logo tone="chrome" sizes="140px" studioClassName="text-[8px]" />
-              </span>
+              <Logo className="text-[11px]" />
               <button type="button" onClick={() => setOpen(false)} className="eyebrow">
                 {t.nav.close}
               </button>

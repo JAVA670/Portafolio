@@ -19,7 +19,20 @@ export type Photo = {
   focus?: string;
 };
 
-export type Film = { src: string; preview: string; poster: string; ratio: number };
+/**
+ * A session film. The full-quality cut is streamed from YouTube (unlisted
+ * is fine) or Vimeo — paste just the video id. `preview`/`poster` are an
+ * optional short silent loop + still in public/media/videos/ (from
+ * `npm run import-media`) shown before playing; otherwise the cover photo.
+ */
+export type Film = {
+  youtube?: string;
+  vimeo?: string;
+  preview?: string;
+  poster?: string;
+  /** Display ratio (w / h); default 16:9. */
+  ratio?: number;
+};
 
 export type Session = {
   slug: string;
@@ -37,18 +50,29 @@ export type Session = {
 };
 
 const EVENTS = "/media/events";
+const BIRTHDAY = "/media/birthday";
 
 export const sessions: Session[] = [
   {
     slug: "birthday",
     category: "celebrations",
-    title: { en: "Birthday", es: "Cumpleaños" },
+    // Title from the photographer's own file names ("Birthday 15th").
+    title: { en: "15th Birthday", es: "Cumpleaños 15" },
     blurb: {
-      en: "A birthday told in frames — the people, the details and the moments in between.",
-      es: "Un cumpleaños contado en fotos — la gente, los detalles y los momentos intermedios.",
+      en: "A fifteenth birthday told in frames — the gown, the family, the first dance and the haze-lit moments in between.",
+      es: "Unos quince contados en fotos — el vestido, la familia, el primer baile y los momentos entre la neblina y las luces.",
     },
-    // Filled in from studio/photos/birthday/ once uploaded.
-    photos: [],
+    photos: [
+      { src: `${BIRTHDAY}/birthday-06.jpg`, ratio: 0.6668, alt: "The birthday girl in a tiara and full blue ball gown on a hazy, violet-lit dance floor", focus: "50% 35%" },
+      { src: `${BIRTHDAY}/birthday-05.jpg`, ratio: 0.6668, alt: "Portrait of the birthday girl in a tiara under violet light and stage haze", focus: "50% 30%" },
+      { src: `${BIRTHDAY}/birthday-02.jpg`, ratio: 0.6668, alt: "The birthday girl holding a blue bouquet beside a woman in a blue lace dress, tropical backdrop behind", focus: "50% 25%" },
+      { src: `${BIRTHDAY}/birthday-04.jpg`, ratio: 0.6668, alt: "The birthday girl with a blue bouquet in front of a palm-tree beach backdrop and blue balloons", focus: "50% 30%" },
+      { src: `${BIRTHDAY}/birthday-03.jpg`, ratio: 0.6668, alt: "The birthday girl seated with her bouquet before a mermaid backdrop and gold balloons", focus: "50% 40%" },
+      { src: `${BIRTHDAY}/birthday-01.jpg`, ratio: 0.6668, alt: "The birthday girl in her tiara and gown, hugged and kissed on the cheek in red and blue haze", focus: "40% 35%" },
+      { src: `${BIRTHDAY}/birthday-07.jpg`, ratio: 0.6668, alt: "A slow dance with a man in a cowboy hat, silhouetted in blue haze", focus: "60% 35%" },
+    ],
+    // Full-quality film streamed from Vimeo (vimeo.com/1250413715).
+    film: { vimeo: "1250413715", ratio: 16 / 9 },
   },
   {
     slug: "live-music",

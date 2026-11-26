@@ -7,6 +7,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion
 import { ImageReveal, Rise, WordsReveal } from "@/components/fx/Reveal";
 import { Frame } from "@/components/ui/Frame";
 import { Viewer } from "@/components/work/Viewer";
+import { Theater } from "@/components/work/Theater";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { setInquiryType, type InquiryType } from "@/lib/inquiry";
 import { coverOf, sessionBySlug, sessions, type Category, type Photo } from "@/lib/sessions";
@@ -179,6 +180,8 @@ export function SessionView({ slug }: { slug: string }) {
           </Rise>
         </div>
       </section>
+
+      {session.film && <Theater film={session.film} title={title} poster={cover} />}
 
       {/* Gallery */}
       {session.photos.length > 0 ? (

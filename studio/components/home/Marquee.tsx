@@ -1,14 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { useLanguage } from "@/components/providers/LanguageProvider";
-import { brand } from "@/lib/site";
+import { LensMark } from "@/components/brand/Logo";
 
 /**
  * Kinetic band: the services in large serif italic, crawling across the
- * full bleed, split by the chrome sigil. Scrolling also skews the band a
+ * full bleed, split by the lens mark. Scrolling also skews the band a
  * touch, like a camera whip.
  */
 export function Marquee() {
@@ -31,7 +30,7 @@ export function Marquee() {
         <span className="serif whitespace-nowrap px-8 text-[clamp(56px,9vw,160px)] italic leading-none md:px-14">
           {item}
         </span>
-        <Image src={brand.sigil.src} width={brand.sigil.width} height={brand.sigil.height} alt="" sizes="64px" className="h-auto w-[clamp(28px,3.4vw,56px)] invert" />
+        <LensMark className="h-[clamp(28px,3.4vw,56px)] w-[clamp(28px,3.4vw,56px)] text-ink" strokeWidth={1.2} />
       </span>
     ));
 

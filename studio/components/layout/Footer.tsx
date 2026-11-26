@@ -1,16 +1,23 @@
 "use client";
 
-import Image from "next/image";
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { LangToggle } from "@/components/layout/LangToggle";
 import { NAV, useAnchor } from "@/components/layout/nav";
 import { useLanguage } from "@/components/providers/LanguageProvider";
-import { brand, site } from "@/lib/site";
+import { LensMark } from "@/components/brand/Logo";
+import { site } from "@/lib/site";
 
 /**
- * Night footer: an index of links on the grid, then the tall chrome
- * wordmark rising into place as the page ends, STUDIO beneath it.
+ * Width of "THRULENSES" in Jost (THRU 600 + LENSES 300) at 0.14em tracking,
+ * in em — measured in the browser. 100cqw / ratio fills the margins exactly.
+ */
+const WORDMARK_EM = 7.16;
+
+/**
+ * Night footer: an index of links on the grid, then THRULENSES set edge to
+ * edge, rising and tilting up into place as the page ends, with the lens
+ * mark and STUDIO beneath.
  */
 export function Footer() {
   const { t } = useLanguage();
@@ -62,17 +69,19 @@ export function Footer() {
           style={reduceMotion ? undefined : { y: rise, rotateX: tilt }}
           className="origin-bottom"
         >
-          <Image
-            src={brand.chromeTall.src}
-            width={brand.chromeTall.width}
-            height={brand.chromeTall.height}
-            alt=""
-            sizes="(min-width: 1440px) 1312px, 100vw"
-            className="h-auto w-full select-none"
-          />
-          <p className="serif mt-2 flex items-center justify-center gap-6 text-[clamp(14px,2vw,30px)] uppercase tracking-[0.6em] text-silver">
+          <div className="[container-type:inline-size]">
+            <p
+              className="font-logo select-none whitespace-nowrap uppercase leading-[0.82] tracking-[0.14em]"
+              style={{ fontSize: `calc(100cqw / ${WORDMARK_EM})`, marginRight: "-0.14em" }}
+            >
+              <span className="font-semibold">Thru</span>
+              <span className="font-light">lenses</span>
+            </p>
+          </div>
+          <p className="mt-6 flex items-center justify-center gap-6 text-silver md:mt-8">
             <span className="h-px flex-1 bg-white/20" />
-            <span className="-mr-[0.6em]">Studio</span>
+            <LensMark className="h-[clamp(22px,2.4vw,34px)] w-[clamp(22px,2.4vw,34px)]" strokeWidth={1.3} />
+            <span className="font-logo -mr-[0.5em] text-[clamp(13px,1.6vw,22px)] uppercase tracking-[0.5em]">Studio</span>
             <span className="h-px flex-1 bg-white/20" />
           </p>
         </motion.div>
