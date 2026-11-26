@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { MobileMenu } from "@/components/layout/MobileMenu";
+import { LensMark } from "@/components/brand/StudioLogo";
+import { contact } from "@/lib/mockData";
 import { LangToggle, NAV_LINKS } from "@/components/layout/nav";
 import { ChromeWordmark } from "@/components/hero/ChromeWordmark";
 import { ThornRule } from "@/components/chrome/ThornRule";
@@ -49,6 +51,15 @@ export function Header() {
                 <span className="text-dim">0{i + 1}</span> {t.nav[link.key]}
               </a>
             ))}
+            <a
+              href={contact.studioUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="snap-link inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.15em] text-strobe"
+            >
+              <LensMark className="h-3 w-3" strokeWidth={2.2} />
+              {t.studio.nav} ↗
+            </a>
           </nav>
 
           <div className="col-span-6 flex items-center justify-end gap-4 lg:col-span-3">

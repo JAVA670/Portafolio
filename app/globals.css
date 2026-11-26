@@ -21,6 +21,11 @@
   --font-display: var(--font-anton), "Arial Narrow", Impact, sans-serif;
   --font-sans: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
   --font-mono: var(--font-jetbrains), "Courier New", monospace;
+  --font-logo: var(--font-jost), "Futura", "Century Gothic", "Helvetica Neue", Arial, sans-serif;
+
+  --color-bone: #f3f1ec;
+  --color-paper: #faf9f6;
+  --color-ink-dark: #0b0b0c;
 
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-swiss: cubic-bezier(0.77, 0, 0.175, 1);
@@ -136,6 +141,27 @@ html.lenis body {
   pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   opacity: 0.04;
+}
+
+/* Hero light table: columns of frames drift slowly in opposite directions. */
+@keyframes drift-up {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -50%, 0);
+  }
+}
+.drift {
+  animation: drift-up var(--drift, 60s) linear infinite;
+}
+.drift--reverse {
+  animation-direction: reverse;
+}
+@media (prefers-reduced-motion: reduce) {
+  .drift {
+    animation: none;
+  }
 }
 
 /* Idle zero-gravity drift for the chrome camera. */

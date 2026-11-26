@@ -39,6 +39,14 @@ export function Footer() {
           >
             INSTAGRAM ↗
           </a>
+          <a
+            href={contact.studioUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="snap-link meta w-fit text-strobe"
+          >
+            THRULENSES STUDIO ↗
+          </a>
         </div>
         <nav className="flex flex-col gap-2 md:col-span-3" aria-label="Footer">
           <span className="meta mb-2 text-dim">{t.footer.navigate}</span>

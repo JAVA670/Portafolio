@@ -7,5 +7,5 @@ export const site = {
   instagram: "thrulenses670",
   instagramUrl: "https://www.instagram.com/thrulenses670/",
   /** The concert & festival archive (separate site). */
-  galleryUrl: process.env.NEXT_PUBLIC_GALLERY_URL ?? "https://thrulenses670.netlify.app",
+  galleryUrl: process.env.NEXT_PUBLIC_GALLERY_URL ?? "https://portafolio-delta-bay-58.vercel.app",
 } as const;

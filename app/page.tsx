@@ -10,6 +10,8 @@ import { Index } from "@/components/sections/Index";
 import { Films } from "@/components/sections/Films";
 import { Booking } from "@/components/sections/Booking";
 import { Ticker } from "@/components/sections/Ticker";
+import { LensDive } from "@/components/sections/LensDive";
+import { StudioBand } from "@/components/sections/StudioBand";
 import { artists, stages } from "@/lib/mockData";
 
 export default function Home() {
@@ -21,11 +23,13 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
+        <LensDive />
         <Work />
         <Ticker items={artists} />
         <Intro />
         <Index />
         <Films />
+        <StudioBand />
         <Ticker items={stages.map((stage) => stage.name)} reverse duration={80} />
         <Booking />
       </main>

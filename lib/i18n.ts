@@ -23,6 +23,18 @@ export const dictionary = {
       scroll: "SCROLL",
       fig: "FIG. 01 — THE INSTRUMENT",
     },
+    lens: {
+      kicker: "FIG. 01 — THE INSTRUMENT",
+      title: "THROUGH THE LENS",
+      sub: "Every frame below was taken through this one. Keep scrolling — go inside.",
+    },
+    studio: {
+      label: "SISTER STUDIO",
+      title: "Events, portraits & celebrations.",
+      text: "The same eye, off the festival floor. Thrulenses Studio photographs birthdays, private events and portraits — calm, clean and made to keep.",
+      cta: "VISIT THRULENSES STUDIO",
+      nav: "STUDIO",
+    },
     intro: {
       label: "00 — MANIFESTO",
       text: "Concert photography and film — made from the barrier, the booth and the crowd, from warehouse nights to the biggest festival stages.",
@@ -128,6 +140,18 @@ export const dictionary = {
       localTime: "LOCAL",
       scroll: "SCROLL",
       fig: "FIG. 01 — EL INSTRUMENTO",
+    },
+    lens: {
+      kicker: "FIG. 01 — EL INSTRUMENTO",
+      title: "A TRAVÉS DEL LENTE",
+      sub: "Cada foto de abajo pasó por este lente. Sigue bajando — entra.",
+    },
+    studio: {
+      label: "ESTUDIO HERMANO",
+      title: "Eventos, retratos y celebraciones.",
+      text: "El mismo ojo, fuera del festival. Thrulenses Studio fotografía cumpleaños, eventos privados y retratos — con calma, limpio y para guardar.",
+      cta: "VISITAR THRULENSES STUDIO",
+      nav: "STUDIO",
     },
     intro: {
       label: "00 — MANIFIESTO",

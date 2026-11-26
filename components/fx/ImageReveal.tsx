@@ -5,8 +5,9 @@ import { motion, useReducedMotion } from "framer-motion";
 const EASE = [0.77, 0, 0.175, 1] as const;
 
 /**
- * Editorial image entrance: the frame wipes open bottom → top while the
- * picture inside settles from a slight zoom.
+ * Editorial image entrance: the frame wipes open bottom → top while it
+ * hinges up out of a slight 3D tilt and the picture inside settles from a
+ * gentle zoom.
  *
  * The in-view trigger lives on an unclipped wrapper and the clip-path on a
  * child: an element whose own clip-path is fully closed can read as
@@ -33,9 +34,15 @@ export function ImageReveal({
     >
       <motion.div
         className="absolute inset-0 overflow-hidden"
+        style={{ transformPerspective: 1400, transformOrigin: "50% 100%" }}
         variants={{
-          hidden: { clipPath: "inset(100% 0 0 0)" },
-          shown: { clipPath: "inset(0% 0 0 0)", transition: { duration: 0.95, ease: EASE, delay } },
+          hidden: { clipPath: "inset(100% 0 0 0)", rotateX: 9, y: 36 },
+          shown: {
+            clipPath: "inset(0% 0 0 0)",
+            rotateX: 0,
+            y: 0,
+            transition: { duration: 1.1, ease: EASE, delay },
+          },
         }}
       >
         <motion.div

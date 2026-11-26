@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Anton, Archivo, JetBrains_Mono } from "next/font/google";
+import { Anton, Archivo, JetBrains_Mono, Jost } from "next/font/google";
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import "./globals.css";
@@ -9,6 +9,14 @@ const anton = Anton({
   variable: "--font-anton",
   subsets: ["latin"],
   weight: "400",
+  display: "swap",
+});
+
+/** Geometric sans — only for the Thrulenses Studio logo. */
+const jost = Jost({
+  variable: "--font-jost",
+  subsets: ["latin"],
+  weight: ["300", "400", "600"],
   display: "swap",
 });
 
@@ -67,7 +75,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${anton.variable} ${archivo.variable} ${mono.variable}`}>
+    <html lang="en" className={`${anton.variable} ${jost.variable} ${archivo.variable} ${mono.variable}`}>
       <body className="grain">
         <LanguageProvider>
           <SmoothScroll>{children}</SmoothScroll>
