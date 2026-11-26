@@ -9,6 +9,11 @@ studio/photos/<next-shoot>/  ← every new shoot gets its own folder
 ```
 
 On GitHub: open this folder → **Add file → Upload files** → drag the photos in
-→ **Commit changes**. JPG, PNG or HEIC straight from the camera or editor is
-fine — the import script resizes them for the web, files them under
-`studio/public/media/`, and clears this folder again.
+→ **Commit changes**. To create the shoot subfolder on GitHub, type the folder
+name followed by `/` in the file-name box (e.g. `birthday/`) while adding a
+file, or just upload into this folder and say which shoot they belong to.
+
+JPG or PNG exports work best (iPhone HEIC: export as JPG first). Full-size
+files are fine — the import script resizes them for the web, removes camera
+metadata (GPS), files them under `studio/public/media/`, and clears this
+folder again.
