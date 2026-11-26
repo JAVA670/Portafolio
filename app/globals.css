@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* Thrulenses Studio (studio/) is a separate app with its own styles. */
+@source not "../studio";
 
 @theme {
   /* THRULENSES670 — cyber-brutalist editorial, liquid-chrome dark mode.
