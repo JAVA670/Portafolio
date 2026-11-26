@@ -1,63 +1,74 @@
-import Image from "next/image";
-import { brand } from "@/lib/site";
+/**
+ * Thrulenses Studio logo — built in code (crisp at any size, any colour):
+ *
+ *   ◎  THRULENSES  │  STUDIO
+ *
+ * A lens mark (outer ring with an offset inner ring), THRU in semibold and
+ * LENSES in light, tracked caps; a hairline divider; STUDIO in a quieter
+ * tone. Everything takes `currentColor`, so the same logo works on night
+ * and bone backgrounds.
+ */
+
+export function LensMark({
+  className = "",
+  strokeWidth = 1.6,
+  draw = false,
+}: {
+  className?: string;
+  strokeWidth?: number;
+  /** Animate the rings drawing themselves in (CSS, reduced-motion safe). */
+  draw?: boolean;
+}) {
+  return (
+    <svg viewBox="0 0 24 24" className={`block shrink-0 ${className}`} aria-hidden focusable="false">
+      <circle
+        cx="12"
+        cy="12"
+        r="10.6"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={strokeWidth}
+        pathLength={1}
+        className={draw ? "lens-draw" : undefined}
+      />
+      <circle
+        cx="12.9"
+        cy="11.1"
+        r="5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={strokeWidth}
+        pathLength={1}
+        className={draw ? "lens-draw lens-draw--late" : undefined}
+      />
+    </svg>
+  );
+}
+
+/** THRU (semibold) + LENSES (light), tracked. */
+export function Wordmark({ className = "" }: { className?: string }) {
+  return (
+    <span className={`font-logo whitespace-nowrap uppercase tracking-[0.28em] ${className}`}>
+      <span className="font-semibold">Thru</span>
+      <span className="font-light">lenses</span>
+    </span>
+  );
+}
 
 /**
- * Thrulenses Studio lockup: the chrome THRULENSES670 wordmark (same artwork
- * as the concert gallery) with STUDIO set beneath in tracked serif caps
- * between hairlines.
- *
- * tone="chrome" — silver metal, for night/photo backgrounds.
- * tone="ink"    — the same lettering as solid ink, for bone/paper pages.
+ * Horizontal lockup for the header / footer bar. `size` sets the cap height
+ * scale via font-size; the mark and divider follow it in em.
  */
-export function Logo({
-  tone = "chrome",
-  studio = true,
-  glint = false,
-  priority = false,
-  sizes = "200px",
-  className = "",
-  studioClassName = "",
-}: {
-  tone?: "chrome" | "ink";
-  studio?: boolean;
-  glint?: boolean;
-  priority?: boolean;
-  sizes?: string;
-  className?: string;
-  studioClassName?: string;
-}) {
-  const art = tone === "ink" ? brand.ink : brand.chrome;
+export function Logo({ className = "", studio = true }: { className?: string; studio?: boolean }) {
   return (
-    <span className={`relative flex select-none flex-col items-center ${className}`} aria-hidden>
-      <span className="relative block w-full">
-        <Image
-          src={art.src}
-          width={art.width}
-          height={art.height}
-          alt=""
-          sizes={sizes}
-          preload={priority}
-          fetchPriority={priority ? "high" : undefined}
-          draggable={false}
-          className="block h-auto w-full"
-        />
-        {glint && tone === "chrome" && (
-          <span
-            className="glint pointer-events-none absolute inset-0 overflow-hidden"
-            style={{ ["--mask" as string]: `url(${brand.chrome.mask})` }}
-          />
-        )}
-      </span>
+    <span className={`inline-flex items-center gap-[0.9em] ${className}`}>
+      <LensMark className="h-[1.55em] w-[1.55em]" strokeWidth={1.7} />
+      <Wordmark className="-mr-[0.28em]" />
       {studio && (
-        <span
-          className={`serif mt-[0.4em] flex w-full items-center justify-center gap-[0.9em] uppercase tracking-[0.55em] ${
-            tone === "ink" ? "text-ink" : "text-silver"
-          } ${studioClassName}`}
-        >
-          <span className={`h-px flex-1 ${tone === "ink" ? "bg-ink/25" : "bg-white/25"}`} />
-          <span className="-mr-[0.55em]">Studio</span>
-          <span className={`h-px flex-1 ${tone === "ink" ? "bg-ink/25" : "bg-white/25"}`} />
-        </span>
+        <>
+          <span className="h-[1.6em] w-px bg-current opacity-30" aria-hidden />
+          <span className="font-logo font-normal uppercase tracking-[0.28em] opacity-60">Studio</span>
+        </>
       )}
     </span>
   );

@@ -1,77 +1,71 @@
 /**
- * Derives the studio's brand files from the silver chrome logo
- * (public/brand/wordmark-silver.png — same artwork as the concert gallery).
+ * Brand files for Thrulenses Studio, drawn from the same geometry as
+ * components/brand/Logo.tsx (lens mark + THRU|LENSES | STUDIO).
  *
  *   node scripts/make-brand.mjs
  *
- * - wordmark-ink.png: the same spiky lettering as solid ink for light
- *   pages. Chrome glow would read as grey haze on white, so the shape is
- *   rebuilt from the metal's brightness (floor + gain) and filled with ink.
- * - og.jpg: 1200x630 share image — chrome logo + STUDIO on night black.
- * - app/icon.png: the chrome sigil as the favicon.
+ * - app/icon.png             the lens mark, ink on bone (favicon / tab icon)
+ * - app/apple-icon.png       the same, larger, for home-screen bookmarks
+ * - app/opengraph-image.jpg  1200x630 share card: the lockup on night black
+ *
+ * The share card needs Jost for the wordmark; it is fetched once from
+ * Google Fonts into the scratch folder below if missing.
  */
 import sharp from "sharp";
-import { copyFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const root = process.cwd();
-const brand = (f) => path.join(root, "public/brand", f);
-const INK = [11, 11, 12];
+const app = (f) => path.join(root, "app", f);
+const INK = "#0b0b0c";
+const BONE = "#f3f1ec";
+const NIGHT = "#0a0a0b";
 
-// ── Ink wordmark ───────────────────────────────────────────────────────
-{
-  const { data, info } = await sharp(brand("wordmark-silver.png"))
-    .ensureAlpha()
-    .raw()
-    .toBuffer({ resolveWithObject: true });
-  const out = Buffer.alloc(info.width * info.height * 4);
-  const floor = 40;
-  const gain = 3.5;
-  for (let p = 0; p < info.width * info.height; p++) {
-    const a = data[p * 4 + 3] / 255;
-    // Brightness the metal shows over black.
-    const lum = Math.max(data[p * 4], data[p * 4 + 1], data[p * 4 + 2]) * a;
-    const alpha = Math.max(0, Math.min(255, Math.round((lum - floor) * gain)));
-    out[p * 4] = INK[0];
-    out[p * 4 + 1] = INK[1];
-    out[p * 4 + 2] = INK[2];
-    out[p * 4 + 3] = alpha;
+const lens = (color, stroke) => `
+  <circle cx="12" cy="12" r="10.6" fill="none" stroke="${color}" stroke-width="${stroke}"/>
+  <circle cx="12.9" cy="11.1" r="5" fill="none" stroke="${color}" stroke-width="${stroke}"/>`;
+
+// ── Icons ──────────────────────────────────────────────────────────────
+const icon = (size) =>
+  Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="-3 -3 30 30">
+    <rect x="-3" y="-3" width="30" height="30" fill="${BONE}"/>${lens(INK, 1.9)}</svg>`);
+await sharp(icon(256)).png().toFile(app("icon.png"));
+await sharp(icon(180)).png().toFile(app("apple-icon.png"));
+console.log("✓ app/icon.png, app/apple-icon.png");
+
+// ── Share card ─────────────────────────────────────────────────────────
+const fontDir = path.join(root, ".brand-fonts");
+await mkdir(fontDir, { recursive: true });
+async function jost(weight) {
+  const file = path.join(fontDir, `jost-${weight}.ttf`);
+  if (!existsSync(file)) {
+    const css = await (await fetch(`https://fonts.googleapis.com/css2?family=Jost:wght@${weight}`)).text();
+    const url = css.match(/url\((https:[^)]+)\)/)?.[1];
+    if (!url) throw new Error(`Could not resolve Jost ${weight}`);
+    await writeFile(file, Buffer.from(await (await fetch(url)).arrayBuffer()));
   }
-  await sharp(out, { raw: { width: info.width, height: info.height, channels: 4 } })
-    .png({ compressionLevel: 9 })
-    .toFile(brand("wordmark-ink.png"));
-  console.log("✓ wordmark-ink.png", info.width, info.height);
+  return (await readFile(file)).toString("base64");
 }
+const [j300, j400, j600] = await Promise.all([jost(300), jost(400), jost(600)]);
 
-// ── Share image ────────────────────────────────────────────────────────
-{
-  const W = 1200;
-  const H = 630;
-  const logo = await sharp(brand("wordmark-silver.png")).resize({ width: 920 }).toBuffer();
-  const logoMeta = await sharp(logo).metadata();
-  const label = Buffer.from(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="80">
-      <text x="50%" y="50" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"
-        font-size="30" letter-spacing="18" fill="#c9cdd3">STUDIO</text>
-      <line x1="${W / 2 - 230}" y1="40" x2="${W / 2 - 130}" y2="40" stroke="#5a5e66" stroke-width="1"/>
-      <line x1="${W / 2 + 130}" y1="40" x2="${W / 2 + 230}" y2="40" stroke="#5a5e66" stroke-width="1"/>
-    </svg>`
-  );
-  const top = Math.round((H - logoMeta.height - 90) / 2);
-  await sharp({ create: { width: W, height: H, channels: 3, background: "#0a0a0b" } })
-    .composite([
-      { input: logo, top, left: Math.round((W - logoMeta.width) / 2) },
-      { input: label, top: top + logoMeta.height + 4, left: 0 },
-    ])
-    .jpeg({ quality: 88, mozjpeg: true })
-    .toFile(brand("og.jpg"));
-  console.log("✓ og.jpg");
-}
-
-// ── Favicon ────────────────────────────────────────────────────────────
-await sharp(brand("sigil-silver.png"))
-  .resize(256, 256, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
-  .png()
-  .toFile(path.join(root, "app/icon.png"));
-await copyFile(brand("og.jpg"), path.join(root, "app/opengraph-image.jpg"));
-console.log("✓ app/icon.png, app/opengraph-image.jpg");
+const W = 1200;
+const H = 630;
+const card = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
+  <style>
+    @font-face { font-family: J; font-weight: 300; src: url(data:font/ttf;base64,${j300}); }
+    @font-face { font-family: J; font-weight: 400; src: url(data:font/ttf;base64,${j400}); }
+    @font-face { font-family: J; font-weight: 600; src: url(data:font/ttf;base64,${j600}); }
+    text { font-family: J; letter-spacing: 0.28em; fill: #ffffff; }
+  </style>
+  <rect width="100%" height="100%" fill="${NIGHT}"/>
+  <g transform="translate(${W / 2 - 36} 150) scale(3)">${lens("#ffffff", 0.9)}</g>
+  <text x="${W / 2 + 14}" y="345" text-anchor="middle" font-size="76">
+    <tspan font-weight="600">THRU</tspan><tspan font-weight="300" dx="21">LENSES</tspan>
+  </text>
+  <line x1="${W / 2 - 280}" y1="410" x2="${W / 2 - 110}" y2="410" stroke="rgba(255,255,255,0.3)"/>
+  <line x1="${W / 2 + 110}" y1="410" x2="${W / 2 + 280}" y2="410" stroke="rgba(255,255,255,0.3)"/>
+  <text x="${W / 2 + 10}" y="420" text-anchor="middle" font-size="26" font-weight="400" style="letter-spacing:0.5em; fill: rgba(255,255,255,0.75)">STUDIO</text>
+</svg>`);
+await sharp(card).jpeg({ quality: 90, mozjpeg: true }).toFile(app("opengraph-image.jpg"));
+console.log("✓ app/opengraph-image.jpg");

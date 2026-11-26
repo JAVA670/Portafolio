@@ -10,7 +10,7 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { Logo } from "@/components/brand/Logo";
+import { LensMark, Wordmark } from "@/components/brand/Logo";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { allFrames } from "@/lib/sessions";
 import { ramp } from "@/lib/motion";
@@ -29,7 +29,7 @@ function columnFrames(col: number) {
 /**
  * Opening shot. A light table of the studio's photographs sits on a plane
  * tilted away in 3D, its columns drifting in opposite directions; the
- * chrome lockup floats in front. Scrolling plays an After-Effects-style
+ * studio lockup floats in front. Scrolling plays an After-Effects-style
  * camera move — the plane tilts further back and swells while the logo
  * pushes toward the viewer and dissolves. The pointer adds a little
  * parallax. Under reduced motion everything holds still.
@@ -137,29 +137,34 @@ export function Hero() {
           className="relative z-10 flex h-full flex-col items-center justify-center px-5 text-center"
           style={reduceMotion ? undefined : { scale: logoScale, opacity: logoOpacity, x: lx, y: ly }}
         >
-          <motion.p
-            className="eyebrow text-white/70"
-            initial={reduceMotion ? false : { opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.9, ease: EXPO }}
-          >
-            {t.hero.kicker}
-          </motion.p>
-          <h1 className="mt-6 w-[88vw] max-w-[980px] md:mt-8">
+          <h1 className="flex flex-col items-center">
             <span className="sr-only">Thrulenses Studio</span>
+            {/* Lens mark draws itself in */}
+            <LensMark draw className="h-[clamp(56px,7vw,96px)] w-[clamp(56px,7vw,96px)]" strokeWidth={1.1} />
+            {/* THRULENSES rises out of its line */}
+            <span className="mt-8 block overflow-hidden pb-[0.06em] md:mt-10" aria-hidden>
+              <motion.span
+                className="block text-[clamp(30px,6.6vw,104px)] leading-none"
+                initial={reduceMotion ? false : { y: "110%" }}
+                animate={{ y: "0%" }}
+                transition={{ duration: 1.3, ease: CINE, delay: 0.55 }}
+              >
+                <Wordmark className="-mr-[0.28em]" />
+              </motion.span>
+            </span>
+            {/* — STUDIO — */}
             <motion.span
-              className="block"
-              initial={reduceMotion ? false : { clipPath: "inset(-30% 50% -30% 50%)", opacity: 0 }}
-              animate={{ clipPath: "inset(-30% -5% -30% -5%)", opacity: 1 }}
-              transition={{ duration: 1.6, ease: CINE, delay: 0.2 }}
+              className="mt-5 flex w-full max-w-[min(88vw,720px)] items-center gap-5 md:mt-7"
+              initial={reduceMotion ? false : { opacity: 0, scaleX: 0.6 }}
+              animate={{ opacity: 1, scaleX: 1 }}
+              transition={{ duration: 1.2, ease: CINE, delay: 0.9 }}
+              aria-hidden
             >
-              <Logo
-                tone="chrome"
-                glint
-                priority
-                sizes="(min-width: 1120px) 980px, 88vw"
-                studioClassName="text-[clamp(12px,1.7vw,22px)]"
-              />
+              <span className="h-px flex-1 bg-white/30" />
+              <span className="font-logo -mr-[0.5em] text-[clamp(12px,1.4vw,18px)] uppercase tracking-[0.5em] text-white/75">
+                Studio
+              </span>
+              <span className="h-px flex-1 bg-white/30" />
             </motion.span>
           </h1>
           <motion.p
